@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Bluoh</string>
+
+    <string name="facebook_app_id">800960263379262</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="invite_text">Hey, there.. I found this interesting content app. Give it a try and stay updated with interesting facts!\n</string>
+    <string name="copyright_symbol">&#169; </string>
+    <string name="refer_email">Email</string>
+    <string name="refer_facebook">FB</string>
+    <string name="refer_invited">Invited Others</string>
+    <string name="refer_message">SMS</string>
+    <string name="refer_more">More</string>
+    <string name="refer_open_screen">Opened Referral</string>
+    <string name="refer_twitter">Twitter</string>
+    <string name="refer_whatsapp">Whatsapp</string>
+    <string name="help_us_do_better">Help us do better !</string>
+
+</resources>

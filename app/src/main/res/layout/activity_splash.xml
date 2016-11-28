@@ -1,0 +1,28 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context="com.karbide.bluoh.Splash"
+    android:gravity="center"
+    android:padding="@dimen/activity_vertical_margin">
+
+    <ImageView
+        android:id="@+id/imvLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo_new"
+        android:visibility="gone"/>
+    <com.karbide.bluoh.ui.CustomButton
+        android:id="@+id/btnFacebookSignup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/com_facebook_button_background"
+        android:textAllCaps="false"
+        android:textColor="@color/White"
+        android:gravity="center"
+        android:text="Login With Facebook"
+        android:visibility="gone"/>
+
+</RelativeLayout>

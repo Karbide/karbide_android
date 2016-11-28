@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/card_fragment_bg">
+
+    <com.karbide.bluoh.ui.SelectableRoundedImageView
+        android:id="@+id/imageViewArticleImage"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:background="#00000000"
+        android:scaleType="centerCrop"
+        app:sriv_left_top_corner_radius="5dp"
+        app:sriv_right_top_corner_radius="5dp"
+        app:sriv_left_bottom_corner_radius="5dp"
+        app:sriv_right_bottom_corner_radius="5dp"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:weightSum="1" >
+
+        <RelativeLayout
+            android:id="@+id/layoutInvisibleTopHalfGradient"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25" >
+        </RelativeLayout>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.75"
+            android:background="@drawable/category_full_view_bottom_gradient" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/layoutInvisibleTopHalfText"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/category_full_view_article_text_content_margin_left_right"
+                android:layout_marginTop="@dimen/category_full_view_article_text_content_margin_left_right">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_person"
+                    app:civ_border_color="#FFFFFFFF"
+                    app:civ_border_width="1dp"/>
+                <com.karbide.bluoh.ui.CustomTextView
+                    android:id="@+id/tvAuthorName"
+                    style="@style/style_category_full_controls_text_watch_like"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/category_title_color_fullview"
+                    app:typeface="Roboto-Light.ttf"
+                    android:text="Author">
+                </com.karbide.bluoh.ui.CustomTextView>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutArticleTextContent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="@dimen/category_full_view_article_text_content_margin_left_right"
+            android:layout_marginBottom="@dimen/category_full_view_article_text_content_margin_left_right"
+            android:layout_marginRight="@dimen/category_full_view_article_text_content_margin_left_right"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:orientation="vertical" >
+            <com.karbide.bluoh.ui.CustomTextView
+                android:id="@+id/textViewArticleHeadline"
+                style="@style/style_category_full_view_headline_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/category_text_color_fullview_portrait"
+                app:typeface="RobotoCondensed-Light.ttf"
+                android:gravity="center_horizontal">
+            </com.karbide.bluoh.ui.CustomTextView>
+            <Button
+                android:id="@+id/btnOpenDeck"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/circle_button"
+                android:text="TAP"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@android:color/white"/>
+            <com.karbide.bluoh.ui.CustomTextView
+                android:id="@+id/tvMediaCopyRight"
+                style="@style/style_category_full_controls_text_watch_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/off_white"
+                app:typeface="Roboto-Light.ttf"
+                android:layout_gravity="right">
+            </com.karbide.bluoh.ui.CustomTextView>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bg_color"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_toolbar_bg">
+            <include
+                android:id="@+id/relativeLayoutArticleControls"
+                layout="@layout/category_full_view_controls_layout_white" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

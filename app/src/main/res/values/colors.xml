@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#0079bf</color>
+    <color name="colorPrimaryDark">#00264c</color>
+    <color name="bg_color">#00407f</color>
+    <color name="yellow">#fbc100</color>
+    <!--<color name="colorPrimary">#1A2146</color>
+    <color name="colorPrimaryDark">#1A2146</color>-->
+    <color name="blue">#1A2146</color>
+    <color name="colorAccent">#1A2146</color>
+
+    <color name="colorPrimaryTransparent">#951A2146</color>
+
+    <color name="black_overlay">#66000000</color>
+
+    <color name="White">#FFFFFF</color>
+    <color name="off_white">#66ffffff</color>
+
+    <!-- Title Color -->
+    <color name="category_title_color_fullview">#FFFFFFFF</color>
+    <color name="category_title_color_list">#FF4C4C4C</color>
+    <color name="category_text_color_fullview_portrait">#FFFFFFFF</color>
+    <color name="category_text_color_fullview_landscape">#FF4C4C4C</color>
+    <color name="category_text_color_no_image_view">#FF4C4C4C</color>
+    <color name="category_text_color_fullview_controls_grey">#FF4D4D4D</color>
+    <color name="category_text_color_fullview_controls_white">#FFFFFFFF</color>
+
+    <color name="black_0percent">#00000000</color>
+    <color name="black_5percent">#0D000000</color>
+    <color name="black_10percent">#1A000000</color>
+    <color name="black_15percent">#26000000</color>
+    <color name="black_20percent">#33000000</color>
+    <color name="black_25percent">#40000000</color>
+    <color name="black_30percent">#4D000000</color>
+    <color name="black_35percent">#59000000</color>
+    <color name="black_40percent">#66000000</color>
+    <color name="black_45percent">#73000000</color>
+    <color name="black_50percent">#80000000</color>
+    <color name="black_55percent">#8C000000</color>
+    <color name="black_60percent">#99000000</color>
+    <color name="black_65percent">#A6000000</color>
+    <color name="black_70percent">#B3000000</color>
+    <color name="black_75percent">#BF000000</color>
+    <color name="black_80percent">#CC000000</color>
+    <color name="black_85percent">#D9000000</color>
+    <color name="black_90percent">#E6000000</color>
+    <color name="black_95percent">#F2000000</color>
+    <color name="black_100percent">#FF000000</color>
+</resources>

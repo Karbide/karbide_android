@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color"
+    android:padding="@dimen/activity_vertical_margin">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <com.karbide.bluoh.ui.CustomTextView
+            style="@style/style_category_full_view_summary_text_no_shadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/White"
+            app:typeface="Roboto-Regular.ttf"
+            android:text="@string/help_us_do_better">
+        </com.karbide.bluoh.ui.CustomTextView>
+        <com.karbide.bluoh.ui.CustomTextView
+            style="@style/style_category_full_view_summary_text_no_shadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/White"
+            app:typeface="Roboto-Light.ttf"
+            android:text="Mind giving us a feedback ?">
+        </com.karbide.bluoh.ui.CustomTextView>
+
+        <Spinner
+            android:background="@drawable/custom_spinner_background"
+            android:spinnerMode="dropdown"
+            android:id="@+id/spFeedbackType"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:entries="@array/feedback_type"/>
+
+        <EditText
+            style="@style/style_category_full_view_summary_text_no_shadow"
+            android:background="@drawable/edit_text_bg"
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_8dp"
+            android:hint="Enter your name"
+            android:singleLine="true"
+            android:textColorHint="@color/black_overlay"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+        </EditText>
+        <EditText
+            style="@style/style_category_full_view_summary_text_no_shadow"
+            android:background="@drawable/edit_text_bg"
+            android:id="@+id/etNumber"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_8dp"
+            android:singleLine="true"
+            android:hint="Enter your number"
+            android:textColorHint="@color/black_overlay"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+        </EditText>
+        <EditText
+            style="@style/style_category_full_view_summary_text_no_shadow"
+            android:background="@drawable/edit_text_bg"
+            android:id="@+id/etEmail"
+            android:inputType="textEmailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_8dp"
+            android:singleLine="true"
+            android:hint="Enter your email"
+            android:textColorHint="@color/black_overlay"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+        </EditText>
+        <EditText
+            android:id="@+id/etFeedback"
+            style="@style/style_category_full_view_summary_text_no_shadow"
+            android:background="@drawable/edit_text_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="6"
+            android:gravity="top|left"
+            android:padding="@dimen/margin_5dp"
+            android:hint="Enter your feedback"
+            android:textColorHint="@color/black_overlay"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+        </EditText>
+       <com.karbide.bluoh.ui.CustomButton
+            android:id="@+id/btnSendFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/yellow"
+            android:text="Submit"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="@dimen/margin_45dp"
+            android:layout_marginRight="@dimen/margin_45dp"/>
+
+    </LinearLayout>
+
+    <com.karbide.bluoh.ui.CustomButton
+        android:id="@+id/btnTestNotification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/yellow"
+        android:text="Test Notification"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_gravity="bottom"
+        />
+
+</LinearLayout>

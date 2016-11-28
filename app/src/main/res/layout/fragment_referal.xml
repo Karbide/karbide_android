@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="1dp">
+
+    <ScrollView
+        android:id="@+id/parentView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <com.karbide.bluoh.ui.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="LET YOUR FRIEND KNOW ABOUT BLUOH AND LET THEM ENJOY ALL NEW NEWS READING EXPERIENCE !"
+                android:textColor="@color/colorPrimary"
+                app:met_typeface="MYRIADPRO-REGULAR.OTF"
+                android:layout_marginTop="@dimen/margin_20dp"/>
+
+
+            <com.karbide.bluoh.ui.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="START INVITING"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/colorPrimary"
+                app:met_typeface="MYRIADPRO-REGULAR.OTF" />
+
+            <GridView
+                android:id="@+id/shareApps"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/margin_25dp"
+                android:horizontalSpacing="10dp"
+                android:verticalSpacing="20dp"
+                android:stretchMode="columnWidth"
+                android:numColumns="2"
+                android:isScrollContainer="false" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
+
+
+

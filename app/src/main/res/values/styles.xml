@@ -1,0 +1,74 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.Splash">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="style_shadow_75percent_white_2dp_wide">
+        <item name="android:shadowColor">@color/black_75percent</item>
+        <item name="android:shadowDx">0.5</item>
+        <item name="android:shadowDy">0.5</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+    <style name="style_category_full_view_headline_text" parent="style_shadow_75percent_white_2dp_wide">
+        <item name="android:textSize">@dimen/category_full_view_article_headline_text_size</item>
+        <item name="android:lineSpacingExtra">@dimen/category_full_view_article_headline_line_spacing_extra</item>
+    </style>
+
+    <style name="style_category_full_view_headline2_text" parent="style_shadow_75percent_white_2dp_wide">
+        <item name="android:textSize">@dimen/category_full_view_article_headline2_text_size</item>
+        <item name="android:lineSpacingExtra">@dimen/category_full_view_article_headline2_line_spacing_extra</item>
+    </style>
+    <style name="style_category_full_view_headline_text_no_shadow">
+        <item name="android:textSize">@dimen/category_full_view_article_headline_text_size</item>
+        <item name="android:lineSpacingExtra">@dimen/category_full_view_article_headline_line_spacing_extra</item>
+    </style>
+
+    <style name="style_category_full_view_summary_text" parent="style_shadow_75percent_white_2dp_wide">
+        <item name="android:textSize">@dimen/category_full_view_article_summary_text_size</item>
+        <item name="android:lineSpacingExtra">@dimen/category_full_view_article_summary_line_spacing_extra</item>
+    </style>
+
+    <style name="style_category_full_view_summary_text_no_shadow">
+        <item name="android:textSize">@dimen/category_full_view_article_summary_text_size</item>
+        <item name="android:lineSpacingExtra">@dimen/category_full_view_article_summary_line_spacing_extra</item>
+        <item name="android:layout_marginTop">@dimen/category_full_view_article_image_margin_bottom</item>
+    </style>
+
+    <style name="style_category_full_controls_text_watch_like">
+        <item name="android:textSize">@dimen/category_full_view_controls_watch_like_textsize</item>
+    </style>
+
+
+</resources>
