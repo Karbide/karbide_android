@@ -5,8 +5,48 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     tools:context="com.karbide.bluoh.Splash"
-    android:gravity="center"
-    android:padding="@dimen/activity_vertical_margin">
+    android:gravity="center">
+
+    <LinearLayout
+        android:id="@+id/fbLoginLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:src="@drawable/rsz_bg"
+            android:scaleType="centerCrop">
+            <!--<ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/logo_new"/>-->
+        </ImageView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/black_100percent"
+            android:gravity="center"
+            android:paddingLeft="@dimen/margin_25dp"
+            android:paddingRight="@dimen/margin_25dp">
+            <com.karbide.bluoh.ui.CustomButton
+                android:id="@+id/btnFacebookSignup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/com_facebook_button_background"
+                android:textAllCaps="false"
+                android:textColor="@color/White"
+                android:gravity="center"
+                android:paddingRight="@dimen/margin_20dp"
+                android:text="Login With Facebook"
+                android:drawableLeft="@drawable/ic_facebook"/>
+
+        </LinearLayout>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imvLogo"
@@ -14,15 +54,4 @@
         android:layout_height="wrap_content"
         android:src="@drawable/logo_new"
         android:visibility="gone"/>
-    <com.karbide.bluoh.ui.CustomButton
-        android:id="@+id/btnFacebookSignup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/com_facebook_button_background"
-        android:textAllCaps="false"
-        android:textColor="@color/White"
-        android:gravity="center"
-        android:text="Login With Facebook"
-        android:visibility="gone"/>
-
 </RelativeLayout>

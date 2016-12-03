@@ -94,11 +94,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/yellow"
-            android:text="Submit"
+            android:text="Send feedback"
             android:textColor="@color/colorPrimaryDark"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginLeft="@dimen/margin_45dp"
-            android:layout_marginRight="@dimen/margin_45dp"/>
+            android:layout_marginLeft="@dimen/margin_55dp"
+            android:layout_marginRight="@dimen/margin_55dp"/>
 
     </LinearLayout>
 
@@ -110,6 +110,6 @@
         android:text="Test Notification"
         android:textColor="@color/colorPrimaryDark"
         android:layout_gravity="bottom"
-        />
+        android:visibility="gone"/>
 
 </LinearLayout>

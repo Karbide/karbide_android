@@ -19,6 +19,10 @@ public class Content {
     @SerializedName("author")
     @Expose
     private String author;
+    @SerializedName("authorImage")
+    @Expose
+    private String authorImage;
+
     @SerializedName("displayName")
     @Expose
     private String displayName;
@@ -114,6 +118,24 @@ public class Content {
      */
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    /**
+     *
+     * @return
+     * The author
+     */
+    public String getAuthorImage() {
+        return authorImage;
+    }
+
+    /**
+     *
+     * @param authorImage
+     * The author
+     */
+    public void setAuthorImage(String authorImage) {
+        this.authorImage = authorImage;
     }
 
     /**

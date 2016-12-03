@@ -2,23 +2,39 @@ package com.karbide.bluoh;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+
+import com.google.gson.Gson;
+import com.karbide.bluoh.database.AppDatabaseHelper;
+import com.karbide.bluoh.datatypes.Card;
+import com.karbide.bluoh.datatypes.Content;
+import com.karbide.bluoh.ui.CustomTextView;
+import com.karbide.bluoh.util.AppUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by FourBrick on 5/12/2016.
  */
-public class WebViewActivity extends BaseActivity
-{
+public class WebViewActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
     private Toolbar mToolbar;
     private WebView webView;
     private ProgressBar progrssBar;
     private String url;
+    private Card summary = null;
+    private int deckId = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -28,6 +44,55 @@ public class WebViewActivity extends BaseActivity
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        if(getIntent().getExtras() != null)
+        {
+            Bundle bundle = getIntent().getExtras();
+            AppUtil.LogError("DATA", bundle.getString("data"));
+            summary = new Gson().fromJson(bundle.getString("data"), Card.class);
+            deckId = bundle.getInt("deckId");
+            url = summary.getUrl();
+            if (url.substring(0, 4).equalsIgnoreCase("http") == false) {
+                url = "http:\\" + url;
+            }
+        }
+        getSupportActionBar().setTitle(""+summary.getTitle());
+
+        CheckBox buttonLike = (CheckBox)findViewById(R.id.buttonLike);
+        CheckBox buttonBookmark = (CheckBox)findViewById(R.id.buttonBookmark);
+        ImageButton buttonShare = (ImageButton)findViewById(R.id.imageButtonShare);
+        CustomTextView tvSource = (CustomTextView)findViewById(R.id.tvNewsSource);
+        ImageView ivSourceImage = (ImageView)findViewById(R.id.ivSourceImage);
+        LinearLayout llSourceImage = (LinearLayout)findViewById(R.id.llSourceImage);
+
+        if(summary.getSource()!= null && (summary.getSource().contains("http") || summary.getSource().contains(".png") || summary.getSource().contains(".jpg")))
+        {
+            Log.e("IMG", "SOURCE : "+summary.getSource());
+            tvSource.setVisibility(View.GONE);
+            llSourceImage.setVisibility(View.VISIBLE);
+            ImageLoader.getInstance().displayImage(summary.getSource(), ivSourceImage);
+        }
+        else
+        {
+            tvSource.setVisibility(View.VISIBLE);
+            llSourceImage.setVisibility(View.GONE);
+            tvSource.setText("@"+summary.getSource());
+        }
+        buttonShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AppUtil.shareData(WebViewActivity.this, ""+summary.getTitle()+"\n"+summary.getUrl());
+            }
+        });
+
+        buttonBookmark.setChecked(AppDatabaseHelper.getInstance(WebViewActivity.this).isBookMarked(deckId));
+        buttonBookmark.setOnCheckedChangeListener(this);
+        buttonLike.setOnCheckedChangeListener(this);
+        buttonShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         progrssBar = (ProgressBar)findViewById(R.id.progressbar);
         webView = (WebView)findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -38,11 +103,12 @@ public class WebViewActivity extends BaseActivity
             }
         });
         webView.setWebViewClient(new AppWebViewClients(progrssBar));
-        if(getIntent().getExtras() != null)
-        {
-            url = getIntent().getExtras().getString("url");
-        }
         webView.loadUrl(url);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
     }
 
 

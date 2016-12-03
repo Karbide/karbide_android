@@ -1,7 +1,12 @@
 package com.karbide.bluoh.viewadapters;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager.LayoutParams;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,20 +16,25 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.data.StreamAssetPathFetcher;
 import com.google.gson.Gson;
 import com.karbide.bluoh.DeckDetailActivity;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.database.AppDatabaseHelper;
 import com.karbide.bluoh.datatypes.Card;
 import com.karbide.bluoh.datatypes.Content;
+import com.karbide.bluoh.datatypes.Deck;
 import com.karbide.bluoh.ui.CustomTextView;
-import com.karbide.bluoh.ui.PagerAdapter;
 import com.karbide.bluoh.util.AppUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -163,8 +173,11 @@ public class HomePagerAdapter extends PagerAdapter {
 			CustomTextView tvHeadline = (CustomTextView) view.findViewById(R.id.textViewArticleHeadline);
 			CustomTextView tvSummary = (CustomTextView) view.findViewById(R.id.textViewArticleSummary);
 			CustomTextView tvSource = (CustomTextView) view.findViewById(R.id.tvNewsSource);
+			LinearLayout llSourceImage = (LinearLayout)view.findViewById(R.id.llSourceImage);
+			ImageView ivSourceImage = (ImageView)view.findViewById(R.id.ivSourceImage);
 			CustomTextView tvAuthor = (CustomTextView) view.findViewById(R.id.tvAuthorName);
 			CustomTextView tvMediaCopyRight = (CustomTextView) view.findViewById(R.id.tvMediaCopyRight);
+			CircleImageView ivAuthorImage = (CircleImageView)view.findViewById(R.id.ivAuthorImage);
 
 			if (null != _onClickListener)
 			{
@@ -189,22 +202,54 @@ public class HomePagerAdapter extends PagerAdapter {
 				buttonLike.setOnCheckedChangeListener(_onCheckedChangeListener);
 				tvSource.setOnClickListener(new OnClickListener() {
 					@Override
+					public void onClick(View view)
+					{
+
+//						AppUtil.openNativeWebView(_context, summary.getUrl());
+						AppUtil.openNativeWebView(_context, getBundle(position));
+					}
+				});
+
+				llSourceImage.setOnClickListener(new OnClickListener() {
+					@Override
 					public void onClick(View view) {
-//						AppUtil.openUrlInWeb(_context,summary.getUrl());
-						AppUtil.openNativeWebView(_context, summary.getUrl());
+//						AppUtil.openNativeWebView(_context, summary.getUrl());
+						AppUtil.openNativeWebView(_context, getBundle(position));
 					}
 				});
 			}
 			view.setOnClickListener(null);
 			tvHeadline.setText(summary.getTitle());
 			tvSummary.setText(summary.getContent());
-			if(summary.getSource() != null)
-				tvSource.setText("@"+summary.getSource());
-			else
-				tvSource.setText("@rediff.com");
+//			Glide.with(_context).load(_allDecks.get(position).getAuthorImage()).into(ivAuthorImage);
+			ImageLoader.getInstance().displayImage(_allDecks.get(position).getAuthorImage(), ivAuthorImage);
 			tvAuthor.setText(_allDecks.get(position).getDisplayName());
+//			if(summary.getMedia().getSource() != null && !summary.getMedia().getSource().equals(""))
+//				tvMediaCopyRight.setText(_context.getResources().getString(R.string.copyright_symbol)+" "+summary.getMedia().getSource());
 			if(summary.getMedia().getSource() != null && !summary.getMedia().getSource().equals(""))
-				tvMediaCopyRight.setText(_context.getResources().getString(R.string.copyright_symbol)+" "+summary.getMedia().getSource());
+			{
+				if(summary.getMedia().getSource().contains("newsapi"))
+				{
+					tvMediaCopyRight.setText(Html.fromHtml(_context.getResources().getString(R.string.powered_by_text)));
+					tvMediaCopyRight.setMovementMethod(LinkMovementMethod.getInstance());
+				}
+				else
+					tvMediaCopyRight.setText(_context.getResources().getString(R.string.copyright_symbol) + " " + summary.getMedia().getSource());
+			}
+			if(summary.getSource()!= null && (summary.getSource().contains("http")
+					|| summary.getSource().contains(".png") || summary.getSource().contains(".jpg")))
+			{
+				Log.e("IMG", "SOURCE : "+summary.getSource());
+				tvSource.setVisibility(View.GONE);
+				llSourceImage.setVisibility(View.VISIBLE);
+				Glide.with(_context).load(summary.getSource()).into(ivSourceImage);
+			}
+			else
+			{
+				tvSource.setVisibility(View.VISIBLE);
+				llSourceImage.setVisibility(View.GONE);
+				tvSource.setText("@"+summary.getSource());
+			}
 		}
 	}
 
@@ -216,6 +261,9 @@ public class HomePagerAdapter extends PagerAdapter {
 			CustomTextView tvAuthor = (CustomTextView) view.findViewById(R.id.tvAuthorName);
 			CustomTextView tvSource = (CustomTextView) view.findViewById(R.id.tvNewsSource);
 			CustomTextView tvMediaCopyRight = (CustomTextView) view.findViewById(R.id.tvMediaCopyRight);
+			CircleImageView ivAuthorImage = (CircleImageView)view.findViewById(R.id.ivAuthorImage);
+			ImageView ivSourceImage = (ImageView)view.findViewById(R.id.ivSourceImage);
+			LinearLayout llSourceImage = (LinearLayout)view.findViewById(R.id.llSourceImage);
 			Button btnOpenDeck = (Button) view.findViewById(R.id.btnOpenDeck);
 			if (null != _onClickListener)
 			{
@@ -243,7 +291,15 @@ public class HomePagerAdapter extends PagerAdapter {
 					@Override
 					public void onClick(View view) {
 //						AppUtil.openUrlInWeb(_context,summary.getUrl());
-						AppUtil.openNativeWebView(_context, summary.getUrl());
+						AppUtil.openNativeWebView(_context, getBundle(position));
+					}
+				});
+
+				llSourceImage.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View view) {
+//						AppUtil.openNativeWebView(_context, summary.getUrl());
+						AppUtil.openNativeWebView(_context, getBundle(position));
 					}
 				});
 			}
@@ -269,14 +325,37 @@ public class HomePagerAdapter extends PagerAdapter {
 					Toast.makeText(_context, "TAP CLICKED", Toast.LENGTH_LONG).show();
 				}
 			});
+//			Glide.with(_context).load(_allDecks.get(position).getAuthorImage()).into(ivAuthorImage);
+			ImageLoader.getInstance().displayImage(_allDecks.get(position).getAuthorImage(), ivAuthorImage);
 			tvHeadline.setText(summary.getTitle());
 			tvAuthor.setText(_allDecks.get(position).getDisplayName());
 			if(summary.getMedia().getSource() != null && !summary.getMedia().getSource().equals(""))
-				tvMediaCopyRight.setText(_context.getResources().getString(R.string.copyright_symbol)+" "+summary.getMedia().getSource());
-			if(summary.getSource() != null)
-				tvSource.setText("@"+summary.getSource());
+			{
+				if(summary.getMedia().getSource().contains("newsapi"))
+				{
+					if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+						tvMediaCopyRight.setText(Html.fromHtml(summary.getMedia().getSource(),Html.FROM_HTML_MODE_LEGACY));
+					} else {
+						tvMediaCopyRight.setText(Html.fromHtml(summary.getMedia().getSource()));
+					}
+				}
+				else
+					tvMediaCopyRight.setText(_context.getResources().getString(R.string.copyright_symbol) + " " + summary.getMedia().getSource());
+			}
+			if(summary.getSource()!= null && (summary.getSource().contains("http") || summary.getSource().contains(".png") || summary.getSource().contains(".jpg")))
+			{
+				Log.e("IMG", "SOURCE : "+summary.getSource());
+				tvSource.setVisibility(View.GONE);
+				llSourceImage.setVisibility(View.VISIBLE);
+//				Glide.with(_context).load(summary.getSource()).into(ivSourceImage);
+				ImageLoader.getInstance().displayImage(summary.getSource(), ivSourceImage);
+			}
 			else
-				tvSource.setText("@rediff.com");
+			{
+				tvSource.setVisibility(View.VISIBLE);
+				llSourceImage.setVisibility(View.GONE);
+				tvSource.setText("@"+summary.getSource());
+			}
 		}
 	}
 
@@ -289,7 +368,8 @@ public class HomePagerAdapter extends PagerAdapter {
 	private void loadArticleImage(View view, String imageUrl)
 	{
 		ImageView imageView = (ImageView) view.findViewById(R.id.imageViewArticleImage);
-		Glide.with(_context).load(imageUrl).into(imageView);
+//		Glide.with(_context).load(imageUrl).into(imageView);
+		ImageLoader.getInstance().displayImage(imageUrl, imageView);
 	}
 
 	/*
@@ -326,5 +406,13 @@ public class HomePagerAdapter extends PagerAdapter {
 		return POSITION_NONE;
 	}
 
+	private Bundle getBundle(int position)
+	{
+		String data = new Gson().toJson(_allDecks.get(position).getCards().get(0), Card.class);
+		Bundle bundle = new Bundle();
+		bundle.putString("data", ""+data);
+		bundle.putInt("deckId", _allDecks.get(position).getDeckId());
+		return bundle;
+	}
 
 }

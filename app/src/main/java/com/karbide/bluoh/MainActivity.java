@@ -54,7 +54,7 @@ public class MainActivity extends BaseActivity{
         setSupportActionBar(toolbar);
 
         initNavigationDrawer();
-        subscribeToPushService();
+//        subscribeToPushService();
         displayView(0);
     }
 
@@ -83,9 +83,9 @@ public class MainActivity extends BaseActivity{
                     case R.id.icRateUs:
                         displayView(4);
                         break;
-                    case R.id.icSetting:
+                    /*case R.id.icSetting:
                         displayView(5);
-                        break;
+                        break;*/
 
                 }
                 return true;
@@ -151,7 +151,7 @@ public class MainActivity extends BaseActivity{
             fragmentTransaction.replace(R.id.containerView, fragment, title);
 //            fragmentTransaction.addToBackStack(title);
             fragmentTransaction.commit();
-            if(isHome)
+            /*if(isHome)
             {
                 getSupportActionBar().setLogo(R.drawable.logo_header);
                 getSupportActionBar().setDisplayUseLogoEnabled(true);
@@ -162,7 +162,7 @@ public class MainActivity extends BaseActivity{
                 getSupportActionBar().setDisplayUseLogoEnabled(false);
                 getSupportActionBar().setDisplayShowTitleEnabled(true);
                 setTitle(title);
-            }
+            }*/
 
         }
     }

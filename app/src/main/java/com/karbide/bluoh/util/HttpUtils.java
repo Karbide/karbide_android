@@ -6,6 +6,7 @@ import com.karbide.bluoh.datatypes.LoginResponse;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.SyncHttpClient;
 
 import cz.msebera.android.httpclient.entity.StringEntity;
 
@@ -13,11 +14,17 @@ public class HttpUtils
 {
     private static final String BASE_URL = "http://api.chequemate.io/";
     private static AsyncHttpClient client = new AsyncHttpClient();
-
+    private static AsyncHttpClient syncclient = new SyncHttpClient();
     public static void get(Context ctx, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         LoginResponse userInfo = AppSharedPreference.getInstance(ctx).getUserInfo();
         client.setBasicAuth(userInfo.getUsername(),userInfo.getPassword());
         client.get(getAbsoluteUrl(url), params, responseHandler);
+    }
+
+    public static void getWithSyncHttpClient(Context ctx, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        LoginResponse userInfo = AppSharedPreference.getInstance(ctx).getUserInfo();
+        syncclient.setBasicAuth(userInfo.getUsername(),userInfo.getPassword());
+        syncclient.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
     public static void post(Context ctx,String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {

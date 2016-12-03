@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -20,12 +22,15 @@ import android.widget.Toast;
 
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 public class ShareFragment extends BaseFragment
 {
@@ -35,6 +40,8 @@ public class ShareFragment extends BaseFragment
     public ShareDialog mShareDialog;
     private GridView shareAppsGrid;
     private ScrollView parentView;
+    private int REQUEST_INVITE = 1000;
+    private Button btnInvite;
 
     public ShareFragment()
     {
@@ -100,11 +107,18 @@ public class ShareFragment extends BaseFragment
         this.mShareDialog = new ShareDialog(getActivity());
         final ShareAdapter adapter=new ShareAdapter(getActivity(), queryShareIntent());
         this.shareAppsGrid.setAdapter(adapter);
+        btnInvite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onInviteClicked();
+            }
+        });
         return layout;
     }
 
     private void initView(View view)
     {
+        btnInvite = (Button)view.findViewById(R.id.btnInvite);
         parentView = (ScrollView)view.findViewById(R.id.parentView);
         shareAppsGrid = (GridView)view.findViewById(R.id.shareApps);
     }
@@ -198,4 +212,33 @@ public class ShareFragment extends BaseFragment
             TextView name;
             ImageView logo;
         }}
+
+    private void onInviteClicked() {
+        Intent intent = new AppInviteInvitation.IntentBuilder("INVITE")
+                .setMessage("Invite Friends")
+                .setDeepLink(Uri.parse("http://fourbrick.com/"))
+                .setCustomImage(Uri.parse("http://fourbrick.com/wp-content/themes/Umbrella/fourbricknew/img/logo.png"))
+                .setCallToActionText("OPEN")
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                for (String id : ids) {
+                    Log.d(TAG, "onActivityResult: sent invitation " + id);
+                }
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                // ...
+            }
+        }
+    }
 }

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -48,23 +49,34 @@ public class Splash extends BaseActivity implements View.OnClickListener, Facebo
     private Button btnFacebokSignup;
     private CallbackManager callbackManager;
     private LoginManager loginManager;
+    private LinearLayout fbLoginLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         subscribeToPushService();
+        fbLoginLayout = (LinearLayout)findViewById(R.id.fbLoginLayout);
         imageView = (ImageView)findViewById(R.id.imvLogo);
         btnFacebokSignup = (Button) findViewById(R.id.btnFacebookSignup);
+        AppUtil.LogError("TAG", ""+AppSharedPreference.getInstance(this).getGcmId());
         if(AppSharedPreference.getInstance(this).getUserInfo() != null)
         {
+            fbLoginLayout.setVisibility(View.GONE);
             imageView.setVisibility(View.VISIBLE);
             imageView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.splash_animation));
             openNextScreen();
+            /*fbLoginLayout.setVisibility(View.VISIBLE);
+            btnFacebokSignup.setOnClickListener(this);
+            loginManager = LoginManager.getInstance();
+            callbackManager = CallbackManager.Factory.create();*/
         }
         else
         {
-            btnFacebokSignup.setVisibility(View.VISIBLE);
+            /*imageView.setVisibility(View.VISIBLE);
+            imageView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.splash_animation));
+            openNextScreen();*/
+            fbLoginLayout.setVisibility(View.VISIBLE);
             btnFacebokSignup.setOnClickListener(this);
             loginManager = LoginManager.getInstance();
             callbackManager = CallbackManager.Factory.create();
@@ -205,6 +217,7 @@ public class Splash extends BaseActivity implements View.OnClickListener, Facebo
 
     private void subscribeToPushService()
     {
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
         String token = FirebaseInstanceId.getInstance().getToken();
         if(token!=null) {
             Log.v("TAG", "gcm"+token);

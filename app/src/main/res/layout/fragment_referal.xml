@@ -22,7 +22,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="LET YOUR FRIEND KNOW ABOUT BLUOH AND LET THEM ENJOY ALL NEW NEWS READING EXPERIENCE !"
+                android:text="@string/invite_text_heading"
+                android:textAllCaps="false"
                 android:textColor="@color/colorPrimary"
                 app:met_typeface="MYRIADPRO-REGULAR.OTF"
                 android:layout_marginTop="@dimen/margin_20dp"/>
@@ -39,14 +40,25 @@
 
             <GridView
                 android:id="@+id/shareApps"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_25dp"
                 android:horizontalSpacing="10dp"
                 android:verticalSpacing="20dp"
                 android:stretchMode="columnWidth"
                 android:numColumns="2"
                 android:isScrollContainer="false" />
+
+            <com.karbide.bluoh.ui.CustomButton
+                android:id="@+id/btnInvite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/yellow"
+                android:text="Invite Friends"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="@dimen/margin_55dp"
+                android:layout_marginRight="@dimen/margin_55dp"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -1,15 +1,23 @@
 package com.karbide.bluoh.fragments;
 
+import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.ResultReceiver;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.database.AppDatabaseHelper;
+import com.karbide.bluoh.datadownloader.FetchArticleService;
 import com.karbide.bluoh.datatypes.AddBookmark;
 import com.karbide.bluoh.datatypes.Content;
 import com.karbide.bluoh.datatypes.HomeDataResponse;
@@ -39,6 +47,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private HomeDataResponse homeDataResponse;
     boolean isFirstRequest = true;
     private long startTime;
+    private AddressResultReceiver mResultReceiver;
 
     @Override
     public void onResume()
@@ -71,12 +80,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void onPageSelected(int position)
             {
-                long seconds = (Calendar.getInstance().getTimeInMillis()-startTime)/1000;
-                AppUtil.LogError("PAGE SELECTED", "PAGE SELECTED"+position+ " SECONDS:- "+seconds);
-                startTime = Calendar.getInstance().getTimeInMillis();
-                updateTrafic(seconds, position);
+//                long seconds = (Calendar.getInstance().getTimeInMillis()-startTime)/1000;
+//                AppUtil.LogError("PAGE SELECTED", "PAGE SELECTED"+position+ " SECONDS:- "+seconds);
+//                startTime = Calendar.getInstance().getTimeInMillis();
+//                updateTrafic(seconds, position);
                 if(position%3 == 0 && homeDataResponse.getLast() == false)
-                    getHomeData(String.valueOf(position/3));
+                    startIntentService(String.valueOf(position/3));
+//                    getHomeData(String.valueOf(position/3));
             }
 
             @Override
@@ -85,7 +95,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             }
         });
 
-        mainPager.setOnTouchListener(new OnSwipeTouchListener(getActivity())
+        /*mainPager.setOnTouchListener(new OnSwipeTouchListener(getActivity())
         {
             public void onSwipeTop() {
             }
@@ -106,7 +116,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 }
                 return gestureDetector.onTouchEvent(event);
             }
-        });
+        });*/
+        mResultReceiver = new AddressResultReceiver(new Handler(Looper.getMainLooper()));
         getHomeData("0");
     }
 
@@ -117,7 +128,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
     private void getHomeData(String pageNo)
     {
-        if (isFirstRequest)
+//        if (isFirstRequest)
             showProgressDialog(R.string.please_wait);
         RequestParams rp = new RequestParams();
         HttpUtils.get(getActivity(), String.format(AppConstants.HOME_DATA_ENDPOINT, pageNo), rp, new AsyncHttpResponseHandler()
@@ -133,19 +144,19 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                     if(statusCode == 200)
                     {
                         homeDataResponse = new Gson().fromJson(str, HomeDataResponse.class);
-                        if(isFirstRequest)
-                        {
+//                        if(isFirstRequest)
+//                        {
                             startTime = Calendar.getInstance().getTimeInMillis();
                             allDecks = homeDataResponse.getContent();
                             homePageAdapter = new HomePagerAdapter(getActivity(), HomeFragment.this, allDecks, HomeFragment.this);
                             mainPager.setAdapter(homePageAdapter);
-                        }
+                        /*}
                         else
                         {
                             allDecks.addAll(homeDataResponse.getContent());
                             homePageAdapter.notifyDataSetChanged();
-                        }
-                        isFirstRequest = false;
+                        }*/
+//                        isFirstRequest = false;
                     }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -381,5 +392,39 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 }
             }
         });
+    }
+
+
+    class AddressResultReceiver extends ResultReceiver
+    {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        /**
+         * Receives data sent from FetchAddressIntentService and updates the UI in MainActivity.
+         */
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData)
+        {
+            Log.d("ARTICLE", "onReceiveResult start");
+            String responseData = resultData.getString("result");
+            homeDataResponse = new Gson().fromJson(responseData, HomeDataResponse.class);
+            allDecks.addAll(homeDataResponse.getContent());
+            homePageAdapter.notifyDataSetChanged();
+            Log.d("ARTICLE", "onReceiveResult end");
+        }
+    }
+
+    /**
+     * Creates an intent, adds location data to it as an extra, and starts the intent service for
+     * fetching an address.
+     */
+    protected void startIntentService(String pageNo)
+    {
+        Intent intent = new Intent(getActivity(), FetchArticleService.class);
+        intent.putExtra("resultReceiver", mResultReceiver);
+        intent.putExtra("pageno", pageNo);
+        getActivity().startService(intent);
     }
 }

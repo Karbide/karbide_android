@@ -36,7 +36,7 @@
     <dimen name="category_full_view_article_text_content_layout_height">141dp</dimen>
     <dimen name="category_full_view_article_text_content_margin_left_right">12dp</dimen>
     <dimen name="category_full_view_article_image_margin_bottom">10dp</dimen>
-    <dimen name="category_full_view_article_headline_text_size">20sp</dimen>
+    <dimen name="category_full_view_article_headline_text_size">18sp</dimen>
     <dimen name="category_full_view_article_headline2_text_size">20sp</dimen>
     <dimen name="category_full_view_article_headline_line_spacing_extra">3sp</dimen>
     <dimen name="category_full_view_article_headline2_line_spacing_extra">4sp</dimen>
@@ -52,7 +52,7 @@
     <dimen name="category_full_view_controls_margin_bottom">13dp</dimen>
     <dimen name="category_full_view_controls_publisher_name_textsize">16sp</dimen>
     <dimen name="category_full_view_controls_date_textsize">16sp</dimen>
-    <dimen name="category_full_view_controls_watch_like_textsize">14sp</dimen>
+    <dimen name="category_full_view_controls_watch_like_textsize">12sp</dimen>
     <dimen name="category_full_view_controls_publisher_logo_width_height">54dp</dimen>
     <dimen name="category_full_view_controls_publisher_logo_margin_right">14dp</dimen>
     <dimen name="category_full_view_controls_like_watch_right_margin">2dp</dimen>

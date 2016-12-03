@@ -1,5 +1,6 @@
 package com.karbide.bluoh.ui;
 
+import android.support.v4.view.ViewPager;
 import android.view.View;
 
 
@@ -7,7 +8,7 @@ import android.view.View;
 /**
  * The Class DepthVerticalPageTransformer.
  */
-public class DepthVerticalPageTransformer implements VerticalViewPager.PageTransformer {
+public class DepthVerticalPageTransformer implements ViewPager.PageTransformer {
 	
 	/** The Constant TAG. */
 	@SuppressWarnings("unused")

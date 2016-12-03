@@ -19,5 +19,7 @@
     <string name="refer_twitter">Twitter</string>
     <string name="refer_whatsapp">Whatsapp</string>
     <string name="help_us_do_better">Help us do better !</string>
+    <string name="invite_text_heading">Let your friends know about Bluoh and let them enjoy interesting and new content!</string>
 
+    <string name="powered_by_text"><![CDATA[<a href=\"http://www.newsapi.org\">Powered By NewsAPI</a>]]></string>
 </resources>

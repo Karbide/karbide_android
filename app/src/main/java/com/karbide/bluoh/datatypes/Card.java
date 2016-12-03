@@ -15,7 +15,7 @@ public class Card {
     @SerializedName("content")
     @Expose
     private String content;
-    @SerializedName("source")
+    @SerializedName("sourceName")
     @Expose
     private String source;
     @SerializedName("url")

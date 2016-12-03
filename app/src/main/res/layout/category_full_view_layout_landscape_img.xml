@@ -39,7 +39,7 @@
                 android:layout_marginTop="@dimen/category_full_view_article_text_content_margin_left_right">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profile_image"
+                    android:id="@+id/ivAuthorImage"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/ic_person"
@@ -61,6 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/off_white"
+                android:textColorLink="@color/off_white"
                 app:typeface="Roboto-Light.ttf"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
@@ -87,7 +88,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/category_text_color_fullview_landscape"
-                app:typeface="RobotoCondensed-Light.ttf" >
+                app:typeface="RobotoCondensed-Bold.ttf"
+                android:maxLines="3">
             </com.karbide.bluoh.ui.CustomTextView>
 
             <com.karbide.bluoh.ui.CustomTextView
@@ -96,7 +98,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/category_text_color_fullview_landscape"
-                app:typeface="Roboto-Light.ttf">
+                app:typeface="Roboto-Light.ttf"
+                android:maxLines="6">
             </com.karbide.bluoh.ui.CustomTextView>
         </LinearLayout>
         <View

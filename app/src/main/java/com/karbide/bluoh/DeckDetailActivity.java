@@ -88,8 +88,8 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
             public void onSwipeLeft()
             {
                 if(allCards != null && allCards.size()>0)
-                    AppUtil.openNativeWebView(DeckDetailActivity.this, allCards.get(mainPager.getCurrentItem()).getUrl());
-//                    AppUtil.openUrlInWeb(DeckDetailActivity.this,allCards.get(mainPager.getCurrentItem()).getUrl());
+                    AppUtil.openNativeWebView(DeckDetailActivity.this, getBundle(mainPager.getCurrentItem()));
+//                    AppUtil.openNativeWebView(DeckDetailActivity.this, allCards.get(mainPager.getCurrentItem()).getUrl());
             }
             public void onSwipeBottom() {
             }
@@ -248,4 +248,14 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
             }
         });
     }
+
+    private Bundle getBundle(int position)
+    {
+        String data = new Gson().toJson(deckContent.getCards().get(position), Card.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("data", ""+data);
+        bundle.putInt("deckId", deckContent.getDeckId());
+        return bundle;
+    }
+
 }

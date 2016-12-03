@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -143,7 +144,7 @@ public class AppUtil
 
 
     public static void applyFontToMenuItem(Context ctx, MenuItem mi) {
-        Typeface font = Typeface.createFromAsset(ctx.getAssets(), "Roboto-Light.ttf");
+        Typeface font = Typeface.createFromAsset(ctx.getAssets(), "Roboto-Regular.ttf");
         SpannableString mNewTitle = new SpannableString(mi.getTitle());
         mNewTitle.setSpan(new CustomTypefaceSpan("" , font), 0 , mNewTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         mi.setTitle(mNewTitle);
@@ -238,13 +239,14 @@ public class AppUtil
         context.startActivity(intent);
     }
 
-    public static void openNativeWebView(Context context, String url) {
-        if (url.substring(0, 4).equalsIgnoreCase("http") == false) {
+    public static void openNativeWebView(Context context, Bundle url)
+    {
+       /* if (url.substring(0, 4).equalsIgnoreCase("http") == false) {
             url = "http:\\" + url;
-        }
+        }*/
 
         Intent intent = new Intent(context, WebViewActivity.class);
-        intent.putExtra("url", url);
+        intent.putExtras(url);
         context.startActivity(intent);
     }
 

@@ -15,6 +15,13 @@
         android:layout_gravity="center"
         android:background="@android:color/transparent"
         android:button="@drawable/selector_like_button_dark" />
+
+    <CheckBox
+        android:layout_width="@dimen/category_full_view_controls_button_width"
+        android:layout_height="@dimen/category_full_view_controls_button_height"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent"
+        android:button="@null" />
     <com.karbide.bluoh.ui.CustomTextView
         android:id="@+id/tvNewsSource"
         android:layout_width="0dp"
@@ -23,7 +30,22 @@
         android:textColor="@color/black_overlay"
         app:typeface="Roboto-Light.ttf"
         android:layout_gravity="center_vertical"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:visibility="gone"/>
+    <LinearLayout
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="3dp"
+        android:id="@+id/llSourceImage"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:gravity="center">
+    <ImageView
+        android:id="@+id/ivSourceImage"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"/>
+    </LinearLayout>
    <!-- <View
         android:layout_width="0dp"
         android:layout_weight="1"

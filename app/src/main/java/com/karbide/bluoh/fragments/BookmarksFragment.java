@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.karbide.bluoh.R;
+import com.karbide.bluoh.datatypes.Card;
 import com.karbide.bluoh.datatypes.Content;
 import com.karbide.bluoh.datatypes.HomeDataResponse;
 import com.karbide.bluoh.ui.DepthVerticalPageTransformer;
@@ -41,7 +42,6 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
     public void onResume()
     {
         super.onResume();
-//        ((MainActivity)getActivity()).setOtherTitle("BOOKMARKS");
     }
     @Nullable
     @Override
@@ -56,11 +56,7 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
         super.onViewCreated(view, savedInstanceState);
         mainPager = (VerticalViewPager)view.findViewById(R.id.mainPager);
         tvBlankTemplate = (TextView)view.findViewById(R.id.tvBlankTemplate);
-//        allDecks = AppDatabaseHelper.getInstance(getActivity()).getBookmarks();
-
         getBookMark("0");
-
-
     }
 
     @Override
@@ -106,8 +102,7 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
 
                 public void onSwipeLeft()
                 {
-                    AppUtil.openNativeWebView(getActivity(), allDecks.get(mainPager.getCurrentItem()).getCards().get(0).getUrl());
-//                    AppUtil.openUrlInWeb(getActivity(), allDecks.get(mainPager.getCurrentItem()).getCards().get(0).getUrl());
+                    AppUtil.openNativeWebView(getActivity(),getBundle(mainPager.getCurrentItem()));
                 }
 
                 public void onSwipeBottom() {
@@ -184,4 +179,14 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
             }
         });
     }
+
+    private Bundle getBundle(int position)
+    {
+        String data = new Gson().toJson(allDecks.get(position).getCards().get(0), Card.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("data", ""+data);
+        bundle.putInt("deckId", allDecks.get(position).getDeckId());
+        return bundle;
+    }
+
 }

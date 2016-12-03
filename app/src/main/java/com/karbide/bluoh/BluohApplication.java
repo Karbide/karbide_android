@@ -2,6 +2,8 @@ package com.karbide.bluoh;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
@@ -11,6 +13,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+
 import io.fabric.sdk.android.Fabric;
 
 // TODO: Auto-generated Javadoc
@@ -29,7 +33,8 @@ public class BluohApplication extends Application {
      * @see android.app.Application#onCreate()
      */
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         _instance = this;
         context = getApplicationContext();
         super.onCreate();
@@ -41,7 +46,14 @@ public class BluohApplication extends Application {
 
 
     public static void initImageLoader(Context context) {
-        DisplayImageOptions options = new DisplayImageOptions.Builder().build();
+        BitmapFactory.Options resizeOptions = new BitmapFactory.Options();
+        resizeOptions.inSampleSize = 3; // decrease size 3 times
+        resizeOptions.inScaled = true;
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .decodingOptions(resizeOptions)
+                .cacheOnDisk(true)
+                .build();
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(context);
         config.threadPriority(Thread.NORM_PRIORITY - 2);
         config.defaultDisplayImageOptions(options);
