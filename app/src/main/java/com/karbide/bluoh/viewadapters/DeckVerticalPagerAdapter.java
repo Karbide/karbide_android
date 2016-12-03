@@ -221,7 +221,6 @@ public class DeckVerticalPagerAdapter extends PagerAdapter
 			tvSummary.setText(summary.getContent());
 			tvAuthor.setText(response.getAuthor());
 //			ImageLoader.getInstance().displayImage(_allDecks.get(position).getAuthorImage(), ivAuthorImage);
-//			Glide.with(_context).load(_allDecks.get(position).getAuthorImage()).into(ivAuthorImage);
 			if(summary.getMedia().getSource() != null && !summary.getMedia().getSource().equals(""))
 				tvMediaCopyRight.setText(_context.getResources().getString(R.string.copyright_symbol)+" "+summary.getMedia().getSource());
 			if(summary.getSource()!= null && (summary.getSource().contains("http")
