@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Bluoh2.iml" filepath="$PROJECT_DIR$/Bluoh2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/karbide_android.iml" filepath="$PROJECT_DIR$/karbide_android.iml" />
     </modules>
   </component>
 </project>
