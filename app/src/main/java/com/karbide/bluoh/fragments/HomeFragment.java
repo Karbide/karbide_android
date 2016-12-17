@@ -1,19 +1,20 @@
 package com.karbide.bluoh.fragments;
 
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.NativeAd;
 import com.google.gson.Gson;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.database.AppDatabaseHelper;
@@ -27,7 +28,6 @@ import com.karbide.bluoh.ui.VerticalViewPager;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
 import com.karbide.bluoh.util.HttpUtils;
-import com.karbide.bluoh.util.OnSwipeTouchListener;
 import com.karbide.bluoh.viewadapters.HomePagerAdapter;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -119,6 +119,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         });*/
         mResultReceiver = new AddressResultReceiver(new Handler(Looper.getMainLooper()));
         getHomeData("0");
+
     }
 
     @Override
@@ -150,6 +151,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                             allDecks = homeDataResponse.getContent();
                             homePageAdapter = new HomePagerAdapter(getActivity(), HomeFragment.this, allDecks, HomeFragment.this);
                             mainPager.setAdapter(homePageAdapter);
+                            showNativeAd();
                         /*}
                         else
                         {
@@ -426,5 +428,37 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         intent.putExtra("resultReceiver", mResultReceiver);
         intent.putExtra("pageno", pageNo);
         getActivity().startService(intent);
+    }
+
+
+    private void showNativeAd()
+    {
+        final NativeAd nativeAd = new NativeAd(getActivity(), "800960263379262_814380178703937");
+        nativeAd.setAdListener(new AdListener()
+        {
+            @Override
+            public void onError(Ad ad, AdError error)
+            {
+                // Ad error callback
+                AppUtil.showToast(getActivity(), "Ad Loaded Error");
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Ad loaded callback
+                AppUtil.showToast(getActivity(), "Ad Loaded Ad Loaded");
+                homePageAdapter.nativeAd = nativeAd;
+                homePageAdapter.loadedAd = ad;
+                homePageAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+            }
+        });
+
+        // Request an ad
+        nativeAd.loadAd();
     }
 }

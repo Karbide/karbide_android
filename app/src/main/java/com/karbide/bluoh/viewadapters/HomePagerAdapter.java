@@ -1,9 +1,10 @@
 package com.karbide.bluoh.viewadapters;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager.LayoutParams;
+import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -17,22 +18,26 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.data.StreamAssetPathFetcher;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdChoicesView;
+import com.facebook.ads.MediaView;
+import com.facebook.ads.NativeAd;
 import com.google.gson.Gson;
 import com.karbide.bluoh.DeckDetailActivity;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.database.AppDatabaseHelper;
 import com.karbide.bluoh.datatypes.Card;
 import com.karbide.bluoh.datatypes.Content;
-import com.karbide.bluoh.datatypes.Deck;
 import com.karbide.bluoh.ui.CustomTextView;
 import com.karbide.bluoh.util.AppUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -53,8 +58,9 @@ public class HomePagerAdapter extends PagerAdapter {
 	private OnClickListener _onClickListener = null;
 	/** The _on checked change listener. */
 	private CompoundButton.OnCheckedChangeListener _onCheckedChangeListener = null;
-	private String adPlacementId = "893127754073705_909205119132635";
-	
+	private String adPlacementId = "800960263379262_814380178703937";
+	public static NativeAd nativeAd = null;
+	public static Ad loadedAd = null;
 	/**
 	 * Instantiates a new vertical pager adapter.
 	 * 
@@ -67,6 +73,7 @@ public class HomePagerAdapter extends PagerAdapter {
 		_onClickListener = onClickListener;
 		_onCheckedChangeListener = onCheckedChangeListener;
 		_allDecks = allDecks;
+//		showNativeAd();
 	}
 
 
@@ -79,8 +86,12 @@ public class HomePagerAdapter extends PagerAdapter {
 	@Override
 	public int getCount() {
 //		AppUtil.LogMsg(TAG, "Item++ count: " + _allDecks.size());
-		if (null != _allDecks) {
-			return _allDecks.size();
+		if (null != _allDecks)
+		{
+			if(nativeAd != null && loadedAd!= null)
+				return _allDecks.size()+((_allDecks.size()/6)+1);
+			else
+				return _allDecks.size();
 		}
 		else {
 			return 0;
@@ -97,28 +108,57 @@ public class HomePagerAdapter extends PagerAdapter {
 	@Override
 	public Object instantiateItem(ViewGroup container, int position)
 	{
-//		AppUtil.LogMsg(TAG, "instantiateItem++ position: " + position);
+		AppUtil.LogMsg(TAG, "instantiateItem++ position: " + position+" ALl Deck size:- "+_allDecks.size());
 		View view = null;
-		if(_allDecks.get(position).getType()!= null && _allDecks.get(position).getType().equalsIgnoreCase("deck"))
+
+
+		if(nativeAd != null && loadedAd != null)
 		{
-			view = initializeLandscapeImageLayoutDeck(position);
+//			if(position > 0 && position%6 == 0)
+			if(position%6 == 0)
+			{
+				view = initializeAdView(loadedAd);
+			}
+			else
+			{
+//				int index = position - (int)Math.floor(position/6);
+				int index = position - ((int)Math.floor(position/6)+1);
+				AppUtil.LogMsg(TAG, "Index here++"+(int)Math.floor(position/6));
+				if (_allDecks.get(index).getType() != null && _allDecks.get(index).getType().equalsIgnoreCase("deck"))
+				{
+					view = initializeLandscapeImageLayoutDeck(index);
+				} else
+				{
+					if (_allDecks.get(index).getCards().get(0).getTemplate().equalsIgnoreCase("Full"))
+						view = initializePortraitImageLayout(index);
+					else if (_allDecks.get(index).getCards().get(0).getTemplate().equalsIgnoreCase("70_30"))
+						view = initializeSeventyTirtyLayout(index);
+					else
+						view = initializeLandscapeImageLayout(index);
+				}
+			}
 		}
 		else
 		{
-			if(_allDecks.get(position).getCards().get(0).getTemplate().equalsIgnoreCase("Full"))
-				view = initializePortraitImageLayout(position);
-			else if(_allDecks.get(position).getCards().get(0).getTemplate().equalsIgnoreCase("70_30"))
-				view = initializeSeventyTirtyLayout(position);
-			else
-				view = initializeLandscapeImageLayout(position);
+			if (_allDecks.get(position).getType() != null && _allDecks.get(position).getType().equalsIgnoreCase("deck")) {
+				view = initializeLandscapeImageLayoutDeck(position);
+			} else {
+				if (_allDecks.get(position).getCards().get(0).getTemplate().equalsIgnoreCase("Full"))
+					view = initializePortraitImageLayout(position);
+				else if (_allDecks.get(position).getCards().get(0).getTemplate().equalsIgnoreCase("70_30"))
+					view = initializeSeventyTirtyLayout(position);
+				else
+					view = initializeLandscapeImageLayout(position);
+			}
 		}
 		if (null != view) {
-//			AppUtil.LogError("BLUOH ", " VIEW IS NOT NULL");
-			container.addView(view, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+			container.addView(view, ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.MATCH_PARENT);
 			view.setTag(position);
 		}
+
 		return view;
 	}
+
 	/**
 	 * Initialize landscape image layout.
 	 *
@@ -414,5 +454,51 @@ public class HomePagerAdapter extends PagerAdapter {
 		bundle.putInt("deckId", _allDecks.get(position).getDeckId());
 		return bundle;
 	}
+
+
+	private View initializeAdView(Ad ad)
+	{
+		LayoutInflater inflater = LayoutInflater.from(_context);
+		LinearLayout parentView = (LinearLayout) inflater.inflate(R.layout.ad_container, null);
+		LinearLayout nativeAdContainer = (LinearLayout)parentView.findViewById(R.id.native_ad_container);
+		// Inflate the Ad view.  The layout referenced should be the one you created in the last step.
+		LinearLayout adView = (LinearLayout) inflater.inflate(R.layout.add_layout, nativeAdContainer, false);
+		nativeAdContainer.addView(adView);
+
+		// Create native UI using the ad metadata.
+		ImageView nativeAdIcon = (ImageView) adView.findViewById(R.id.native_ad_icon);
+		TextView nativeAdTitle = (TextView) adView.findViewById(R.id.native_ad_title);
+		MediaView nativeAdMedia = (MediaView) adView.findViewById(R.id.native_ad_media);
+		TextView nativeAdSocialContext = (TextView) adView.findViewById(R.id.native_ad_social_context);
+		TextView nativeAdBody = (TextView) adView.findViewById(R.id.native_ad_body);
+		Button nativeAdCallToAction = (Button) adView.findViewById(R.id.native_ad_call_to_action);
+
+		// Set the Text.
+		nativeAdTitle.setText(nativeAd.getAdTitle());
+		nativeAdSocialContext.setText(nativeAd.getAdSocialContext());
+		nativeAdBody.setText(nativeAd.getAdBody());
+		nativeAdCallToAction.setText(nativeAd.getAdCallToAction());
+
+		// Download and display the ad icon.
+		NativeAd.Image adIcon = nativeAd.getAdIcon();
+		NativeAd.downloadAndDisplayImage(adIcon, nativeAdIcon);
+
+		// Download and display the cover image.
+		nativeAdMedia.setNativeAd(nativeAd);
+
+		// Add the AdChoices icon
+		LinearLayout adChoicesContainer = (LinearLayout)adView.findViewById(R.id.ad_choices_container);
+		AdChoicesView adChoicesView = new AdChoicesView(_context, nativeAd, true);
+		adChoicesContainer.addView(adChoicesView);
+
+		// Register the Title and CTA button to listen for clicks.
+		List<View> clickableViews = new ArrayList<>();
+		clickableViews.add(nativeAdTitle);
+		clickableViews.add(nativeAdCallToAction);
+		nativeAd.registerViewForInteraction(nativeAdContainer,clickableViews);
+		return parentView;
+	}
+
+
 
 }
