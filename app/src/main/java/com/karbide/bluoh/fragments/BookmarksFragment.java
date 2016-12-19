@@ -37,7 +37,7 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
     private TextView tvBlankTemplate;
     private HomePagerAdapter homePageAdapter;
     private HomeDataResponse homeDataResponse;
-    boolean isFirstRequest = true;
+    boolean isFirstRequest = false;
     @Override
     public void onResume()
     {
@@ -56,7 +56,13 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
         super.onViewCreated(view, savedInstanceState);
         mainPager = (VerticalViewPager)view.findViewById(R.id.mainPager);
         tvBlankTemplate = (TextView)view.findViewById(R.id.tvBlankTemplate);
-        getBookMark("0");
+       if(getArguments() != null) {
+            homeDataResponse = new Gson().fromJson(getArguments().getString("bookmark"), HomeDataResponse.class);
+            allDecks = homeDataResponse.getContent();
+            setBookmarkData();
+        }
+        else
+            getBookMark("0");
     }
 
     @Override

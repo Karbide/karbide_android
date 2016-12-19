@@ -48,12 +48,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     boolean isFirstRequest = true;
     private long startTime;
     private AddressResultReceiver mResultReceiver;
-
+    private String homedata = null;
     @Override
     public void onResume()
     {
         super.onResume();
-//        ((MainActivity)getActivity()).setHomeTitle();
     }
 
     @Override
@@ -66,6 +65,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        homedata = getArguments().getString("homedata");
         mainPager = (VerticalViewPager)view.findViewById(R.id.mainPager);
         mainPager.setPageTransformer(false, new DepthVerticalPageTransformer());
         mainPager.setOffscreenPageLimit(3);
@@ -118,13 +118,25 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             }
         });*/
         mResultReceiver = new AddressResultReceiver(new Handler(Looper.getMainLooper()));
-        getHomeData("0");
-
+        if(homedata != null)
+            setHomePageData(homedata);
+        else
+            getHomeData("0");
     }
 
     @Override
     public void onClick(View view) {
 
+    }
+
+    private void setHomePageData(String data)
+    {
+        homeDataResponse = new Gson().fromJson(data, HomeDataResponse.class);
+        startTime = Calendar.getInstance().getTimeInMillis();
+        allDecks = homeDataResponse.getContent();
+        homePageAdapter = new HomePagerAdapter(getActivity(), HomeFragment.this, allDecks, HomeFragment.this);
+        mainPager.setAdapter(homePageAdapter);
+        showNativeAd();
     }
 
     private void getHomeData(String pageNo)

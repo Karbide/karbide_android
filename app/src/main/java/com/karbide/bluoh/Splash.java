@@ -31,6 +31,7 @@ import com.karbide.bluoh.util.AppSharedPreference;
 import com.karbide.bluoh.util.AppUtil;
 import com.karbide.bluoh.util.HttpUtils;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -66,16 +67,9 @@ public class Splash extends BaseActivity implements View.OnClickListener, Facebo
             imageView.setVisibility(View.VISIBLE);
             imageView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.splash_animation));
             openNextScreen();
-            /*fbLoginLayout.setVisibility(View.VISIBLE);
-            btnFacebokSignup.setOnClickListener(this);
-            loginManager = LoginManager.getInstance();
-            callbackManager = CallbackManager.Factory.create();*/
         }
         else
         {
-            /*imageView.setVisibility(View.VISIBLE);
-            imageView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.splash_animation));
-            openNextScreen();*/
             fbLoginLayout.setVisibility(View.VISIBLE);
             btnFacebokSignup.setOnClickListener(this);
             loginManager = LoginManager.getInstance();
@@ -85,14 +79,69 @@ public class Splash extends BaseActivity implements View.OnClickListener, Facebo
 
     private void openNextScreen()
     {
-        new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable()
+        {
             public void run()
             {
-                    Intent intent = new Intent(Splash.this, MainActivity.class);
-                    startActivity(intent);
-                    Splash.this.finish();
+                getHomeData("0");
             }
         }, SPLASH_TIME);
+    }
+
+    private void openHomeScreen(String homeData)
+    {
+        Intent intent = new Intent(Splash.this, MainActivity.class);
+        intent.putExtra("homedata", homeData);
+        startActivity(intent);
+        Splash.this.finish();
+    }
+
+    private void getHomeData(String pageNo)
+    {
+        RequestParams rp = new RequestParams();
+        HttpUtils.get(Splash.this, String.format(AppConstants.HOME_DATA_ENDPOINT, pageNo), rp, new AsyncHttpResponseHandler()
+        {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
+            {
+                try
+                {
+                    String str = new String(responseBody, "utf-8");
+                    AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR"+statusCode+str);
+                    if(statusCode == 200)
+                    {
+                        openHomeScreen(str);
+                    }
+                    else
+                    {
+
+                    }
+                }
+                catch (UnsupportedEncodingException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                try
+                {
+                    if(error!= null)
+                    {
+                        AppUtil.showToast(Splash.this, error.getMessage()+error.getLocalizedMessage());
+                    }
+                    else
+                    {
+                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
+                        String str = new String(responseBody, "utf-8");
+                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override

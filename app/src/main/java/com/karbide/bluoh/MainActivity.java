@@ -1,6 +1,5 @@
 package com.karbide.bluoh;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
@@ -9,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,20 +15,27 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
+import com.karbide.bluoh.datatypes.HomeDataResponse;
 import com.karbide.bluoh.fragments.BookmarksFragment;
 import com.karbide.bluoh.fragments.HomeFragment;
 import com.karbide.bluoh.fragments.InviteFragment;
 import com.karbide.bluoh.fragments.ShareFragment;
+import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppSharedPreference;
 import com.karbide.bluoh.util.AppUtil;
+import com.karbide.bluoh.util.HttpUtils;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import java.io.UnsupportedEncodingException;
+
+import cz.msebera.android.httpclient.Header;
 
 
 public class MainActivity extends BaseActivity{
@@ -42,6 +47,8 @@ public class MainActivity extends BaseActivity{
     private final Handler mHideHandler = new Handler();
     private AppBarLayout appBarLayout;
     private boolean isHome;
+    private String homeData;
+    private String bookmarkData;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -54,8 +61,11 @@ public class MainActivity extends BaseActivity{
         setSupportActionBar(toolbar);
 
         initNavigationDrawer();
+        if(getIntent().getExtras() != null)
+            homeData = getIntent().getExtras().getString("homedata", null);
 //        subscribeToPushService();
         displayView(0);
+
     }
 
     public void initNavigationDrawer()
@@ -83,19 +93,11 @@ public class MainActivity extends BaseActivity{
                     case R.id.icRateUs:
                         displayView(4);
                         break;
-                    /*case R.id.icSetting:
-                        displayView(5);
-                        break;*/
-
                 }
                 return true;
             }
         });
-       /* View header = navigationView.getHeaderView(0);
-        TextView tv_email = (TextView)header.findViewById(R.id.tv_email);
-        tv_email.setText("Basant Kumar");*/
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer);
-
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar, R.string.drawer_open, R.string.drawer_close){
             @Override
             public void onDrawerClosed(View v){
@@ -119,18 +121,24 @@ public class MainActivity extends BaseActivity{
         {
             case 0:
                 isHome =true;
+                Bundle bundle = new Bundle();
+                bundle.putString("homedata", homeData);
                 fragment = new HomeFragment();
+                fragment.setArguments(bundle);
                 break;
             case 1:
                 isHome =false;
                 title = "BOOKMARKS";
+                Bundle bundlebm = new Bundle();
+                bundlebm.putString("bookmark", bookmarkData);
+                AppUtil.showToast(MainActivity.this, "BOOKMARK"+bookmarkData);
                 fragment = new BookmarksFragment();
+                fragment.setArguments(bundlebm);
                 break;
             case 2:
                 isHome =false;
                 title = "INVITE";
                 fragment = new ShareFragment();
-//                AppUtil.shareData(MainActivity.this, "Hey , I found this amazing app, lets join Bluoh and have amazing experience !");
                 break;
             case 3:
                 isHome =false;
@@ -149,28 +157,13 @@ public class MainActivity extends BaseActivity{
 
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.containerView, fragment, title);
-//            fragmentTransaction.addToBackStack(title);
             fragmentTransaction.commit();
-            /*if(isHome)
-            {
-                getSupportActionBar().setLogo(R.drawable.logo_header);
-                getSupportActionBar().setDisplayUseLogoEnabled(true);
-                getSupportActionBar().setDisplayShowTitleEnabled(false);
-            }
-            else
-            {
-                getSupportActionBar().setDisplayUseLogoEnabled(false);
-                getSupportActionBar().setDisplayShowTitleEnabled(true);
-                setTitle(title);
-            }*/
-
         }
     }
 
     private void hideViews(AppBarLayout mToolbar) {
         mVisible = false;
         mToolbar.animate().translationY(-mToolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2));
-
     }
 
     private void showViews(AppBarLayout mToolbar) {
@@ -207,7 +200,8 @@ public class MainActivity extends BaseActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.miProfile:
-                displayView(1);
+//                displayView(1);
+                getBookMark("0");
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -236,5 +230,58 @@ public class MainActivity extends BaseActivity{
             }
         }
         super.onBackPressed();
+    }
+
+
+    private void getBookMark(String pageNo)
+    {
+        showProgressDialog(R.string.please_wait);
+        RequestParams rp = new RequestParams();
+        HttpUtils.get(this, String.format(AppConstants.GET_BOOKMARK, pageNo), rp, new AsyncHttpResponseHandler()
+        {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
+            {
+                hideProgressDialog();
+                try
+                {
+                    String str = new String(responseBody, "utf-8");
+                    AppUtil.LogMsg("RESPONSE", "RESPONSE  BOOMARK MAIN"+statusCode+str);
+                    if(statusCode == 200)
+                    {
+                        HomeDataResponse homeData = new Gson().fromJson(str, HomeDataResponse.class);
+                        if(homeData.getContent() != null && homeData.getContent().size()>0)
+                        {
+                            bookmarkData = str;
+                            displayView(1);
+                        }
+                        else
+                            AppUtil.showToast(MainActivity.this, "No bookmark found");
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                hideProgressDialog();
+                try
+                {
+                    if(error!= null)
+                    {
+                        AppUtil.showToast(MainActivity.this, error.getMessage()+error.getLocalizedMessage());
+                    }
+                    else
+                    {
+                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
+                        String str = new String(responseBody, "utf-8");
+                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }
