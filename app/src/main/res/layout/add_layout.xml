@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/native_ad_unit"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,8 +12,24 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:background="@color/White"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_10dp">
+        <com.karbide.bluoh.ui.CustomTextView
+            app:typeface="Roboto-Regular.ttf"
+            android:id="@+id/native_ad_social_context"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/black"
+            android:textSize="10sp"/>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/ll_header"
         android:layout_width="match_parent"
@@ -22,68 +39,25 @@
 
         <ImageView
             android:id="@+id/native_ad_icon"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center_vertical"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="5dp">
 
             <TextView
                 android:id="@+id/native_ad_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textColor="@android:color/black"
                 android:textSize="15sp"/>
-
-            <TextView
-                android:id="@+id/sponsored_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lines="1"
-                android:text="Sponsored"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="10sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ad_choices_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="horizontal"/>
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:padding="5dp">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <TextView
-                android:id="@+id/native_ad_social_context"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:lines="2"
-                android:paddingRight="5dp"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="10sp"/>
 
             <TextView
                 android:id="@+id/native_ad_body"
@@ -95,14 +69,43 @@
                 android:textColor="@android:color/black"
                 android:textSize="10sp"/>
         </LinearLayout>
+        <Button
+            android:id="@+id/native_ad_call_to_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/yellow"
+            android:padding="@dimen/margin_3dp"
+            android:gravity="center"
+            android:textColor="@android:color/white"/>
     </LinearLayout>
-    <Button
-        android:id="@+id/native_ad_call_to_action"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:background="@color/bg_color"/>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_8dp"
-        android:layout_gravity="bottom"
-        android:background="@color/yellow"
+        android:orientation="horizontal"
         android:gravity="center"
-        android:textColor="@android:color/white"/>
+        android:paddingTop="@dimen/margin_5dp"
+        android:paddingBottom="@dimen/margin_5dp">
+        <com.karbide.bluoh.ui.CustomTextView
+            app:typeface="Roboto-Regular.ttf"
+            android:id="@+id/sponsored_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="Sponsored"
+            android:textColor="@android:color/black"
+            android:textSize="10sp"/>
+        <LinearLayout
+            android:id="@+id/ad_choices_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal"/>
+    </LinearLayout>
+
 </LinearLayout>

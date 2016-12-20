@@ -1,9 +1,10 @@
 package com.karbide.bluoh.datatypes;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Content {
 
@@ -23,7 +24,7 @@ public class Content {
     @Expose
     private String authorImage;
 
-    @SerializedName("displayName")
+    @SerializedName("authorHandle")
     @Expose
     private String displayName;
     @SerializedName("categories")
@@ -35,7 +36,7 @@ public class Content {
     @SerializedName("approver")
     @Expose
     private Approver approver;
-    @SerializedName("status")
+    @SerializedName("deckStatus")
     @Expose
     private String status;
     @SerializedName("likes")

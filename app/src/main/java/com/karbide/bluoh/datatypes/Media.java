@@ -6,13 +6,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class Media {
 
-    @SerializedName("type")
+    @SerializedName("mediaType")
     @Expose
     private String type;
-    @SerializedName("url")
+    @SerializedName("mediaUrl")
     @Expose
     private String url;
-    @SerializedName("source")
+    @SerializedName("mediaCredit")
     @Expose
     private String source;
 

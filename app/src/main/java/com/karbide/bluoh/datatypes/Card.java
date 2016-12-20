@@ -15,10 +15,13 @@ public class Card {
     @SerializedName("content")
     @Expose
     private String content;
-    @SerializedName("sourceName")
+    @SerializedName("articleSourceName")
     @Expose
-    private String source;
-    @SerializedName("url")
+    private String articleSourceName;
+    @SerializedName("articleSourceLogo")
+    @Expose
+    private String articleSourceLogo;
+    @SerializedName("articleWebUrl")
     @Expose
     private String url;
     @SerializedName("media")
@@ -27,6 +30,9 @@ public class Card {
     @SerializedName("template")
     @Expose
     private String template;
+    @SerializedName("cardStatus")
+    @Expose
+    private String cardStatus;
 
     /**
      *
@@ -82,12 +88,28 @@ public class Card {
         this.content = content;
     }
 
-    public String getSource() {
-        return source;
+    public String getArticleSourceName() {
+        return articleSourceName;
     }
 
-    public void setSource(String source) {
-        this.source = source;
+    public void setArticleSourceName(String articleSourceName) {
+        this.articleSourceName = articleSourceName;
+    }
+
+    public String getArticleSourceLogo() {
+        return articleSourceLogo;
+    }
+
+    public void setArticleSourceLogo(String articleSourceLogo) {
+        this.articleSourceLogo = articleSourceLogo;
+    }
+
+    public String getCardStatus() {
+        return cardStatus;
+    }
+
+    public void setCardStatus(String cardStatus) {
+        this.cardStatus = cardStatus;
     }
 
     /**

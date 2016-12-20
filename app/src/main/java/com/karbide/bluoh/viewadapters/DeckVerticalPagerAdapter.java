@@ -14,7 +14,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.database.AppDatabaseHelper;
@@ -216,27 +215,23 @@ public class DeckVerticalPagerAdapter extends PagerAdapter
 				});
 			}
 
-
 			tvHeadline.setText(summary.getTitle());
 			tvSummary.setText(summary.getContent());
 			tvAuthor.setText(response.getAuthor());
-//			ImageLoader.getInstance().displayImage(_allDecks.get(position).getAuthorImage(), ivAuthorImage);
 			if(summary.getMedia().getSource() != null && !summary.getMedia().getSource().equals(""))
 				tvMediaCopyRight.setText(_context.getResources().getString(R.string.copyright_symbol)+" "+summary.getMedia().getSource());
-			if(summary.getSource()!= null && (summary.getSource().contains("http")
-					|| summary.getSource().contains(".png") || summary.getSource().contains(".jpg")))
+			if(summary.getArticleSourceLogo()!= null )
 			{
-				Log.e("IMG", "SOURCE : "+summary.getSource());
+				Log.e("IMG", "SOURCE : "+summary.getArticleSourceLogo());
 				tvSource.setVisibility(View.GONE);
 				llSourceImage.setVisibility(View.VISIBLE);
-//				Glide.with(_context).load(summary.getSource()).into(ivSourceImage);
-				ImageLoader.getInstance().displayImage(summary.getSource(), ivSourceImage);
+				ImageLoader.getInstance().displayImage(summary.getArticleSourceLogo(), ivSourceImage);
 			}
 			else
 			{
 				tvSource.setVisibility(View.VISIBLE);
 				llSourceImage.setVisibility(View.GONE);
-				tvSource.setText("@"+summary.getSource());
+				tvSource.setText("@"+summary.getArticleSourceName());
 			}
 		}
 	}

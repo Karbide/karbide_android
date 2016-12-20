@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdChoicesView;
 import com.facebook.ads.MediaView;
@@ -210,6 +209,7 @@ public class HomePagerAdapter extends PagerAdapter {
 	{
 		if (null != view && null != summary)
 		{
+
 			CustomTextView tvHeadline = (CustomTextView) view.findViewById(R.id.textViewArticleHeadline);
 			CustomTextView tvSummary = (CustomTextView) view.findViewById(R.id.textViewArticleSummary);
 			CustomTextView tvSource = (CustomTextView) view.findViewById(R.id.tvNewsSource);
@@ -276,19 +276,18 @@ public class HomePagerAdapter extends PagerAdapter {
 				else
 					tvMediaCopyRight.setText(_context.getResources().getString(R.string.copyright_symbol) + " " + summary.getMedia().getSource());
 			}
-			if(summary.getSource()!= null && (summary.getSource().contains("http")
-					|| summary.getSource().contains(".png") || summary.getSource().contains(".jpg")))
+			if(summary.getArticleSourceLogo()!= null)
 			{
-				Log.e("IMG", "SOURCE : "+summary.getSource());
+				Log.e("IMG", "SOURCE : "+summary.getArticleSourceLogo());
 				tvSource.setVisibility(View.GONE);
 				llSourceImage.setVisibility(View.VISIBLE);
-				Glide.with(_context).load(summary.getSource()).into(ivSourceImage);
+				ImageLoader.getInstance().displayImage(summary.getArticleSourceLogo(), ivSourceImage);
 			}
 			else
 			{
 				tvSource.setVisibility(View.VISIBLE);
 				llSourceImage.setVisibility(View.GONE);
-				tvSource.setText("@"+summary.getSource());
+				tvSource.setText("@"+summary.getArticleSourceName());
 			}
 		}
 	}
@@ -382,19 +381,18 @@ public class HomePagerAdapter extends PagerAdapter {
 				else
 					tvMediaCopyRight.setText(_context.getResources().getString(R.string.copyright_symbol) + " " + summary.getMedia().getSource());
 			}
-			if(summary.getSource()!= null && (summary.getSource().contains("http") || summary.getSource().contains(".png") || summary.getSource().contains(".jpg")))
+			if(summary.getArticleSourceLogo()!= null)
 			{
-				Log.e("IMG", "SOURCE : "+summary.getSource());
+				Log.e("IMG", "SOURCE : "+summary.getArticleSourceLogo());
 				tvSource.setVisibility(View.GONE);
 				llSourceImage.setVisibility(View.VISIBLE);
-//				Glide.with(_context).load(summary.getSource()).into(ivSourceImage);
-				ImageLoader.getInstance().displayImage(summary.getSource(), ivSourceImage);
+				ImageLoader.getInstance().displayImage(summary.getArticleSourceLogo(), ivSourceImage);
 			}
 			else
 			{
 				tvSource.setVisibility(View.VISIBLE);
 				llSourceImage.setVisibility(View.GONE);
-				tvSource.setText("@"+summary.getSource());
+				tvSource.setText("@"+summary.getArticleSourceName());
 			}
 		}
 	}

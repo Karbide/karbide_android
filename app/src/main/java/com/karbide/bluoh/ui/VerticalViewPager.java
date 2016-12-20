@@ -72,6 +72,7 @@ public class VerticalViewPager extends ViewGroup {
 	 * If the app changes this when we don't expect it, we'll throw a big obnoxious exception.
 	 */
 	private int mExpectedAdapterCount;
+	private boolean paging = true;
 
 	static class ItemInfo {
 		Object object;
@@ -2855,4 +2856,6 @@ public class VerticalViewPager extends ViewGroup {
 			return llp.position - rlp.position;
 		}
 	}
+
+	public void setPaging(boolean p){ paging = p; }
 }

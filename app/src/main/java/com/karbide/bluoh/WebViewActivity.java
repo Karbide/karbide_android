@@ -18,12 +18,9 @@ import android.widget.ProgressBar;
 import com.google.gson.Gson;
 import com.karbide.bluoh.database.AppDatabaseHelper;
 import com.karbide.bluoh.datatypes.Card;
-import com.karbide.bluoh.datatypes.Content;
 import com.karbide.bluoh.ui.CustomTextView;
 import com.karbide.bluoh.util.AppUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by FourBrick on 5/12/2016.
@@ -64,18 +61,18 @@ public class WebViewActivity extends BaseActivity implements CompoundButton.OnCh
         ImageView ivSourceImage = (ImageView)findViewById(R.id.ivSourceImage);
         LinearLayout llSourceImage = (LinearLayout)findViewById(R.id.llSourceImage);
 
-        if(summary.getSource()!= null && (summary.getSource().contains("http") || summary.getSource().contains(".png") || summary.getSource().contains(".jpg")))
+        if(summary.getArticleSourceLogo()!= null)
         {
-            Log.e("IMG", "SOURCE : "+summary.getSource());
+            Log.e("IMG", "SOURCE : "+summary.getArticleSourceLogo());
             tvSource.setVisibility(View.GONE);
             llSourceImage.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(summary.getSource(), ivSourceImage);
+            ImageLoader.getInstance().displayImage(summary.getArticleSourceLogo(), ivSourceImage);
         }
         else
         {
             tvSource.setVisibility(View.VISIBLE);
             llSourceImage.setVisibility(View.GONE);
-            tvSource.setText("@"+summary.getSource());
+            tvSource.setText("@"+summary.getArticleSourceName());
         }
         buttonShare.setOnClickListener(new View.OnClickListener() {
             @Override

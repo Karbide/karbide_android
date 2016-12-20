@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -20,6 +21,7 @@ import com.karbide.bluoh.R;
 import com.karbide.bluoh.database.AppDatabaseHelper;
 import com.karbide.bluoh.datadownloader.FetchArticleService;
 import com.karbide.bluoh.datatypes.AddBookmark;
+import com.karbide.bluoh.datatypes.Card;
 import com.karbide.bluoh.datatypes.Content;
 import com.karbide.bluoh.datatypes.HomeDataResponse;
 import com.karbide.bluoh.datatypes.TrafficData;
@@ -28,6 +30,7 @@ import com.karbide.bluoh.ui.VerticalViewPager;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
 import com.karbide.bluoh.util.HttpUtils;
+import com.karbide.bluoh.util.OnSwipeTouchListener;
 import com.karbide.bluoh.viewadapters.HomePagerAdapter;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -49,6 +52,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private long startTime;
     private AddressResultReceiver mResultReceiver;
     private String homedata = null;
+    private static final int SWIPE_THRESHOLD = 100;
+    private static final int SWIPE_VELOCITY_THRESHOLD = 100;
     @Override
     public void onResume()
     {
@@ -92,36 +97,58 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void onPageScrollStateChanged(int state)
             {
+                AppUtil.LogError("STATE", "IS   "+state);
+                if(state == VerticalViewPager.SCROLL_STATE_IDLE)
+                    addTouchListener();
+                else
+                    removeTouchListener();
             }
         });
+        mResultReceiver = new AddressResultReceiver(new Handler(Looper.getMainLooper()));
+        if(homedata != null)
+            setHomePageData(homedata);
+        else
+            getHomeData("0");
+    }
 
-        /*mainPager.setOnTouchListener(new OnSwipeTouchListener(getActivity())
+
+    private void addTouchListener()
+    {
+        mainPager.setOnTouchListener(new OnSwipeTouchListener(getActivity())
         {
-            public void onSwipeTop() {
-            }
-            public void onSwipeRight() {
-            }
+            @Override
             public void onSwipeLeft()
             {
-                AppUtil.openNativeWebView(getActivity(), allDecks.get(mainPager.getCurrentItem()).getCards().get(0).getUrl());
-//                AppUtil.openUrlInWeb(getActivity(),allDecks.get(mainPager.getCurrentItem()).getCards().get(0).getUrl());
+                AppUtil.showToast(getActivity(), "On swipe left");
+//                AppUtil.openNativeWebView(getActivity(), getBundle());
             }
             public void onSwipeBottom() {
             }
 
             public boolean onTouch(View v, MotionEvent event)
             {
-               if (event.getAction() == MotionEvent.ACTION_DOWN)
+//                AppUtil.showToast(getActivity(), "On touchhhhhhhhhhhh");
+                if (event.getAction() == MotionEvent.ACTION_DOWN)
                 {
+
                 }
                 return gestureDetector.onTouchEvent(event);
             }
-        });*/
-        mResultReceiver = new AddressResultReceiver(new Handler(Looper.getMainLooper()));
-        if(homedata != null)
-            setHomePageData(homedata);
-        else
-            getHomeData("0");
+        });
+    }
+
+    private void removeTouchListener()
+    {
+        mainPager.setOnTouchListener(null);
+    }
+
+    private Bundle getBundle()
+    {
+        String data = new Gson().toJson(allDecks.get(mainPager.getCurrentItem()).getCards().get(0), Card.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("data", ""+data);
+        bundle.putInt("deckId", allDecks.get(mainPager.getCurrentItem()).getDeckId());
+        return bundle;
     }
 
     @Override
