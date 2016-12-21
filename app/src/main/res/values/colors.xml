@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
    <!-- <color name="colorPrimary">#0079bf</color>
-    <color name="colorPrimaryDark">#00264c</color>-->
-    <color name="colorPrimary">#00264c</color>
-    <color name="colorPrimaryDark">#00264c</color>
-    <color name="bg_color">#00264c</color>
+    <color name="colorPrimaryDark">#E40046</color>-->
+    <color name="colorPrimary">#E40046</color>
+    <color name="colorPrimaryDark">#C7003D</color>
+    <color name="colorText">#262626</color>
+    <color name="bg_color">#FFFFFF</color>
     <color name="yellow">#fbc100</color>
     <!--<color name="colorPrimary">#1A2146</color>
     <color name="colorPrimaryDark">#1A2146</color>-->

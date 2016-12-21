@@ -2,7 +2,7 @@
 <resources>
     <string-array name="feedback_type">
         <item>Query</item>
-        <item>Complain</item>
+        <item>Complaint</item>
         <item>Suggestion</item>
     </string-array>
 

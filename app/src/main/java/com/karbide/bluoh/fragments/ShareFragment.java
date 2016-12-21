@@ -13,10 +13,8 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,9 +37,8 @@ public class ShareFragment extends BaseFragment
     private List<String> mAppsName;
     public ShareDialog mShareDialog;
     private GridView shareAppsGrid;
-    private ScrollView parentView;
     private int REQUEST_INVITE = 1000;
-    private Button btnInvite;
+
 
     public ShareFragment()
     {
@@ -107,19 +104,11 @@ public class ShareFragment extends BaseFragment
         this.mShareDialog = new ShareDialog(getActivity());
         final ShareAdapter adapter=new ShareAdapter(getActivity(), queryShareIntent());
         this.shareAppsGrid.setAdapter(adapter);
-        btnInvite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onInviteClicked();
-            }
-        });
         return layout;
     }
 
     private void initView(View view)
     {
-        btnInvite = (Button)view.findViewById(R.id.btnInvite);
-        parentView = (ScrollView)view.findViewById(R.id.parentView);
         shareAppsGrid = (GridView)view.findViewById(R.id.shareApps);
     }
 
@@ -190,8 +179,6 @@ public class ShareFragment extends BaseFragment
                             if (ShareDialog.canShow(ShareLinkContent.class)) {
                                 mShareDialog.show(((ShareLinkContent.Builder) new ShareLinkContent.Builder().setContentTitle("Try Bluoh").setContentDescription(getResources().getString(R.string.invite_text)).setContentUrl(Uri.parse(AppConstants.BLUOH_PROFILE_PLAYSTORE_WEB_URL))).build());
                             }
-//                        new PostToFacebookDialog(context, body).show();
-                            //here u can write your own code to handle the particular social media networking apps.
                             Toast.makeText(getActivity(), "FaceBook", Toast.LENGTH_LONG).show();
                         } else {
                             Intent intent = new Intent(android.content.Intent.ACTION_SEND);

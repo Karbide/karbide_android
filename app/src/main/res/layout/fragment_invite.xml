@@ -6,99 +6,94 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_color"
-    android:padding="@dimen/activity_vertical_margin">
+    android:padding="@dimen/margin_10dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical">
-        <com.karbide.bluoh.ui.CustomTextView
-            style="@style/style_category_full_view_summary_text_no_shadow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/White"
-            app:typeface="Roboto-Regular.ttf"
-            android:text="@string/help_us_do_better">
-        </com.karbide.bluoh.ui.CustomTextView>
-        <com.karbide.bluoh.ui.CustomTextView
-            style="@style/style_category_full_view_summary_text_no_shadow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/White"
-            app:typeface="Roboto-Light.ttf"
-            android:text="Mind giving us a feedback ?">
-        </com.karbide.bluoh.ui.CustomTextView>
-
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_15dp"
+                android:src="@drawable/feedback"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical">
         <Spinner
             android:background="@drawable/custom_spinner_background"
             android:spinnerMode="dropdown"
             android:id="@+id/spFeedbackType"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:entries="@array/feedback_type"/>
 
         <EditText
             style="@style/style_category_full_view_summary_text_no_shadow"
             android:background="@drawable/edit_text_bg"
             android:id="@+id/etName"
+            android:padding="@dimen/margin_5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_8dp"
-            android:hint="Enter your name"
-            android:singleLine="true"
+            android:hint="@string/feedback_str_enter_name"
+            android:lines="1"
             android:textColorHint="@color/black_overlay"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
+            android:inputType="textPersonName"
+            android:layout_marginTop="@dimen/margin_10dp">
         </EditText>
         <EditText
             style="@style/style_category_full_view_summary_text_no_shadow"
             android:background="@drawable/edit_text_bg"
             android:id="@+id/etNumber"
+            android:padding="@dimen/margin_5dp"
             android:inputType="number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_8dp"
-            android:singleLine="true"
-            android:hint="Enter your number"
+            android:lines="1"
+            android:hint="@string/feedback_str_enter_number"
             android:textColorHint="@color/black_overlay"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
+            android:layout_marginTop="@dimen/margin_10dp">
         </EditText>
         <EditText
             style="@style/style_category_full_view_summary_text_no_shadow"
             android:background="@drawable/edit_text_bg"
             android:id="@+id/etEmail"
+            android:padding="@dimen/margin_5dp"
             android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_8dp"
-            android:singleLine="true"
-            android:hint="Enter your email"
+            android:lines="1"
+            android:hint="@string/feedback_str_enter_email"
             android:textColorHint="@color/black_overlay"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
+            android:layout_marginTop="@dimen/margin_10dp">
         </EditText>
         <EditText
             android:id="@+id/etFeedback"
             style="@style/style_category_full_view_summary_text_no_shadow"
+            android:padding="@dimen/margin_5dp"
             android:background="@drawable/edit_text_bg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lines="6"
+            android:lines="5"
             android:gravity="top|left"
-            android:padding="@dimen/margin_5dp"
-            android:hint="Enter your feedback"
+            android:hint="@string/feedback_str_enter_feedback"
             android:textColorHint="@color/black_overlay"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
+            android:layout_marginTop="@dimen/margin_10dp">
         </EditText>
        <com.karbide.bluoh.ui.CustomButton
             android:id="@+id/btnSendFeedback"
+           android:padding="@dimen/margin_5dp"
             android:layout_width="match_parent"
+           android:layout_marginTop="@dimen/margin_10dp"
             android:layout_height="wrap_content"
-            android:background="@color/yellow"
+            android:background="@color/colorPrimary"
             android:text="Send feedback"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginLeft="@dimen/margin_55dp"
-            android:layout_marginRight="@dimen/margin_55dp"/>
+            android:textColor="@color/White"
+            android:layout_marginLeft="@dimen/margin_50dp"
+            android:layout_marginRight="@dimen/margin_50dp"/>
 
     </LinearLayout>
 
