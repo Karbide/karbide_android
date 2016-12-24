@@ -6,7 +6,13 @@
     <item
         android:id="@+id/miProfile"
         android:icon="@drawable/bookmark_full_white"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
+        android:title="">
+    </item>
+    <item
+        android:id="@+id/icOptionMenu"
+        android:icon="@drawable/ic_action_menu"
+        app:showAsAction="always"
         android:title="">
     </item>
 </menu>

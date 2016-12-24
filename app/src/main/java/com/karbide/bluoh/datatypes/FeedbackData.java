@@ -15,12 +15,12 @@ private String email;
 private String name;
 @SerializedName("number")
 @Expose
-private Integer number;
+private String number;
 @SerializedName("subject")
 @Expose
 private String subject;
 
-    public FeedbackData(String content, String email, String name, Integer number, String subject) {
+    public FeedbackData(String content, String email, String name, String number, String subject) {
         this.content = content;
         this.email = email;
         this.name = name;
@@ -87,7 +87,7 @@ this.name = name;
 * @return
 * The number
 */
-public Integer getNumber() {
+public String getNumber() {
 return number;
 }
 
@@ -96,7 +96,7 @@ return number;
 * @param number
 * The number
 */
-public void setNumber(Integer number) {
+public void setNumber(String number) {
 this.number = number;
 }
 

@@ -88,8 +88,7 @@ public class InviteFragment extends BaseFragment implements View.OnClickListener
             case R.id.btnSendFeedback:
                 if(isValidInput())
                 {
-                    FeedbackData feedbackData = new FeedbackData(feedback, emailAddress,
-                            name, (number.equals(""))?0:Integer.valueOf(number), feedbackType);
+                    FeedbackData feedbackData = new FeedbackData(feedback, emailAddress,name, number, feedbackType);
                     try {
                         sendFeedback(feedbackData);
                     } catch (UnsupportedEncodingException e) {

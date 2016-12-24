@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:background="@drawable/card_fragment_bg">
 
     <com.karbide.bluoh.ui.SelectableRoundedImageView
         android:id="@+id/imageViewArticleImage"
@@ -114,20 +114,18 @@
                 style="@style/style_category_full_controls_text_watch_like"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/White"
-                android:textColorLink="@color/White"
+                android:textColor="@color/category_title_color_fullview"
+                android:textColorLink="@color/category_title_color_fullview"
                 android:layout_gravity="right"
                 app:typeface="Roboto-Light.ttf"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/category_full_view_article_text_content_margin_left_right"
-                android:layout_marginBottom="@dimen/category_full_view_article_text_content_margin_left_right">
+                android:layout_alignParentRight="true">
             </com.karbide.bluoh.ui.CustomTextView>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bottom_toolbar_bg">
+            android:background="@color/White">
             <include
                 android:id="@+id/relativeLayoutArticleControls"
                 layout="@layout/category_full_view_controls_layout_white" />

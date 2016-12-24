@@ -121,7 +121,7 @@ public class DeckVerticalPagerAdapter extends PagerAdapter
 	 * @return the view
 	 */
 	private View initializeLandscapeImageLayout(int position) {
-		View view = LayoutInflater.from(_context).inflate(R.layout.category_full_view_layout_landscape_img, null);
+		View view = LayoutInflater.from(_context).inflate(R.layout.layout_fifty_fifty, null);
 		setCommonData(position, view, _allDecks.get(position));
 		loadArticleImage(view, _allDecks.get(position).getMedia().getUrl());
 		return view;
@@ -141,7 +141,7 @@ public class DeckVerticalPagerAdapter extends PagerAdapter
 	 * @return the view
 	 */
 	private View initializePortraitImageLayout(int position) {
-		View view = LayoutInflater.from(_context).inflate(R.layout.category_full_view_layout_portrait_img, null);
+		View view = LayoutInflater.from(_context).inflate(R.layout.layout_full_view, null);
 		setCommonData(position, view, _allDecks.get(position));
 		loadArticleImage(view, _allDecks.get(position).getMedia().getUrl());
 		return view;

@@ -53,6 +53,7 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.google.firebase:firebase-invites:9.8.0'
     compile 'com.facebook.android:audience-network-sdk:4.+'
+    compile project(':contextmenu')
 //    compile 'fm.jiecao:jiecaovideoplayer:4.8.3'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;

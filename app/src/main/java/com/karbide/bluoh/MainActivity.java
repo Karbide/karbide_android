@@ -1,5 +1,9 @@
 package com.karbide.bluoh;
 
+import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
@@ -32,13 +36,20 @@ import com.karbide.bluoh.util.AppUtil;
 import com.karbide.bluoh.util.HttpUtils;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
+import com.yalantis.contextmenu.lib.MenuObject;
+import com.yalantis.contextmenu.lib.MenuParams;
+import com.yalantis.contextmenu.lib.interfaces.OnMenuItemClickListener;
+import com.yalantis.contextmenu.lib.interfaces.OnMenuItemLongClickListener;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
 
-public class MainActivity extends BaseActivity{
+public class MainActivity extends BaseActivity implements OnMenuItemClickListener, OnMenuItemLongClickListener {
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private FragmentManager fragmentManager;
@@ -49,6 +60,7 @@ public class MainActivity extends BaseActivity{
     private boolean isHome;
     private String homeData;
     private String bookmarkData;
+    private ContextMenuDialogFragment mMenuDialogFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -65,6 +77,7 @@ public class MainActivity extends BaseActivity{
             homeData = getIntent().getExtras().getString("homedata", null);
 //        subscribeToPushService();
         displayView(0);
+        initMenuFragment();
 
     }
 
@@ -72,6 +85,7 @@ public class MainActivity extends BaseActivity{
     {
         NavigationView navigationView = (NavigationView)findViewById(R.id.navigation_view);
         AppUtil.applyCustomFontToNavigationMenu(MainActivity.this, navigationView);
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -81,7 +95,9 @@ public class MainActivity extends BaseActivity{
                         displayView(0);
                         break;
                     case R.id.icWishList:
-                        displayView(1);
+                        drawerLayout.closeDrawer(Gravity.LEFT);
+                        getBookMark("0");
+//                        displayView(1);
                         break;
                     case R.id.icInvite:
                         displayView(2);
@@ -97,7 +113,7 @@ public class MainActivity extends BaseActivity{
                 return true;
             }
         });
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer);
+
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar, R.string.drawer_open, R.string.drawer_close){
             @Override
             public void onDrawerClosed(View v){
@@ -134,6 +150,7 @@ public class MainActivity extends BaseActivity{
                 AppUtil.showToast(MainActivity.this, "BOOKMARK"+bookmarkData);
                 fragment = new BookmarksFragment();
                 fragment.setArguments(bundlebm);
+                getBookMark("0");
                 break;
             case 2:
                 isHome =false;
@@ -202,6 +219,11 @@ public class MainActivity extends BaseActivity{
             case R.id.miProfile:
 //                displayView(1);
                 getBookMark("0");
+                break;
+            case R.id.icOptionMenu:
+                if (fragmentManager.findFragmentByTag(ContextMenuDialogFragment.TAG) == null) {
+                    mMenuDialogFragment.show(fragmentManager, ContextMenuDialogFragment.TAG);
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -283,5 +305,86 @@ public class MainActivity extends BaseActivity{
                 }
             }
         });
+    }
+
+    private void initMenuFragment() {
+        MenuParams menuParams = new MenuParams();
+        menuParams.setActionBarSize((int) getResources().getDimension(R.dimen.tool_bar_height));
+        menuParams.setMenuObjects(getMenuObjects());
+        menuParams.setClosableOutside(true);
+        menuParams.setAnimationDelay(0);
+        menuParams.setAnimationDuration(50);
+        mMenuDialogFragment = ContextMenuDialogFragment.newInstance(menuParams);
+        mMenuDialogFragment.setItemClickListener(this);
+        mMenuDialogFragment.setItemLongClickListener(this);
+    }
+
+    private List<MenuObject> getMenuObjects() {
+        // You can use any [resource, bitmap, drawable, color] as image:
+        // item.setResource(...)
+        // item.setBitmap(...)
+        // item.setDrawable(...)
+        // item.setColor(...)
+        // You can set image ScaleType:
+        // item.setScaleType(ScaleType.FIT_XY)
+        // You can use any [resource, drawable, color] as background:
+        // item.setBgResource(...)
+        // item.setBgDrawable(...)
+        // item.setBgColor(...)
+        // You can use any [color] as text color:
+        // item.setTextColor(...)
+        // You can set any [color] as divider color:
+        // item.setDividerColor(...)
+
+        List<MenuObject> menuObjects = new ArrayList<>();
+
+       /* MenuObject close = new MenuObject();
+        BitmapDrawable bdClose = new BitmapDrawable(getResources(),BitmapFactory.decodeResource(getResources(), R.drawable.icn_close));
+        bdClose.setColorFilter(new PorterDuffColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY));
+        close.setDrawable(bdClose);
+        close.setDividerColor(R.color.colorPrimary);*/
+
+        MenuObject send = new MenuObject("Daily Astrology");
+        BitmapDrawable bSend = new BitmapDrawable(getResources(),BitmapFactory.decodeResource(getResources(), R.drawable.icn_1));
+        bSend.setColorFilter(new PorterDuffColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY));
+        send.setDrawable(bSend);
+        send.setDividerColor(R.color.colorPrimary);
+
+        MenuObject like = new MenuObject("Jokes");
+        BitmapDrawable b = new BitmapDrawable(getResources(),BitmapFactory.decodeResource(getResources(), R.drawable.icn_2));
+        b.setColorFilter(new PorterDuffColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY));
+        like.setDrawable(b);
+        like.setDividerColor(R.color.colorPrimary);
+
+
+        MenuObject addFr = new MenuObject("Night Mode");
+        BitmapDrawable bd = new BitmapDrawable(getResources(),BitmapFactory.decodeResource(getResources(), R.drawable.icn_3));
+        bd.setColorFilter(new PorterDuffColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY));
+        addFr.setDrawable(bd);
+        addFr.setDividerColor(R.color.colorPrimary);
+
+        MenuObject addFav = new MenuObject("Text Mode");
+        BitmapDrawable bdFav = new BitmapDrawable(getResources(),BitmapFactory.decodeResource(getResources(), R.drawable.icn_4));
+        bdFav.setColorFilter(new PorterDuffColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY));
+        addFav.setDrawable(bdFav);
+        addFav.setDividerColor(R.color.colorPrimary);
+
+
+//        menuObjects.add(close);
+        menuObjects.add(send);
+        menuObjects.add(like);
+        menuObjects.add(addFr);
+        menuObjects.add(addFav);
+        return menuObjects;
+    }
+
+    @Override
+    public void onMenuItemClick(View clickedView, int position) {
+
+    }
+
+    @Override
+    public void onMenuItemLongClick(View clickedView, int position) {
+
     }
 }

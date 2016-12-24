@@ -7,6 +7,9 @@ import android.os.Looper;
 import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +63,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         super.onResume();
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -499,5 +507,22 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
         // Request an ad
         nativeAd.loadAd();
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_feed, menu);  // Use filter.xml from step 1
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.ic_gotoTop:
+                if(mainPager.getCurrentItem() != 0)
+                    mainPager.setCurrentItem(0, true);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

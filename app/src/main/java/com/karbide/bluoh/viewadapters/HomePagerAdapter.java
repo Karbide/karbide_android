@@ -18,6 +18,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -114,14 +115,14 @@ public class HomePagerAdapter extends PagerAdapter {
 		if(nativeAd != null && loadedAd != null)
 		{
 //			if(position > 0 && position%6 == 0)
-			if(position%6 == 0)
+			if(position>0 && position%10 == 0)
 			{
 				view = initializeAdView(loadedAd);
 			}
 			else
 			{
-//				int index = position - (int)Math.floor(position/6);
-				int index = position - ((int)Math.floor(position/6)+1);
+				int index = position - (int)Math.floor(position/6);
+//				int index = position - ((int)Math.floor(position/6)+1);
 				AppUtil.LogMsg(TAG, "Index here++"+(int)Math.floor(position/6));
 				if (_allDecks.get(index).getType() != null && _allDecks.get(index).getType().equalsIgnoreCase("deck"))
 				{
@@ -129,11 +130,9 @@ public class HomePagerAdapter extends PagerAdapter {
 				} else
 				{
 					if (_allDecks.get(index).getCards().get(0).getTemplate().equalsIgnoreCase("Full"))
-						view = initializePortraitImageLayout(index);
-					else if (_allDecks.get(index).getCards().get(0).getTemplate().equalsIgnoreCase("70_30"))
-						view = initializeSeventyTirtyLayout(index);
+						view = initializeFullViewLayout(index);
 					else
-						view = initializeLandscapeImageLayout(index);
+						view = initializeFiftyFiftyLayout(index, _allDecks.get(position).getCards().get(0).getTemplate());
 				}
 			}
 		}
@@ -143,11 +142,9 @@ public class HomePagerAdapter extends PagerAdapter {
 				view = initializeLandscapeImageLayoutDeck(position);
 			} else {
 				if (_allDecks.get(position).getCards().get(0).getTemplate().equalsIgnoreCase("Full"))
-					view = initializePortraitImageLayout(position);
-				else if (_allDecks.get(position).getCards().get(0).getTemplate().equalsIgnoreCase("70_30"))
-					view = initializeSeventyTirtyLayout(position);
+					view = initializeFullViewLayout(position);
 				else
-					view = initializeLandscapeImageLayout(position);
+					view = initializeFiftyFiftyLayout(position, _allDecks.get(position).getCards().get(0).getTemplate());
 			}
 		}
 		if (null != view) {
@@ -164,19 +161,39 @@ public class HomePagerAdapter extends PagerAdapter {
 	 * @param position the position
 	 * @return the view
 	 */
-	private View initializeLandscapeImageLayout(int position) {
-		View view = LayoutInflater.from(_context).inflate(R.layout.category_full_view_layout_landscape_img, null);
+	private View initializeFiftyFiftyLayout(int position, String type)
+	{
+		View view = LayoutInflater.from(_context).inflate(R.layout.layout_fifty_fifty, null);
+		RelativeLayout imageLayout = (RelativeLayout)view.findViewById(R.id.layoutArticleImage);
+		LinearLayout textLayout  = (LinearLayout) view.findViewById(R.id.linearLayoutArticleTextContent);
+		if(type.equalsIgnoreCase("70_30"))
+		{
+			LinearLayout.LayoutParams textLayoutParam = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.MATCH_PARENT,
+					LinearLayout.LayoutParams.MATCH_PARENT, 2.0f);
+			LinearLayout.LayoutParams imageLayoutParam = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.MATCH_PARENT,
+					LinearLayout.LayoutParams.MATCH_PARENT, 4.0f);
+			textLayout.setLayoutParams(imageLayoutParam);
+			imageLayout.setLayoutParams(textLayoutParam);
+		}
+		else
+		{
+			LinearLayout.LayoutParams textLayoutParam = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.MATCH_PARENT,
+					LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
+			LinearLayout.LayoutParams imageLayoutParam = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.MATCH_PARENT,
+					LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
+			imageLayout.setLayoutParams(imageLayoutParam);
+			textLayout.setLayoutParams(textLayoutParam);
+		}
 		setCommonData(position, view, _allDecks.get(position).getCards().get(0));
 		loadArticleImage(view, _allDecks.get(position).getCards().get(0).getMedia().getUrl());
 		return view;
 	}
 
-	private View initializeSeventyTirtyLayout(int position) {
-		View view = LayoutInflater.from(_context).inflate(R.layout.layout_seventy_thirty, null);
-		setCommonData(position, view, _allDecks.get(position).getCards().get(0));
-		loadArticleImage(view, _allDecks.get(position).getCards().get(0).getMedia().getUrl());
-		return view;
-	}
+
 	/**
 	 * Initialize landscape image layout Deck.
 	 *
@@ -184,7 +201,7 @@ public class HomePagerAdapter extends PagerAdapter {
 	 * @return the view
 	 */
 	private View initializeLandscapeImageLayoutDeck(int position) {
-		View view = LayoutInflater.from(_context).inflate(R.layout.full_view_layout_portrait_img_deck, null);
+		View view = LayoutInflater.from(_context).inflate(R.layout.layout_deck, null);
 		setCommonDataDeck(position, view, _allDecks.get(position).getCards().get(0));
 		loadArticleImage(view, _allDecks.get(position).getCards().get(0).getMedia().getUrl());
 		return view;
@@ -197,8 +214,8 @@ public class HomePagerAdapter extends PagerAdapter {
 	 * @param position the position
 	 * @return the view
 	 */
-	private View initializePortraitImageLayout(int position) {
-		View view = LayoutInflater.from(_context).inflate(R.layout.category_full_view_layout_portrait_img, null);
+	private View initializeFullViewLayout(int position) {
+		View view = LayoutInflater.from(_context).inflate(R.layout.layout_full_view, null);
 		setCommonData(position, view, _allDecks.get(position).getCards().get(0));
 		loadArticleImage(view, _allDecks.get(position).getCards().get(0).getMedia().getUrl());
 		return view;
