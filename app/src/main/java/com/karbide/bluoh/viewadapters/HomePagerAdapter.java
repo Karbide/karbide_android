@@ -108,7 +108,7 @@ public class HomePagerAdapter extends PagerAdapter {
 	@Override
 	public Object instantiateItem(ViewGroup container, int position)
 	{
-		AppUtil.LogMsg(TAG, "instantiateItem++ position: " + position+" ALl Deck size:- "+_allDecks.size());
+		AppUtil.LogMsg(TAG, "instantiateItem++ position: " + position+" ALl Deck size: "+_allDecks.size());
 		View view = null;
 
 
@@ -124,6 +124,7 @@ public class HomePagerAdapter extends PagerAdapter {
 				int index = position - (int)Math.floor(position/6);
 //				int index = position - ((int)Math.floor(position/6)+1);
 				AppUtil.LogMsg(TAG, "Index here++"+(int)Math.floor(position/6));
+
 				if (_allDecks.get(index).getType() != null && _allDecks.get(index).getType().equalsIgnoreCase("deck"))
 				{
 					view = initializeLandscapeImageLayoutDeck(index);
