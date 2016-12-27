@@ -7,8 +7,6 @@ import android.os.Looper;
 import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -53,6 +51,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private HomeDataResponse homeDataResponse;
     boolean isFirstRequest = true;
     private long startTime;
+    private static final String Tag="Home Fragment";
     private AddressResultReceiver mResultReceiver;
     private String homedata = null;
     private static final int SWIPE_THRESHOLD = 100;
@@ -487,13 +486,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             public void onError(Ad ad, AdError error)
             {
                 // Ad error callback
-                AppUtil.showToast(getActivity(), "Ad Loaded Error");
+                Log.e(Tag, "Ad Loaded Error");
             }
 
             @Override
             public void onAdLoaded(Ad ad) {
                 // Ad loaded callback
-                AppUtil.showToast(getActivity(), "Ad Loaded Ad Loaded");
+                //AppUtil.showToast(getActivity(), "Ad Loaded Ad Loaded");
                 homePageAdapter.nativeAd = nativeAd;
                 homePageAdapter.loadedAd = ad;
                 homePageAdapter.notifyDataSetChanged();
@@ -509,11 +508,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         nativeAd.loadAd();
     }
 
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_feed, menu);  // Use filter.xml from step 1
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

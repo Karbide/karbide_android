@@ -38,11 +38,11 @@
     <dimen name="category_full_view_article_text_content_layout_height">141dp</dimen>
     <dimen name="category_full_view_article_text_content_margin_left_right">12dp</dimen>
     <dimen name="category_full_view_article_image_margin_bottom">10dp</dimen>
-    <dimen name="category_full_view_article_headline_text_size">18sp</dimen>
-    <dimen name="category_full_view_article_headline2_text_size">20sp</dimen>
+    <dimen name="category_full_view_article_headline_text_size">16sp</dimen>
+    <dimen name="category_full_view_article_headline2_text_size">18sp</dimen>
     <dimen name="category_full_view_article_headline_line_spacing_extra">3sp</dimen>
     <dimen name="category_full_view_article_headline2_line_spacing_extra">4sp</dimen>
-    <dimen name="category_full_view_article_summary_text_size">16sp</dimen>
+    <dimen name="category_full_view_article_summary_text_size">14sp</dimen>
     <dimen name="category_full_view_article_summary_line_spacing_extra">4sp</dimen>
     <dimen name="category_full_view_gradient_margin_top">-20dp</dimen>
 

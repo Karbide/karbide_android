@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/category_text_color_fullview_landscape"
                 app:typeface="RobotoCondensed-Bold.ttf"
-                android:maxLines="3">
+                android:maxLines="2">
             </com.karbide.bluoh.ui.CustomTextView>
 
             <com.karbide.bluoh.ui.CustomTextView
@@ -99,7 +99,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/category_text_color_fullview_landscape"
                 app:typeface="Roboto-Light.ttf"
-                android:maxLines="6">
+                android:ellipsize="end"
+                android:maxLines="8">
             </com.karbide.bluoh.ui.CustomTextView>
         </LinearLayout>
         <View

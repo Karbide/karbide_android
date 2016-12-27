@@ -97,12 +97,10 @@ public class MainActivity extends BaseActivity implements OnMenuItemClickListene
                     case R.id.icWishList:
                         drawerLayout.closeDrawer(Gravity.LEFT);
                         getBookMark("0");
-//                        displayView(1);
                         break;
                     case R.id.icInvite:
                         displayView(2);
                         break;
-
                     case R.id.icFeedBack:
                         displayView(3);
                         break;

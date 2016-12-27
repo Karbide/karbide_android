@@ -78,7 +78,7 @@
             android:layout_height="0dp"
             android:layout_marginLeft="@dimen/category_full_view_article_image_margin_bottom"
             android:layout_marginRight="@dimen/category_full_view_article_image_margin_bottom"
-            android:layout_weight="2"
+            android:layout_weight="7"
             android:orientation="vertical"
             android:paddingTop="@dimen/category_full_view_article_image_margin_bottom" >
 
@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/category_text_color_fullview_landscape"
                 app:typeface="RobotoCondensed-Bold.ttf"
-                android:maxLines="3">
+                android:maxLines="2">
             </com.karbide.bluoh.ui.CustomTextView>
 
             <com.karbide.bluoh.ui.CustomTextView
@@ -99,6 +99,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/category_text_color_fullview_landscape"
                 app:typeface="Roboto-Light.ttf"
+                android:ellipsize="end"
                 android:maxLines="4">
             </com.karbide.bluoh.ui.CustomTextView>
         </LinearLayout>
