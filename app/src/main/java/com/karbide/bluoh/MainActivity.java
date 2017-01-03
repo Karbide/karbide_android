@@ -265,9 +265,9 @@ public class MainActivity extends BaseActivity implements OnMenuItemClickListene
                 hideProgressDialog();
                 try
                 {
-                    String str = new String(responseBody, "utf-8");
+                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                     AppUtil.LogMsg("RESPONSE", "RESPONSE  BOOMARK MAIN"+statusCode+str);
-                    if(statusCode == 200)
+                    if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
                     {
                         HomeDataResponse homeData = new Gson().fromJson(str, HomeDataResponse.class);
                         if(homeData.getContent() != null && homeData.getContent().size()>0)
@@ -295,7 +295,7 @@ public class MainActivity extends BaseActivity implements OnMenuItemClickListene
                     else
                     {
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, "utf-8");
+                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
                     }
                 } catch (UnsupportedEncodingException e) {

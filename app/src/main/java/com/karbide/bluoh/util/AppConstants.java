@@ -39,4 +39,8 @@ public class AppConstants
 	public static final int ITEMS_IN_STACK = 10;
 	public static final int GET_DATA_POSITION=5;
 
+	public static final String DEFAULT_ENCODING="utf-8";
+	public static final int STATUS_CODE_SUCCESS=200;
+	public static final int STATUS_CODE_FAILURE=400;
+
 }

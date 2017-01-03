@@ -207,9 +207,9 @@ public class Splash extends BaseActivity implements View.OnClickListener, Facebo
                 hideProgressDialog();
                 try
                 {
-                    String str = new String(responseBody, "utf-8");
+                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                     AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR"+statusCode+str);
-                    if(statusCode == 200)
+                    if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
                     {
                         AppSharedPreference.getInstance(Splash.this).saveUserDetail(str);
                         AppUtil.showToast(Splash.this, "Facebook login success");
@@ -238,7 +238,7 @@ public class Splash extends BaseActivity implements View.OnClickListener, Facebo
                     else
                     {
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, "utf-8");
+                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
                     }
                 } catch (UnsupportedEncodingException e) {

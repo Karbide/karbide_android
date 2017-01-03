@@ -132,7 +132,7 @@ public class AppUtil
             is.read(buffer);
             is.close();
 
-            json = new String(buffer, "UTF-8");
+            json = new String(buffer, AppConstants.DEFAULT_ENCODING);
         }
         catch (IOException ex) {
             ex.printStackTrace();

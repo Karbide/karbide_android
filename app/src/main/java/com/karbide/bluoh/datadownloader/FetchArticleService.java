@@ -74,9 +74,9 @@ public class FetchArticleService extends IntentService
                 Log.e("GOT Data","------------ Got Data");
                 try
                 {
-                    String str = new String(responseBody, "utf-8");
+                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                     AppUtil.LogMsg("RESPONSE", "RESPONSE  SUCCESS"+statusCode+str);
-                    if(statusCode == 200)
+                    if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
                     {
                         Bundle bundle = new Bundle();
                         bundle.putString("result", str);
@@ -98,7 +98,7 @@ public class FetchArticleService extends IntentService
                     else
                     {
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, "utf-8");
+                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
                     }
                 } catch (UnsupportedEncodingException e) {

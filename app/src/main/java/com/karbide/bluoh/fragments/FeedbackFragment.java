@@ -115,9 +115,9 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 hideProgressDialog();
                 try
                 {
-                    String str = new String(responseBody, "utf-8");
+                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                     AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR"+statusCode+str);
-                    if(statusCode == 200)
+                    if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
                     {
                         clearValue();
                         AppUtil.showToast(getActivity(), "Feedback sent");
@@ -141,7 +141,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                     else
                     {
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, "utf-8");
+                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
                     }
                 } catch (UnsupportedEncodingException e) {
@@ -162,7 +162,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 {
                     try
                     {
-                        String str = new String(responseBody, "utf-8");
+                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                         AppUtil.showToast(getActivity(), str);
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();

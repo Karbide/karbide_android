@@ -84,15 +84,15 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
             mainPager.setVisibility(View.VISIBLE);
             tvBlankTemplate.setVisibility(View.GONE);
             mainPager.setPageTransformer(false, new DepthVerticalPageTransformer());
-            mainPager.setOffscreenPageLimit(3);
+            mainPager.setOffscreenPageLimit(AppConstants.ITEMS_IN_STACK);
             mainPager.setOnPageChangeListener(new VerticalViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 }
                 @Override
                 public void onPageSelected(int position) {
-                    if(position%3 == 0 && homeDataResponse.getLast() == false)
-                        getBookMark(String.valueOf(position/3));
+                    if(position%AppConstants.ITEMS_IN_STACK == 0 && homeDataResponse.getLast() == false)
+                        getBookMark(String.valueOf(position/AppConstants.ITEMS_IN_STACK));
                 }
                 @Override
                 public void onPageScrollStateChanged(int state) {
@@ -142,9 +142,9 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
 
                 try
                 {
-                    String str = new String(responseBody, "utf-8");
+                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                     AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR"+statusCode+str);
-                    if(statusCode == 200)
+                    if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
                     {
                         homeDataResponse = new Gson().fromJson(str, HomeDataResponse.class);
                         if(isFirstRequest)
@@ -176,7 +176,7 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
                     else
                     {
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, "utf-8");
+                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
                     }
                 } catch (UnsupportedEncodingException e) {

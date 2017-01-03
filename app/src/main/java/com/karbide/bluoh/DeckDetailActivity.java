@@ -12,17 +12,14 @@ import com.karbide.bluoh.database.AppDatabaseHelper;
 import com.karbide.bluoh.datatypes.AddBookmark;
 import com.karbide.bluoh.datatypes.Card;
 import com.karbide.bluoh.datatypes.Content;
-import com.karbide.bluoh.datatypes.Deck;
 import com.karbide.bluoh.datatypes.DeckDetailResponse;
-import com.karbide.bluoh.datatypes.HomeDataResponse;
-import com.karbide.bluoh.ui.*;
+import com.karbide.bluoh.ui.DepthVerticalPageTransformer;
 import com.karbide.bluoh.ui.VerticalViewPager;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
 import com.karbide.bluoh.util.HttpUtils;
 import com.karbide.bluoh.util.OnSwipeTouchListener;
 import com.karbide.bluoh.viewadapters.DeckVerticalPagerAdapter;
-import com.karbide.bluoh.viewadapters.HomePagerAdapter;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -136,9 +133,9 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
                 hideProgressDialog();
                 try
                 {
-                    String responseData = new String(responseBody, "utf-8");
+                    String responseData = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                     AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR"+statusCode+responseData);
-                    if(statusCode == 200)
+                    if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
                     {
                         DeckDetailResponse response = new Gson().fromJson(responseData, DeckDetailResponse.class);
                         allCards = response.getCards();
@@ -164,7 +161,7 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
                     else
                     {
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, "utf-8");
+                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
                     }
                 } catch (UnsupportedEncodingException e) {
@@ -215,9 +212,9 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
                 hideProgressDialog();
                 try
                 {
-                    String str = new String(responseBody, "utf-8");
+                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                     AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR"+statusCode+str);
-                    if(statusCode == 200)
+                    if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
                     {
 
                     }
@@ -239,7 +236,7 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
                     else
                     {
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, "utf-8");
+                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
                     }
                 } catch (UnsupportedEncodingException e) {

@@ -170,9 +170,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 hideProgressDialog();
 
                 try {
-                    String str = new String(responseBody, "utf-8");
+                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                     AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    if (statusCode == 200) {
+                    if (statusCode == AppConstants.STATUS_CODE_SUCCESS) {
 
                     }
                 } catch (UnsupportedEncodingException e) {
@@ -188,7 +188,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                         AppUtil.showToast(getActivity(), error.getMessage() + error.getLocalizedMessage());
                     } else {
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, "utf-8");
+                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
                     }
                 } catch (UnsupportedEncodingException e) {
@@ -206,9 +206,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 hideProgressDialog();
                 try {
-                    String str = new String(responseBody, "utf-8");
+                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                     AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    if (statusCode == 200) {
+                    if (statusCode == AppConstants.STATUS_CODE_SUCCESS) {
                         AppUtil.showToast(getActivity(), "Bookmark deleted");
                     }
                 } catch (UnsupportedEncodingException e) {
@@ -224,7 +224,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                         AppUtil.showToast(getActivity(), error.getMessage() + error.getLocalizedMessage());
                     } else {
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, "utf-8");
+                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
                     }
                 } catch (UnsupportedEncodingException e) {
@@ -302,9 +302,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try {
-                    String str = new String(responseBody, "utf-8");
+                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                     AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    if (statusCode == 200) {
+                    if (statusCode == AppConstants.STATUS_CODE_SUCCESS) {
 
                     }
                 } catch (UnsupportedEncodingException e) {
@@ -320,7 +320,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                         AppUtil.showToast(getActivity(), "STATUS CODE" + statusCode + error.getMessage() + error.getLocalizedMessage());
                     } else {
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, "utf-8");
+                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                         AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
                     }
                 } catch (UnsupportedEncodingException e) {
