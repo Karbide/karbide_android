@@ -15,6 +15,7 @@ public class HttpUtils
     private static final String BASE_URL = "http://api.chequemate.io/";
     private static AsyncHttpClient client = new AsyncHttpClient();
     private static AsyncHttpClient syncclient = new SyncHttpClient();
+
     public static void get(Context ctx, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         LoginResponse userInfo = AppSharedPreference.getInstance(ctx).getUserInfo();
         client.setBasicAuth(userInfo.getUsername(),userInfo.getPassword());

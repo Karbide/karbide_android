@@ -28,7 +28,7 @@ import com.google.gson.Gson;
 import com.karbide.bluoh.datatypes.HomeDataResponse;
 import com.karbide.bluoh.fragments.BookmarksFragment;
 import com.karbide.bluoh.fragments.HomeFragment;
-import com.karbide.bluoh.fragments.InviteFragment;
+import com.karbide.bluoh.fragments.FeedbackFragment;
 import com.karbide.bluoh.fragments.ShareFragment;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppSharedPreference;
@@ -158,7 +158,7 @@ public class MainActivity extends BaseActivity implements OnMenuItemClickListene
             case 3:
                 isHome =false;
                 title = "FEEDBACK";
-                fragment = new InviteFragment();
+                fragment = new FeedbackFragment();
                 break;
             case 4:
                 AppUtil.launchPlayStorePage(MainActivity.this);

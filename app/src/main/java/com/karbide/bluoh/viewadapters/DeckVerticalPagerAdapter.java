@@ -89,7 +89,7 @@ public class DeckVerticalPagerAdapter extends PagerAdapter
 	@Override
 	public Object instantiateItem(ViewGroup container, int position)
 	{
-		AppUtil.LogMsg(TAG, "instantiateItem++ position: " + position);
+		AppUtil.LogMsg(TAG, "instantiateItem -> postion: " + position);
 		View view = null;
 		if(position == _allDecks.size())
 		{

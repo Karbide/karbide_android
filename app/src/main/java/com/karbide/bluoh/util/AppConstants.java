@@ -32,4 +32,11 @@ public class AppConstants
 	public static String TRAFIC ="traffic/";
 	public static String FEEDBACK ="feedback/";
 	public static String DELETE_BOOKMARK_ENDPOINT = "bookmarks/%s/%s";
+	public static String FEED_DATA_ENDPOINT = "feed/";
+
+	public static final int GRID_SHOW_POSITION = 7;
+	public static final int ADV_SHOW_POSITION = 10;
+	public static final int ITEMS_IN_STACK = 10;
+	public static final int GET_DATA_POSITION=5;
+
 }

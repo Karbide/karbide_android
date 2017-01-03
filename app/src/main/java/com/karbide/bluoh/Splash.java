@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
@@ -25,13 +26,15 @@ import com.facebook.login.LoginResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
+import com.karbide.bluoh.datadownloader.ArticleFeedResultReceiver;
+import com.karbide.bluoh.datadownloader.ArticlesDataReceiverIntf;
+import com.karbide.bluoh.datadownloader.FetchArticleService;
 import com.karbide.bluoh.datatypes.FacebookData;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppSharedPreference;
 import com.karbide.bluoh.util.AppUtil;
 import com.karbide.bluoh.util.HttpUtils;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -44,7 +47,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class Splash extends BaseActivity implements View.OnClickListener, FacebookCallback<LoginResult> {
+public class Splash extends BaseActivity implements View.OnClickListener, FacebookCallback<LoginResult>, ArticlesDataReceiverIntf {
     private static final int SPLASH_TIME = 2 * 1000;
     private ImageView imageView;
     private Button btnFacebokSignup;
@@ -83,7 +86,8 @@ public class Splash extends BaseActivity implements View.OnClickListener, Facebo
         {
             public void run()
             {
-                getHomeData("0");
+                // - getHomeData("0");
+                startIntentService("0");
             }
         }, SPLASH_TIME);
     }
@@ -96,52 +100,32 @@ public class Splash extends BaseActivity implements View.OnClickListener, Facebo
         Splash.this.finish();
     }
 
-    private void getHomeData(String pageNo)
-    {
-        RequestParams rp = new RequestParams();
-        HttpUtils.get(Splash.this, String.format(AppConstants.HOME_DATA_ENDPOINT, pageNo), rp, new AsyncHttpResponseHandler()
-        {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
-            {
-                try
-                {
-                    String str = new String(responseBody, "utf-8");
-                    AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR"+statusCode+str);
-                    if(statusCode == 200)
-                    {
-                        openHomeScreen(str);
-                    }
-                    else
-                    {
 
-                    }
-                }
-                catch (UnsupportedEncodingException e)
-                {
-                    e.printStackTrace();
-                }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                try
-                {
-                    if(error!= null)
-                    {
-                        AppUtil.showToast(Splash.this, error.getMessage()+error.getLocalizedMessage());
-                    }
-                    else
-                    {
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, "utf-8");
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    /**
+     * Creates an intent, adds location data to it as an extra, and starts the intent service for
+     * fetching an address.
+     */
+    protected void startIntentService(String pageNo) {
+
+        Intent intent = new Intent(this, FetchArticleService.class);
+        ArticleFeedResultReceiver mResultReceiver = new ArticleFeedResultReceiver(new Handler(Looper.getMainLooper()));
+        mResultReceiver.setReceiver(this);
+        intent.putExtra("resultReceiver", mResultReceiver);
+        intent.putExtra("pageno", pageNo);
+        this.startService(intent);
+    }
+
+
+    /**
+     * Interface method implemented to get article data feed
+     * @param resultCode
+     * @param resultData
+     */
+    @Override
+    public void onReceiveResult(int resultCode, Bundle resultData) {
+        String responseData = resultData.getString("result");
+        openHomeScreen(responseData);
     }
 
     @Override
