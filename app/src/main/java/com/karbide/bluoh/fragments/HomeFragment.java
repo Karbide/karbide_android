@@ -19,11 +19,11 @@ import com.facebook.ads.NativeAd;
 import com.google.gson.Gson;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.dal.AppDatabaseHelper;
+import com.karbide.bluoh.dao.HomeDataResponse;
+import com.karbide.bluoh.dao.core.TrafficData;
 import com.karbide.bluoh.dao.core.Bookmark;
 import com.karbide.bluoh.dao.core.Card;
 import com.karbide.bluoh.dao.core.Content;
-import com.karbide.bluoh.dao.HomeDataResponse;
-import com.karbide.bluoh.dao.TrafficData;
 import com.karbide.bluoh.service.ArticleFeedResultReceiver;
 import com.karbide.bluoh.service.BookmarksResultReceiver;
 import com.karbide.bluoh.service.DataReceiverIntf;
@@ -108,6 +108,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         if (homedata != null) {
             homeDataResponse = new Gson().fromJson(homedata, HomeDataResponse.class);
             startTime = Calendar.getInstance().getTimeInMillis();
+            if(allDecks==null){
+                allDecks = new ArrayList<Content>();
+            }
             allDecks = homeDataResponse.getContent();
             homePageAdapter = new HomePagerAdapter(getActivity(), HomeFragment.this, allDecks, HomeFragment.this);
             mainPager.setAdapter(homePageAdapter);
@@ -284,6 +287,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         String responseData = resultData.getString("result");
         startTime = Calendar.getInstance().getTimeInMillis();
         homeDataResponse = new Gson().fromJson(responseData, HomeDataResponse.class);
+        if(allDecks==null){
+            allDecks = new ArrayList<Content>();
+        }
         allDecks.addAll(homeDataResponse.getContent());
 
         if (homePageAdapter == null){

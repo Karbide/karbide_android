@@ -12,12 +12,11 @@ import com.karbide.bluoh.dal.AppDatabaseHelper;
 import com.karbide.bluoh.dao.core.Bookmark;
 import com.karbide.bluoh.dao.core.Card;
 import com.karbide.bluoh.dao.core.Content;
-import com.karbide.bluoh.dao.core.Deck;
+import com.karbide.bluoh.service.HttpClient;
 import com.karbide.bluoh.ui.DepthVerticalPageTransformer;
 import com.karbide.bluoh.ui.VerticalViewPager;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
-import com.karbide.bluoh.service.HttpClient;
 import com.karbide.bluoh.util.OnSwipeTouchListener;
 import com.karbide.bluoh.viewadapters.DeckVerticalPagerAdapter;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -137,7 +136,7 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
                     AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR"+statusCode+responseData);
                     if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
                     {
-                        Deck response = new Gson().fromJson(responseData, Deck.class);
+                        Content response = new Gson().fromJson(responseData, Content.class);
                         allCards = response.getCards();
                         AppUtil.LogError("ALL DECKS", "ALL DECKS:- "+allCards.size());
                         DeckVerticalPagerAdapter adapter = new DeckVerticalPagerAdapter(DeckDetailActivity.this, DeckDetailActivity.this, response, deckContent);
