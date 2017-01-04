@@ -26,14 +26,14 @@ import com.facebook.login.LoginResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
-import com.karbide.bluoh.datadownloader.ArticleFeedResultReceiver;
-import com.karbide.bluoh.datadownloader.ArticlesDataReceiverIntf;
-import com.karbide.bluoh.datadownloader.FetchArticleService;
-import com.karbide.bluoh.datatypes.FacebookData;
+import com.karbide.bluoh.dao.FacebookData;
+import com.karbide.bluoh.service.ArticleFeedResultReceiver;
+import com.karbide.bluoh.service.DataReceiverIntf;
+import com.karbide.bluoh.service.FetchArticleService;
+import com.karbide.bluoh.service.HttpClient;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppSharedPreference;
 import com.karbide.bluoh.util.AppUtil;
-import com.karbide.bluoh.util.HttpUtils;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.io.UnsupportedEncodingException;
@@ -47,7 +47,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class Splash extends BaseActivity implements View.OnClickListener, FacebookCallback<LoginResult>, ArticlesDataReceiverIntf {
+public class Splash extends BaseActivity implements View.OnClickListener, FacebookCallback<LoginResult>, DataReceiverIntf {
     private static final int SPLASH_TIME = 2 * 1000;
     private ImageView imageView;
     private Button btnFacebokSignup;
@@ -199,7 +199,7 @@ public class Splash extends BaseActivity implements View.OnClickListener, Facebo
         showProgressDialog(R.string.please_wait);
         AppUtil.LogMsg("RESPONSE", "BOOKMARK JSON"+new Gson().toJson(fbData));
         StringEntity entity = new StringEntity(new Gson().toJson(fbData));
-        HttpUtils.postWithJson(Splash.this, AppConstants.LOGIN_ENDPOINT, entity,new AsyncHttpResponseHandler()
+        HttpClient.postWithJson(Splash.this, AppConstants.LOGIN_ENDPOINT, entity,new AsyncHttpResponseHandler()
         {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)

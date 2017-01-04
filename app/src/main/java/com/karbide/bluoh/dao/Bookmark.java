@@ -1,4 +1,4 @@
-package com.karbide.bluoh.datatypes;
+package com.karbide.bluoh.dao;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

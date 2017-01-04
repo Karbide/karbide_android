@@ -1,4 +1,4 @@
-package com.karbide.bluoh.datadownloader;
+package com.karbide.bluoh.service;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -6,14 +6,14 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 /**
- * Created by cheta on 03-01-2017.
+ * Created by cheta on 29-12-2016.
  */
 
-public class BookmarksResultReceiver extends ResultReceiver {
-
+public class ArticleFeedResultReceiver extends ResultReceiver
+{
     private DataReceiverIntf mReceiver;
 
-    public BookmarksResultReceiver(Handler handler) {
+    public ArticleFeedResultReceiver(Handler handler) {
         super(handler);
     }
 
@@ -27,13 +27,11 @@ public class BookmarksResultReceiver extends ResultReceiver {
     @Override
     protected void onReceiveResult(int resultCode, Bundle resultData)
     {
-        Log.d("BOOKMARKS", "onReceiveResult start");
+        Log.d("ARTICLE", "onReceiveResult start");
         if (mReceiver != null) {
             mReceiver.onReceiveResult(resultCode, resultData);
         }
 
-        Log.d("BOOKMARKS", "onReceiveResult end");
+        Log.d("ARTICLE", "onReceiveResult end");
     }
-
-
 }

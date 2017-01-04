@@ -7,6 +7,9 @@ import android.os.Environment;
 
 public class AppConstants 
 {
+
+	public static final String SERVER_BASE_URL = "http://api.chequemate.io/";
+
 	/** The Constant LOG_FILENAME. */
 	public static final String LOG_FILENAME = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Bluohlogfile.txt";
 

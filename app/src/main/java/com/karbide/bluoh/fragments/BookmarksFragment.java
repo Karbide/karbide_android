@@ -14,12 +14,12 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.karbide.bluoh.R;
-import com.karbide.bluoh.datadownloader.BookmarksResultReceiver;
-import com.karbide.bluoh.datadownloader.DataReceiverIntf;
-import com.karbide.bluoh.datadownloader.ManageBookmarksService;
-import com.karbide.bluoh.datatypes.Card;
-import com.karbide.bluoh.datatypes.Content;
-import com.karbide.bluoh.datatypes.HomeDataResponse;
+import com.karbide.bluoh.service.BookmarksResultReceiver;
+import com.karbide.bluoh.service.DataReceiverIntf;
+import com.karbide.bluoh.service.ManageBookmarksService;
+import com.karbide.bluoh.dao.Card;
+import com.karbide.bluoh.dao.Content;
+import com.karbide.bluoh.dao.HomeDataResponse;
 import com.karbide.bluoh.ui.DepthVerticalPageTransformer;
 import com.karbide.bluoh.ui.VerticalViewPager;
 import com.karbide.bluoh.util.AppConstants;

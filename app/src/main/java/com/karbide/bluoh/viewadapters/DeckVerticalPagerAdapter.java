@@ -16,10 +16,10 @@ import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 import com.karbide.bluoh.R;
-import com.karbide.bluoh.database.AppDatabaseHelper;
-import com.karbide.bluoh.datatypes.Card;
-import com.karbide.bluoh.datatypes.Content;
-import com.karbide.bluoh.datatypes.DeckDetailResponse;
+import com.karbide.bluoh.dal.AppDatabaseHelper;
+import com.karbide.bluoh.dao.Card;
+import com.karbide.bluoh.dao.Content;
+import com.karbide.bluoh.dao.DeckDetailResponse;
 import com.karbide.bluoh.ui.CustomTextView;
 import com.karbide.bluoh.util.AppUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;

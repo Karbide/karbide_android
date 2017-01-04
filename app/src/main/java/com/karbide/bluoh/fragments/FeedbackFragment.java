@@ -18,11 +18,11 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.karbide.bluoh.R;
-import com.karbide.bluoh.datatypes.FeedbackData;
+import com.karbide.bluoh.dao.FeedbackData;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppSharedPreference;
 import com.karbide.bluoh.util.AppUtil;
-import com.karbide.bluoh.util.HttpUtils;
+import com.karbide.bluoh.service.HttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.io.UnsupportedEncodingException;
@@ -102,12 +102,13 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 break;
         }
     }
+
     private void sendFeedback(FeedbackData feedback) throws UnsupportedEncodingException
     {
         showProgressDialog(R.string.please_wait);
         AppUtil.LogMsg("RESPONSE", "TRAFFIC_ENDPOINT JSON"+new Gson().toJson(feedback));
         StringEntity entity = new StringEntity(new Gson().toJson(feedback));
-        HttpUtils.postWithJson(getActivity(), AppConstants.FEEDBACK_ENDPOINT, entity,new AsyncHttpResponseHandler()
+        HttpClient.postWithJson(getActivity(), AppConstants.FEEDBACK_ENDPOINT, entity,new AsyncHttpResponseHandler()
         {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
@@ -155,7 +156,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
     {
         if(!AppSharedPreference.getInstance(getActivity()).getGcmId().equals(""))
         {
-            HttpUtils.testNotification(getActivity(), new AsyncHttpResponseHandler()
+            HttpClient.testNotification(getActivity(), new AsyncHttpResponseHandler()
             {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)

@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import com.google.gson.Gson;
-import com.karbide.bluoh.datatypes.LoginResponse;
+import com.karbide.bluoh.dao.LoginResponse;
 
 public class AppSharedPreference {
 

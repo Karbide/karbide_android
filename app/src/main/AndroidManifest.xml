@@ -57,7 +57,7 @@
         </activity>
 
         <service
-            android:name=".datadownloader.FetchArticleService"
+            android:name=".service.FetchArticleService"
             android:exported="false" />
 
         <service

@@ -1,5 +1,5 @@
 
-package com.karbide.bluoh.datatypes;
+package com.karbide.bluoh.dao;
 
 import java.util.ArrayList;
 import java.util.List;

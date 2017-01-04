@@ -18,22 +18,22 @@ import com.facebook.ads.AdListener;
 import com.facebook.ads.NativeAd;
 import com.google.gson.Gson;
 import com.karbide.bluoh.R;
-import com.karbide.bluoh.database.AppDatabaseHelper;
-import com.karbide.bluoh.datadownloader.ArticleFeedResultReceiver;
-import com.karbide.bluoh.datadownloader.ArticlesDataReceiverIntf;
-import com.karbide.bluoh.datadownloader.BookmarksResultReceiver;
-import com.karbide.bluoh.datadownloader.FetchArticleService;
-import com.karbide.bluoh.datadownloader.ManageBookmarksService;
-import com.karbide.bluoh.datatypes.Bookmark;
-import com.karbide.bluoh.datatypes.Card;
-import com.karbide.bluoh.datatypes.Content;
-import com.karbide.bluoh.datatypes.HomeDataResponse;
-import com.karbide.bluoh.datatypes.TrafficData;
+import com.karbide.bluoh.dal.AppDatabaseHelper;
+import com.karbide.bluoh.dao.Bookmark;
+import com.karbide.bluoh.dao.Card;
+import com.karbide.bluoh.dao.Content;
+import com.karbide.bluoh.dao.HomeDataResponse;
+import com.karbide.bluoh.dao.TrafficData;
+import com.karbide.bluoh.service.ArticleFeedResultReceiver;
+import com.karbide.bluoh.service.BookmarksResultReceiver;
+import com.karbide.bluoh.service.DataReceiverIntf;
+import com.karbide.bluoh.service.FetchArticleService;
+import com.karbide.bluoh.service.HttpClient;
+import com.karbide.bluoh.service.ManageBookmarksService;
 import com.karbide.bluoh.ui.DepthVerticalPageTransformer;
 import com.karbide.bluoh.ui.VerticalViewPager;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
-import com.karbide.bluoh.util.HttpUtils;
 import com.karbide.bluoh.util.OnSwipeTouchListener;
 import com.karbide.bluoh.viewadapters.HomePagerAdapter;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -46,7 +46,7 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class HomeFragment extends BaseFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener,
-        ArticlesDataReceiverIntf {
+        DataReceiverIntf {
 
     public VerticalViewPager mainPager;
     boolean isFirstRequest = true;
@@ -215,7 +215,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private void updateTraficOnServer(TrafficData traficData) throws UnsupportedEncodingException {
         AppUtil.LogMsg("RESPONSE", "TRAFFIC_ENDPOINT JSON" + new Gson().toJson(traficData));
         StringEntity entity = new StringEntity(new Gson().toJson(traficData));
-        HttpUtils.postWithJson(getActivity(), AppConstants.TRAFFIC_ENDPOINT, entity, new AsyncHttpResponseHandler() {
+        HttpClient.postWithJson(getActivity(), AppConstants.TRAFFIC_ENDPOINT, entity, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try {

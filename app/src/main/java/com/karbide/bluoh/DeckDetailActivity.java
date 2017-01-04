@@ -8,16 +8,16 @@ import android.view.View;
 import android.widget.CompoundButton;
 
 import com.google.gson.Gson;
-import com.karbide.bluoh.database.AppDatabaseHelper;
-import com.karbide.bluoh.datatypes.Bookmark;
-import com.karbide.bluoh.datatypes.Card;
-import com.karbide.bluoh.datatypes.Content;
-import com.karbide.bluoh.datatypes.DeckDetailResponse;
+import com.karbide.bluoh.dal.AppDatabaseHelper;
+import com.karbide.bluoh.dao.Bookmark;
+import com.karbide.bluoh.dao.Card;
+import com.karbide.bluoh.dao.Content;
+import com.karbide.bluoh.dao.DeckDetailResponse;
 import com.karbide.bluoh.ui.DepthVerticalPageTransformer;
 import com.karbide.bluoh.ui.VerticalViewPager;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
-import com.karbide.bluoh.util.HttpUtils;
+import com.karbide.bluoh.service.HttpClient;
 import com.karbide.bluoh.util.OnSwipeTouchListener;
 import com.karbide.bluoh.viewadapters.DeckVerticalPagerAdapter;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -125,7 +125,7 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
     {
         showProgressDialog(R.string.please_wait);
         RequestParams rp = new RequestParams();
-        HttpUtils.get(DeckDetailActivity.this, String.format(AppConstants.DECK_DATA_ENDPOINT, deckId), rp, new AsyncHttpResponseHandler()
+        HttpClient.get(DeckDetailActivity.this, String.format(AppConstants.DECK_DATA_ENDPOINT, deckId), rp, new AsyncHttpResponseHandler()
         {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
@@ -204,7 +204,7 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
         showProgressDialog(R.string.please_wait);
         AppUtil.LogMsg("RESPONSE", "BOOKMARK JSON"+new Gson().toJson(bookmarks));
         StringEntity entity = new StringEntity(new Gson().toJson(bookmarks));
-        HttpUtils.postWithJson(DeckDetailActivity.this, AppConstants.ADD_BOOKMARK_ENDPOINT, entity,new AsyncHttpResponseHandler()
+        HttpClient.postWithJson(DeckDetailActivity.this, AppConstants.ADD_BOOKMARK_ENDPOINT, entity,new AsyncHttpResponseHandler()
         {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)

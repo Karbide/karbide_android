@@ -1,36 +1,35 @@
-package com.karbide.bluoh.datadownloader;
+package com.karbide.bluoh.service;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
+
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
-import com.karbide.bluoh.util.HttpUtils;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
 import java.io.UnsupportedEncodingException;
 
 import cz.msebera.android.httpclient.Header;
 
+
 /**
- * Created by cheta on 29-12-2016.
+ * Asynchronously handles an intent using a worker thread. Receives a ResultReceiver object and a
+ * location through an intent. Tries to fetch the address for the location using a Geocoder, and
+ * sends the result to the ResultReceiver.
  */
-
-public class FetchFeedService extends IntentService {
-
-    private static final String TAG = "FetchFeedService";
-    /**
-     * The receiver where results are forwarded from this service.
-     */
-    protected ResultReceiver mReceiver;
+public class FetchArticleService extends IntentService
+{
+    private static final String TAG = "FetchArticleService";
 
     /**
      * This constructor is required, and calls the super IntentService(String)
      * constructor with the name for a worker thread.
      */
-    public FetchFeedService() {
+    public FetchArticleService() {
         // Use the TAG to name the worker thread.
         super(TAG);
     }
@@ -48,26 +47,24 @@ public class FetchFeedService extends IntentService {
     protected void onHandleIntent(Intent intent)
     {
         String errorMessage = "";
-        mReceiver = intent.getParcelableExtra("resultReceiver");
-
+        final ResultReceiver mReceiver = intent.getParcelableExtra("resultReceiver");
+        String pageNo = intent.getStringExtra("pageno");
         // Check if receiver was properly registered.
         if (mReceiver == null)
         {
             Log.wtf(TAG, "No receiver received. There is nowhere to send the results.");
             return;
         }
-        getGridData();
+        getHomeData(mReceiver, pageNo);
 
     }
 
-    private void getGridData()
+    private void getHomeData(final ResultReceiver resultReceiver, String pageNo)
     {
         RequestParams rp = new RequestParams();
 
         Log.e("REQUEST Data","------------ Req Data");
-        HttpUtils.getWithSyncHttpClient(FetchFeedService.this,
-                String.format(AppConstants.FEED_DATA_ENDPOINT), rp,
-                new AsyncHttpResponseHandler()
+        HttpClient.getWithSyncHttpClient(FetchArticleService.this, String.format(AppConstants.HOME_DATA_ENDPOINT, pageNo), rp, new AsyncHttpResponseHandler()
         {
 
             @Override
@@ -80,7 +77,9 @@ public class FetchFeedService extends IntentService {
                     AppUtil.LogMsg("RESPONSE", "RESPONSE  SUCCESS"+statusCode+str);
                     if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
                     {
-                        deliverResultToReceiver(str);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("result", str);
+                        resultReceiver.send(100, bundle);
                     }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -93,7 +92,7 @@ public class FetchFeedService extends IntentService {
                 {
                     if(error!= null)
                     {
-                        AppUtil.showToast(FetchFeedService.this, error.getMessage()+error.getLocalizedMessage());
+                        AppUtil.showToast(FetchArticleService.this, error.getMessage()+error.getLocalizedMessage());
                     }
                     else
                     {
@@ -106,22 +105,5 @@ public class FetchFeedService extends IntentService {
                 }
             }
         });
-    }
-
-
-    private void deliverResultToReceiver(String message) {
-        try {
-            Bundle bundle = new Bundle();
-            bundle.putString("result", message);
-//            Handler mHandler = new Handler(getMainLooper());
-//            mHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-               mReceiver.send(200, bundle);
-//                }
-//            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

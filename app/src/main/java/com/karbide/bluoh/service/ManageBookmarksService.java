@@ -1,4 +1,4 @@
-package com.karbide.bluoh.datadownloader;
+package com.karbide.bluoh.service;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -7,10 +7,9 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.karbide.bluoh.datatypes.Bookmark;
+import com.karbide.bluoh.dao.Bookmark;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
-import com.karbide.bluoh.util.HttpUtils;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -79,7 +78,7 @@ public class ManageBookmarksService extends IntentService {
 
         Log.e("REQUEST Data","------------ Req Data");
 
-        HttpUtils.get(this, String.format(AppConstants.GET_BOOKMARK_ENDPOINT, pageNo), rp, new AsyncHttpResponseHandler()
+        HttpClient.get(this, String.format(AppConstants.GET_BOOKMARK_ENDPOINT, pageNo), rp, new AsyncHttpResponseHandler()
         {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
@@ -134,7 +133,7 @@ public class ManageBookmarksService extends IntentService {
         }catch (UnsupportedEncodingException ex){
             ex.printStackTrace();
         }
-        HttpUtils.postWithJson(ManageBookmarksService.this, AppConstants.ADD_BOOKMARK_ENDPOINT, entity, new AsyncHttpResponseHandler() {
+        HttpClient.postWithJson(ManageBookmarksService.this, AppConstants.ADD_BOOKMARK_ENDPOINT, entity, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
@@ -172,7 +171,7 @@ public class ManageBookmarksService extends IntentService {
         String cardId = bookmark.getCardId();
 
         RequestParams rp = new RequestParams();
-        HttpUtils.delete(ManageBookmarksService.this, String.format(AppConstants.DELETE_BOOKMARK_ENDPOINT, deckId, cardId), rp, new AsyncHttpResponseHandler() {
+        HttpClient.delete(ManageBookmarksService.this, String.format(AppConstants.DELETE_BOOKMARK_ENDPOINT, deckId, cardId), rp, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try {

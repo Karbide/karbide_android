@@ -25,7 +25,7 @@ import android.view.animation.DecelerateInterpolator;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
-import com.karbide.bluoh.datatypes.HomeDataResponse;
+import com.karbide.bluoh.dao.HomeDataResponse;
 import com.karbide.bluoh.fragments.BookmarksFragment;
 import com.karbide.bluoh.fragments.HomeFragment;
 import com.karbide.bluoh.fragments.FeedbackFragment;
@@ -33,7 +33,7 @@ import com.karbide.bluoh.fragments.ShareFragment;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppSharedPreference;
 import com.karbide.bluoh.util.AppUtil;
-import com.karbide.bluoh.util.HttpUtils;
+import com.karbide.bluoh.service.HttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
@@ -257,7 +257,7 @@ public class MainActivity extends BaseActivity implements OnMenuItemClickListene
     {
         showProgressDialog(R.string.please_wait);
         RequestParams rp = new RequestParams();
-        HttpUtils.get(this, String.format(AppConstants.GET_BOOKMARK_ENDPOINT, pageNo), rp, new AsyncHttpResponseHandler()
+        HttpClient.get(this, String.format(AppConstants.GET_BOOKMARK_ENDPOINT, pageNo), rp, new AsyncHttpResponseHandler()
         {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
