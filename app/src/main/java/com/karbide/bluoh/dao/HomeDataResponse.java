@@ -2,6 +2,7 @@ package com.karbide.bluoh.dao;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.karbide.bluoh.dao.core.Content;
 
 import java.util.ArrayList;
 

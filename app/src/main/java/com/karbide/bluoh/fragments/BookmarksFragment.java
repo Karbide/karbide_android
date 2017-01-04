@@ -18,7 +18,7 @@ import com.karbide.bluoh.service.BookmarksResultReceiver;
 import com.karbide.bluoh.service.DataReceiverIntf;
 import com.karbide.bluoh.service.ManageBookmarksService;
 import com.karbide.bluoh.dao.core.Card;
-import com.karbide.bluoh.dao.Content;
+import com.karbide.bluoh.dao.core.Content;
 import com.karbide.bluoh.dao.HomeDataResponse;
 import com.karbide.bluoh.ui.DepthVerticalPageTransformer;
 import com.karbide.bluoh.ui.VerticalViewPager;

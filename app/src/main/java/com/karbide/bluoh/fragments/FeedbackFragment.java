@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.karbide.bluoh.R;
-import com.karbide.bluoh.dao.FeedbackData;
+import com.karbide.bluoh.dao.core.Feedback;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppSharedPreference;
 import com.karbide.bluoh.util.AppUtil;
@@ -89,9 +89,9 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             case R.id.btnSendFeedback:
                 if(isValidInput())
                 {
-                    FeedbackData feedbackData = new FeedbackData(feedback, emailAddress,name, number, feedbackType);
+                    Feedback feedback = new Feedback(this.feedback, emailAddress,name, number, feedbackType);
                     try {
-                        sendFeedback(feedbackData);
+                        sendFeedback(feedback);
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
@@ -103,7 +103,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
-    private void sendFeedback(FeedbackData feedback) throws UnsupportedEncodingException
+    private void sendFeedback(Feedback feedback) throws UnsupportedEncodingException
     {
         showProgressDialog(R.string.please_wait);
         AppUtil.LogMsg("RESPONSE", "TRAFFIC_ENDPOINT JSON"+new Gson().toJson(feedback));

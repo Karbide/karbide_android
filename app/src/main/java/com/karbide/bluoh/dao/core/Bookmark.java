@@ -1,8 +1,8 @@
-package com.karbide.bluoh.dao;
+package com.karbide.bluoh.dao.core;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Bookmark extends BluohDAO{
+public class Bookmark extends BluohDAO {
 
 @SerializedName("deckId")
 @Expose

@@ -18,8 +18,8 @@ import com.google.gson.Gson;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.dal.AppDatabaseHelper;
 import com.karbide.bluoh.dao.core.Card;
-import com.karbide.bluoh.dao.Content;
-import com.karbide.bluoh.dao.DeckDetailResponse;
+import com.karbide.bluoh.dao.core.Content;
+import com.karbide.bluoh.dao.core.Deck;
 import com.karbide.bluoh.ui.CustomTextView;
 import com.karbide.bluoh.util.AppUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -38,7 +38,7 @@ public class DeckVerticalPagerAdapter extends PagerAdapter
 	/** The Constant TAG. */
 	private static final String TAG = DeckVerticalPagerAdapter.class.getSimpleName();
 	private List<Card> _allDecks;
-	private DeckDetailResponse response;
+	private Deck response;
 	/** The _context. */
 	private Context _context = null;
 	/** The _on click listener. */
@@ -52,7 +52,7 @@ public class DeckVerticalPagerAdapter extends PagerAdapter
 	 * @paramarticleSummaryList the article summary list
 	 * @param onClickListener the on click listener
 	 */
-	public DeckVerticalPagerAdapter(Context context, OnClickListener onClickListener, DeckDetailResponse allDecks, Content parentContent) {
+	public DeckVerticalPagerAdapter(Context context, OnClickListener onClickListener, Deck allDecks, Content parentContent) {
 		_context = context;
 		_onClickListener = onClickListener;
 		_content = parentContent;

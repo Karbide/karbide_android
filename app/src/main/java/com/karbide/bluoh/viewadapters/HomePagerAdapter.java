@@ -31,7 +31,7 @@ import com.karbide.bluoh.DeckDetailActivity;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.dal.AppDatabaseHelper;
 import com.karbide.bluoh.dao.core.Card;
-import com.karbide.bluoh.dao.Content;
+import com.karbide.bluoh.dao.core.Content;
 import com.karbide.bluoh.ui.CustomTextView;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;

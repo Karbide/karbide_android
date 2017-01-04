@@ -7,7 +7,7 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.karbide.bluoh.dao.Bookmark;
+import com.karbide.bluoh.dao.core.Bookmark;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
 import com.loopj.android.http.AsyncHttpResponseHandler;

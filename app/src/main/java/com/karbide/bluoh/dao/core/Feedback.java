@@ -1,8 +1,8 @@
-package com.karbide.bluoh.dao;
+package com.karbide.bluoh.dao.core;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-public class FeedbackData {
+public class Feedback {
 
 @SerializedName("content")
 @Expose
@@ -20,7 +20,7 @@ private String number;
 @Expose
 private String subject;
 
-    public FeedbackData(String content, String email, String name, String number, String subject) {
+    public Feedback(String content, String email, String name, String number, String subject) {
         this.content = content;
         this.email = email;
         this.name = name;

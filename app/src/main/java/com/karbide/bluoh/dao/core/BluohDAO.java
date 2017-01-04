@@ -1,4 +1,4 @@
-package com.karbide.bluoh.dao;
+package com.karbide.bluoh.dao.core;
 
 import java.io.Serializable;
 

@@ -1,13 +1,12 @@
-package com.karbide.bluoh.dao;
+package com.karbide.bluoh.dao.core;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.karbide.bluoh.dao.core.Approver;
-import com.karbide.bluoh.dao.core.Card;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeckDetailResponse {
+public class Content {
 
     @SerializedName("deckId")
     @Expose
@@ -21,7 +20,11 @@ public class DeckDetailResponse {
     @SerializedName("author")
     @Expose
     private String author;
-    @SerializedName("displayName")
+    @SerializedName("authorImage")
+    @Expose
+    private String authorImage;
+
+    @SerializedName("authorHandle")
     @Expose
     private String displayName;
     @SerializedName("categories")
@@ -33,7 +36,7 @@ public class DeckDetailResponse {
     @SerializedName("approver")
     @Expose
     private Approver approver;
-    @SerializedName("status")
+    @SerializedName("deckStatus")
     @Expose
     private String status;
     @SerializedName("likes")
@@ -116,6 +119,24 @@ public class DeckDetailResponse {
      */
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    /**
+     *
+     * @return
+     * The author
+     */
+    public String getAuthorImage() {
+        return authorImage;
+    }
+
+    /**
+     *
+     * @param authorImage
+     * The author
+     */
+    public void setAuthorImage(String authorImage) {
+        this.authorImage = authorImage;
     }
 
     /**

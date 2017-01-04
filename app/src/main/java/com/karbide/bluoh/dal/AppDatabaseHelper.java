@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.gson.Gson;
-import com.karbide.bluoh.dao.Content;
+import com.karbide.bluoh.dao.core.Content;
 import com.karbide.bluoh.util.AppUtil;
 
 import java.util.ArrayList;
