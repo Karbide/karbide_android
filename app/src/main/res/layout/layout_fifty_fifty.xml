@@ -16,7 +16,7 @@
             android:layout_height="0dp"
             android:layout_weight="1" >
 
-            <com.karbide.bluoh.ui.SelectableRoundedImageView
+            <com.karbide.bluoh.presentation.components.SelectableRoundedImageView
                 android:id="@+id/imageViewArticleImage"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -45,17 +45,17 @@
                     android:src="@drawable/ic_person"
                     app:civ_border_color="#FFFFFFFF"
                     app:civ_border_width="1dp"/>
-                <com.karbide.bluoh.ui.CustomTextView
+                <com.karbide.bluoh.presentation.components.CustomTextView
                     android:id="@+id/tvAuthorName"
                     style="@style/style_category_full_controls_text_watch_like"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/category_title_color_fullview"
                     app:typeface="Roboto-Light.ttf">
-                </com.karbide.bluoh.ui.CustomTextView>
+                </com.karbide.bluoh.presentation.components.CustomTextView>
             </LinearLayout>
 
-            <com.karbide.bluoh.ui.CustomTextView
+            <com.karbide.bluoh.presentation.components.CustomTextView
                 android:id="@+id/tvMediaCopyRight"
                 style="@style/style_category_full_controls_text_watch_like"
                 android:layout_width="wrap_content"
@@ -67,7 +67,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/category_full_view_article_text_content_margin_left_right"
                 android:layout_marginBottom="@dimen/category_full_view_article_text_content_margin_left_right">
-            </com.karbide.bluoh.ui.CustomTextView>
+            </com.karbide.bluoh.presentation.components.CustomTextView>
 
 
         </RelativeLayout>
@@ -82,7 +82,7 @@
             android:orientation="vertical"
             android:paddingTop="@dimen/category_full_view_article_image_margin_bottom" >
 
-            <com.karbide.bluoh.ui.CustomTextView
+            <com.karbide.bluoh.presentation.components.CustomTextView
                 android:id="@+id/textViewArticleHeadline"
                 style="@style/style_category_full_view_headline_text_no_shadow"
                 android:layout_width="wrap_content"
@@ -90,9 +90,9 @@
                 android:textColor="@color/category_text_color_fullview_landscape"
                 app:typeface="RobotoCondensed-Bold.ttf"
                 android:maxLines="2">
-            </com.karbide.bluoh.ui.CustomTextView>
+            </com.karbide.bluoh.presentation.components.CustomTextView>
 
-            <com.karbide.bluoh.ui.CustomTextView
+            <com.karbide.bluoh.presentation.components.CustomTextView
                 android:id="@+id/textViewArticleSummary"
                 style="@style/style_category_full_view_summary_text_no_shadow"
                 android:layout_width="wrap_content"
@@ -101,7 +101,7 @@
                 app:typeface="Roboto-Light.ttf"
                 android:ellipsize="end"
                 android:maxLines="8">
-            </com.karbide.bluoh.ui.CustomTextView>
+            </com.karbide.bluoh.presentation.components.CustomTextView>
         </LinearLayout>
         <View
             android:layout_width="match_parent"

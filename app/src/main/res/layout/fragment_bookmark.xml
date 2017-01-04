@@ -13,12 +13,12 @@
         android:textColor="@color/White"
         android:id="@+id/tvBlankTemplate"/>
 
-    <com.karbide.bluoh.ui.VerticalViewPager
+    <com.karbide.bluoh.presentation.components.VerticalViewPager
         android:id="@+id/mainPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/activity_vertical_margin"
         android:visibility="gone">
-    </com.karbide.bluoh.ui.VerticalViewPager>
+    </com.karbide.bluoh.presentation.components.VerticalViewPager>
 
 </RelativeLayout>

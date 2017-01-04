@@ -9,7 +9,7 @@
         android:id="@+id/shareAppIcon"
         android:layout_width="@dimen/margin_40dp"
         android:layout_height="@dimen/margin_40dp" />
-    <com.karbide.bluoh.ui.CustomTextView
+    <com.karbide.bluoh.presentation.components.CustomTextView
         android:textSize="14sp"
         android:textColor="@color/category_text_color_fullview_landscape"
         app:typeface="Roboto-Regular.ttf"

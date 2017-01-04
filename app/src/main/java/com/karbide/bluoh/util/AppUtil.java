@@ -17,7 +17,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.widget.Toast;
 
-import com.karbide.bluoh.WebViewActivity;
+import com.karbide.bluoh.presentation.activities.WebViewActivity;
 
 import java.io.FileWriter;
 import java.io.IOException;

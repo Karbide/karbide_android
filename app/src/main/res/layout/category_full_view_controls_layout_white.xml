@@ -22,7 +22,7 @@
         android:layout_gravity="center"
         android:background="@android:color/transparent"
         android:button="@null" />
-    <com.karbide.bluoh.ui.CustomTextView
+    <com.karbide.bluoh.presentation.components.CustomTextView
         android:id="@+id/tvNewsSource"
         android:layout_width="0dp"
         android:layout_weight="1"

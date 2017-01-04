@@ -29,7 +29,7 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.karbide.bluoh.MainActivity;
+import com.karbide.bluoh.presentation.activities.MainActivity;
 import com.karbide.bluoh.R;
 
 import java.io.InputStream;

@@ -12,7 +12,7 @@
     android:orientation="horizontal"
     android:gravity="bottom">
 
-        <com.karbide.bluoh.ui.CustomTextView
+        <com.karbide.bluoh.presentation.components.CustomTextView
             android:id="@+id/tvNewsSource"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
             android:layout_gravity="left|bottom"
             android:drawableLeft="@drawable/web_dark"
             android:gravity="center_vertical">
-        </com.karbide.bluoh.ui.CustomTextView>
+        </com.karbide.bluoh.presentation.components.CustomTextView>
         <View
             android:layout_width="0dp"
             android:layout_height="wrap_content"

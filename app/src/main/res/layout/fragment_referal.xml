@@ -25,7 +25,7 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_weight="1">
-    <com.karbide.bluoh.ui.CustomTextView
+    <com.karbide.bluoh.presentation.components.CustomTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/invite_text_heading"

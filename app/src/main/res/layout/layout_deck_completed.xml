@@ -13,7 +13,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:layout_weight="1">
-        <com.karbide.bluoh.ui.SelectableRoundedImageView
+        <com.karbide.bluoh.presentation.components.SelectableRoundedImageView
             android:id="@+id/imageViewArticleImage"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -22,7 +22,7 @@
             android:src="@drawable/hill_cartoon"
             app:sriv_left_top_corner_radius="5dp"
             app:sriv_right_top_corner_radius="5dp"/>
-        <com.karbide.bluoh.ui.CustomTextView
+        <com.karbide.bluoh.presentation.components.CustomTextView
             style="@style/style_category_full_controls_text_watch_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             android:layout_centerInParent="true"
             android:text="DECK COMPLETED"
             android:textSize="22sp">
-        </com.karbide.bluoh.ui.CustomTextView>
+        </com.karbide.bluoh.presentation.components.CustomTextView>
 
     </RelativeLayout>
 

@@ -83,7 +83,7 @@
             android:textColorHint="@color/black_overlay"
             android:layout_marginTop="@dimen/margin_10dp">
         </EditText>
-       <com.karbide.bluoh.ui.CustomButton
+       <com.karbide.bluoh.presentation.components.CustomButton
             android:id="@+id/btnSendFeedback"
            android:padding="@dimen/margin_5dp"
             android:layout_width="match_parent"
@@ -97,7 +97,7 @@
 
     </LinearLayout>
 
-    <com.karbide.bluoh.ui.CustomButton
+    <com.karbide.bluoh.presentation.components.CustomButton
         android:id="@+id/btnTestNotification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

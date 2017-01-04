@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/card_fragment_bg">
 
-    <com.karbide.bluoh.ui.SelectableRoundedImageView
+    <com.karbide.bluoh.presentation.components.SelectableRoundedImageView
         android:id="@+id/imageViewArticleImage"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -65,7 +65,7 @@
                     android:src="@drawable/ic_person"
                     app:civ_border_color="#FFFFFFFF"
                     app:civ_border_width="1dp"/>
-                <com.karbide.bluoh.ui.CustomTextView
+                <com.karbide.bluoh.presentation.components.CustomTextView
                     android:id="@+id/tvAuthorName"
                     style="@style/style_category_full_controls_text_watch_like"
                     android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
                     android:textColor="@color/category_title_color_fullview"
                     app:typeface="Roboto-Light.ttf"
                     android:text="Author">
-                </com.karbide.bluoh.ui.CustomTextView>
+                </com.karbide.bluoh.presentation.components.CustomTextView>
             </LinearLayout>
         </RelativeLayout>
 
@@ -87,7 +87,7 @@
             android:layout_weight="1"
             android:gravity="bottom"
             android:orientation="vertical" >
-            <com.karbide.bluoh.ui.CustomTextView
+            <com.karbide.bluoh.presentation.components.CustomTextView
                 android:id="@+id/textViewArticleHeadline"
                 style="@style/style_category_full_view_headline_text"
                 android:layout_width="match_parent"
@@ -95,7 +95,7 @@
                 android:textColor="@color/category_text_color_fullview_portrait"
                 app:typeface="RobotoCondensed-Light.ttf"
                 android:gravity="center_horizontal">
-            </com.karbide.bluoh.ui.CustomTextView>
+            </com.karbide.bluoh.presentation.components.CustomTextView>
             <Button
                 android:id="@+id/btnOpenDeck"
                 android:layout_width="50dp"
@@ -106,7 +106,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@android:color/white"/>
-            <com.karbide.bluoh.ui.CustomTextView
+            <com.karbide.bluoh.presentation.components.CustomTextView
                 android:id="@+id/tvMediaCopyRight"
                 style="@style/style_category_full_controls_text_watch_like"
                 android:layout_width="wrap_content"
@@ -114,7 +114,7 @@
                 android:textColor="@color/off_white"
                 app:typeface="Roboto-Light.ttf"
                 android:layout_gravity="right">
-            </com.karbide.bluoh.ui.CustomTextView>
+            </com.karbide.bluoh.presentation.components.CustomTextView>
         </LinearLayout>
         <View
             android:layout_width="match_parent"

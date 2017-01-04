@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="@dimen/margin_10dp">
-        <com.karbide.bluoh.ui.CustomTextView
+        <com.karbide.bluoh.presentation.components.CustomTextView
             app:typeface="Roboto-Regular.ttf"
             android:id="@+id/native_ad_social_context"
             android:layout_width="match_parent"
@@ -90,7 +90,7 @@
         android:gravity="center"
         android:paddingTop="@dimen/margin_5dp"
         android:paddingBottom="@dimen/margin_5dp">
-        <com.karbide.bluoh.ui.CustomTextView
+        <com.karbide.bluoh.presentation.components.CustomTextView
             app:typeface="Roboto-Regular.ttf"
             android:id="@+id/sponsored_label"
             android:layout_width="wrap_content"
