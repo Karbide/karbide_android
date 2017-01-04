@@ -26,21 +26,24 @@ public class AppConstants
 
 	public static String HOME_DATA_ENDPOINT = "deck?page=%s";
 	public static String DECK_DATA_ENDPOINT = "deck/%s";
-	public static String ADD_BOOKMARK = "bookmarks/";
-	public static String GET_BOOKMARK = "bookmarks?page=%s";
-	public static String LOGIN = "login/";
-	public static String TRAFIC ="traffic/";
-	public static String FEEDBACK ="feedback/";
+	public static String ADD_BOOKMARK_ENDPOINT = "bookmarks/";
+	public static String GET_BOOKMARK_ENDPOINT = "bookmarks?page=%s";
+	public static String LOGIN_ENDPOINT = "login/";
+	public static String TRAFFIC_ENDPOINT ="traffic/";
+	public static String FEEDBACK_ENDPOINT ="feedback/";
 	public static String DELETE_BOOKMARK_ENDPOINT = "bookmarks/%s/%s";
 	public static String FEED_DATA_ENDPOINT = "feed/";
 
 	public static final int GRID_SHOW_POSITION = 7;
 	public static final int ADV_SHOW_POSITION = 10;
-	public static final int ITEMS_IN_STACK = 10;
-	public static final int GET_DATA_POSITION=5;
+	public static final int ITEMS_IN_STACK = 5;
+	public static final int GET_DATA_POSITION=3;
 
 	public static final String DEFAULT_ENCODING="utf-8";
 	public static final int STATUS_CODE_SUCCESS=200;
 	public static final int STATUS_CODE_FAILURE=400;
 
+	public static final String BOOKMARK_DELETE_OPERATION = "DELETE";
+	public static final String BOOKMARK_UPDATE_OPERATION = "UPDATE";
+	public static final String BOOKMARK_GET_OPERATION = "GET";
 }

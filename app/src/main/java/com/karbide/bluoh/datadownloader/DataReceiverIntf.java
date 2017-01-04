@@ -3,9 +3,9 @@ package com.karbide.bluoh.datadownloader;
 import android.os.Bundle;
 
 /**
- * Created by cheta on 29-12-2016.
+ * Created by cheta on 03-01-2017.
  */
 
-public interface ArticlesDataReceiverIntf extends DataReceiverIntf{
+public interface DataReceiverIntf {
     public void onReceiveResult(int resultCode, Bundle resultData);
 }

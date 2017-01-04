@@ -157,7 +157,7 @@ public class MainActivity extends BaseActivity implements OnMenuItemClickListene
                 break;
             case 3:
                 isHome =false;
-                title = "FEEDBACK";
+                title = "FEEDBACK_ENDPOINT";
                 fragment = new FeedbackFragment();
                 break;
             case 4:
@@ -257,7 +257,7 @@ public class MainActivity extends BaseActivity implements OnMenuItemClickListene
     {
         showProgressDialog(R.string.please_wait);
         RequestParams rp = new RequestParams();
-        HttpUtils.get(this, String.format(AppConstants.GET_BOOKMARK, pageNo), rp, new AsyncHttpResponseHandler()
+        HttpUtils.get(this, String.format(AppConstants.GET_BOOKMARK_ENDPOINT, pageNo), rp, new AsyncHttpResponseHandler()
         {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)

@@ -105,9 +105,9 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
     private void sendFeedback(FeedbackData feedback) throws UnsupportedEncodingException
     {
         showProgressDialog(R.string.please_wait);
-        AppUtil.LogMsg("RESPONSE", "TRAFIC JSON"+new Gson().toJson(feedback));
+        AppUtil.LogMsg("RESPONSE", "TRAFFIC_ENDPOINT JSON"+new Gson().toJson(feedback));
         StringEntity entity = new StringEntity(new Gson().toJson(feedback));
-        HttpUtils.postWithJson(getActivity(), AppConstants.FEEDBACK, entity,new AsyncHttpResponseHandler()
+        HttpUtils.postWithJson(getActivity(), AppConstants.FEEDBACK_ENDPOINT, entity,new AsyncHttpResponseHandler()
         {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
@@ -184,7 +184,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         feedback = etFeedback.getText().toString().trim();
         feedbackType = spFeedbackType.getSelectedItem().toString();
 
-        Log.e("FEEDBACK TYPE SELECTED",feedbackType);
+        Log.e("FEEDBACK_ENDPOINT TYPE SELECTED",feedbackType);
 
         if(name.isEmpty() || name.length() == 0 || name.equals("") || name == null) {
             AppUtil.showToast(getActivity(), getResources().getString(R.string.feedback_str_enter_name));

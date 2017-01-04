@@ -199,7 +199,7 @@ public class Splash extends BaseActivity implements View.OnClickListener, Facebo
         showProgressDialog(R.string.please_wait);
         AppUtil.LogMsg("RESPONSE", "BOOKMARK JSON"+new Gson().toJson(fbData));
         StringEntity entity = new StringEntity(new Gson().toJson(fbData));
-        HttpUtils.postWithJson(Splash.this, AppConstants.LOGIN, entity,new AsyncHttpResponseHandler()
+        HttpUtils.postWithJson(Splash.this, AppConstants.LOGIN_ENDPOINT, entity,new AsyncHttpResponseHandler()
         {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)

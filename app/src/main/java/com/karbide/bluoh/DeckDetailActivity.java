@@ -9,7 +9,7 @@ import android.widget.CompoundButton;
 
 import com.google.gson.Gson;
 import com.karbide.bluoh.database.AppDatabaseHelper;
-import com.karbide.bluoh.datatypes.AddBookmark;
+import com.karbide.bluoh.datatypes.Bookmark;
 import com.karbide.bluoh.datatypes.Card;
 import com.karbide.bluoh.datatypes.Content;
 import com.karbide.bluoh.datatypes.DeckDetailResponse;
@@ -182,8 +182,8 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
                 {
                     try
                     {
-                        ArrayList<AddBookmark> bookmark = new ArrayList<>();
-                        AddBookmark addBookmark = new AddBookmark();
+                        ArrayList<Bookmark> bookmark = new ArrayList<>();
+                        Bookmark addBookmark = new Bookmark();
                         addBookmark.setDeckId(deckContent.getDeckId());
                         addBookmark.setCardId(allCards.get(position).getId());
                         bookmark.add(addBookmark);
@@ -199,12 +199,12 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private void updateBookmark(ArrayList<AddBookmark> bookmarks) throws UnsupportedEncodingException
+    private void updateBookmark(ArrayList<Bookmark> bookmarks) throws UnsupportedEncodingException
     {
         showProgressDialog(R.string.please_wait);
         AppUtil.LogMsg("RESPONSE", "BOOKMARK JSON"+new Gson().toJson(bookmarks));
         StringEntity entity = new StringEntity(new Gson().toJson(bookmarks));
-        HttpUtils.postWithJson(DeckDetailActivity.this, AppConstants.ADD_BOOKMARK, entity,new AsyncHttpResponseHandler()
+        HttpUtils.postWithJson(DeckDetailActivity.this, AppConstants.ADD_BOOKMARK_ENDPOINT, entity,new AsyncHttpResponseHandler()
         {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)

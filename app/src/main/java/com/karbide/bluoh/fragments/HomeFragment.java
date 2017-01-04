@@ -21,8 +21,10 @@ import com.karbide.bluoh.R;
 import com.karbide.bluoh.database.AppDatabaseHelper;
 import com.karbide.bluoh.datadownloader.ArticleFeedResultReceiver;
 import com.karbide.bluoh.datadownloader.ArticlesDataReceiverIntf;
+import com.karbide.bluoh.datadownloader.BookmarksResultReceiver;
 import com.karbide.bluoh.datadownloader.FetchArticleService;
-import com.karbide.bluoh.datatypes.AddBookmark;
+import com.karbide.bluoh.datadownloader.ManageBookmarksService;
+import com.karbide.bluoh.datatypes.Bookmark;
 import com.karbide.bluoh.datatypes.Card;
 import com.karbide.bluoh.datatypes.Content;
 import com.karbide.bluoh.datatypes.HomeDataResponse;
@@ -35,7 +37,6 @@ import com.karbide.bluoh.util.HttpUtils;
 import com.karbide.bluoh.util.OnSwipeTouchListener;
 import com.karbide.bluoh.viewadapters.HomePagerAdapter;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -90,13 +91,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
             @Override
             public void onPageSelected(int position) {
-//                long seconds = (Calendar.getInstance().getTimeInMillis()-startTime)/1000;
-//                AppUtil.LogError("PAGE SELECTED", "PAGE SELECTED"+position+ " SECONDS:- "+seconds);
-//                startTime = Calendar.getInstance().getTimeInMillis();
-//                updateTrafic(seconds, position);
                 if (position % AppConstants.GET_DATA_POSITION== 0 && homeDataResponse.getLast() == false)
                     startArticleIntentService(String.valueOf(position / AppConstants.GET_DATA_POSITION));
-//                    getHomeData(String.valueOf(position/3));
             }
 
             @Override
@@ -118,7 +114,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             showNativeAd();
         } else {
             startArticleIntentService("0");
-            // - getHomeData("0");
         }
     }
 
@@ -127,16 +122,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void onSwipeLeft() {
                 AppUtil.showToast(getActivity(), "On swipe left");
-//                AppUtil.openNativeWebView(getActivity(), getBundle());
             }
 
             public void onSwipeBottom() {
             }
 
             public boolean onTouch(View v, MotionEvent event) {
-//                AppUtil.showToast(getActivity(), "On touchhhhhhhhhhhh");
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
                 }
                 return gestureDetector.onTouchEvent(event);
             }
@@ -157,81 +149,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onClick(View view) {
-
-    }
-
-    private void updateBookmark(ArrayList<AddBookmark> bookmarks) throws UnsupportedEncodingException {
-        showProgressDialog(R.string.please_wait);
-        AppUtil.LogMsg("RESPONSE", "BOOKMARK JSON" + new Gson().toJson(bookmarks));
-        StringEntity entity = new StringEntity(new Gson().toJson(bookmarks));
-        HttpUtils.postWithJson(getActivity(), AppConstants.ADD_BOOKMARK, entity, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                hideProgressDialog();
-
-                try {
-                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                    AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    if (statusCode == AppConstants.STATUS_CODE_SUCCESS) {
-
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                hideProgressDialog();
-                try {
-                    if (error != null) {
-                        AppUtil.showToast(getActivity(), error.getMessage() + error.getLocalizedMessage());
-                    } else {
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private void deleteBookmark(String deckId, String cardId) {
-        showProgressDialog(R.string.please_wait);
-        RequestParams rp = new RequestParams();
-        HttpUtils.delete(getActivity(), String.format(AppConstants.DELETE_BOOKMARK_ENDPOINT, deckId, cardId), rp, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                hideProgressDialog();
-                try {
-                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                    AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    if (statusCode == AppConstants.STATUS_CODE_SUCCESS) {
-                        AppUtil.showToast(getActivity(), "Bookmark deleted");
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                hideProgressDialog();
-                try {
-                    if (error != null) {
-                        AppUtil.showToast(getActivity(), error.getMessage() + error.getLocalizedMessage());
-                    } else {
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     @Override
@@ -239,22 +156,22 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         int position = (Integer) compoundButton.getTag();
         switch (compoundButton.getId()) {
             case R.id.buttonBookmark:
+
+                Bookmark bookmark = new Bookmark();
+                String operationType = null;
+                bookmark.setDeckId(allDecks.get(position).getDeckId());
+                bookmark.setCardId(allDecks.get(position).getCards().get(0).getId());
+
                 if (isChecked) {
-                    try {
-                        ArrayList<AddBookmark> bookmark = new ArrayList<>();
-                        AddBookmark addBookmark = new AddBookmark();
-                        addBookmark.setDeckId(allDecks.get(position).getDeckId());
-                        addBookmark.setCardId(allDecks.get(position).getCards().get(0).getId());
-                        bookmark.add(addBookmark);
-                        updateBookmark(bookmark);
+                        operationType = AppConstants.BOOKMARK_UPDATE_OPERATION;
                         AppDatabaseHelper.getInstance(getActivity()).addBookMark(allDecks.get(position), null);
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
                 } else {
-                    deleteBookmark(String.valueOf(allDecks.get(position).getDeckId()), "0");
-                    AppDatabaseHelper.getInstance(getActivity()).deleteBookmark(allDecks.get(position).getDeckId());
+                        operationType = AppConstants.BOOKMARK_DELETE_OPERATION;
+                        AppDatabaseHelper.getInstance(getActivity()).deleteBookmark(allDecks.get(position).getDeckId());
                 }
+
+                startManageBookmarkIntentService(operationType, bookmark);
+
                 break;
 
             case R.id.buttonLike:
@@ -296,16 +213,15 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void updateTraficOnServer(TrafficData traficData) throws UnsupportedEncodingException {
-        AppUtil.LogMsg("RESPONSE", "TRAFIC JSON" + new Gson().toJson(traficData));
+        AppUtil.LogMsg("RESPONSE", "TRAFFIC_ENDPOINT JSON" + new Gson().toJson(traficData));
         StringEntity entity = new StringEntity(new Gson().toJson(traficData));
-        HttpUtils.postWithJson(getActivity(), AppConstants.TRAFIC, entity, new AsyncHttpResponseHandler() {
+        HttpUtils.postWithJson(getActivity(), AppConstants.TRAFFIC_ENDPOINT, entity, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try {
                     String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
                     AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
                     if (statusCode == AppConstants.STATUS_CODE_SUCCESS) {
-
                     }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -335,7 +251,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
      * fetching an address.
      */
     protected void startArticleIntentService(String pageNo) {
-
         Intent intent = new Intent(getActivity(), FetchArticleService.class);
         ArticleFeedResultReceiver mResultReceiver = new ArticleFeedResultReceiver(new Handler(Looper.getMainLooper()));
         mResultReceiver.setReceiver(this);
@@ -344,6 +259,20 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         getActivity().startService(intent);
     }
 
+
+    /**
+     * Creates an intent, adds location data to it as an extra, and starts the intent service for
+     * fetching an address.
+     */
+    protected void startManageBookmarkIntentService(String operationType, Bookmark bookmark) {
+        Intent intent = new Intent(getActivity(), ManageBookmarksService.class);
+        BookmarksResultReceiver mResultReceiver = new BookmarksResultReceiver(new Handler(Looper.getMainLooper()));
+        mResultReceiver.setReceiver(this);
+        intent.putExtra("resultReceiver", mResultReceiver);
+        intent.putExtra("operationType", operationType);
+        intent.putExtra("bookmark", bookmark);
+        getActivity().startService(intent);
+    }
 
     /**
      * Interface method implemented to get article data feed
@@ -389,11 +318,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 // Ad clicked callback
             }
         });
-
         // Request an ad
         nativeAd.loadAd();
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

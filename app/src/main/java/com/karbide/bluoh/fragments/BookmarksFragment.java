@@ -1,6 +1,9 @@
 package com.karbide.bluoh.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -11,6 +14,9 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.karbide.bluoh.R;
+import com.karbide.bluoh.datadownloader.BookmarksResultReceiver;
+import com.karbide.bluoh.datadownloader.DataReceiverIntf;
+import com.karbide.bluoh.datadownloader.ManageBookmarksService;
 import com.karbide.bluoh.datatypes.Card;
 import com.karbide.bluoh.datatypes.Content;
 import com.karbide.bluoh.datatypes.HomeDataResponse;
@@ -18,19 +24,14 @@ import com.karbide.bluoh.ui.DepthVerticalPageTransformer;
 import com.karbide.bluoh.ui.VerticalViewPager;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
-import com.karbide.bluoh.util.HttpUtils;
 import com.karbide.bluoh.util.OnSwipeTouchListener;
 import com.karbide.bluoh.viewadapters.HomePagerAdapter;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import cz.msebera.android.httpclient.Header;
 
-
-public class BookmarksFragment extends BaseFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener
+public class BookmarksFragment extends BaseFragment implements View.OnClickListener,
+        CompoundButton.OnCheckedChangeListener, DataReceiverIntf
 {
     private VerticalViewPager mainPager;
     private ArrayList<Content> allDecks;
@@ -129,65 +130,49 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
             tvBlankTemplate.setVisibility(View.VISIBLE);
         }
     }
-    private void getBookMark(String pageNo)
-    {
-        showProgressDialog(R.string.please_wait);
-        RequestParams rp = new RequestParams();
-        HttpUtils.get(getActivity(), String.format(AppConstants.GET_BOOKMARK, pageNo), rp, new AsyncHttpResponseHandler()
-        {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
-            {
-                hideProgressDialog();
 
-                try
-                {
-                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                    AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR"+statusCode+str);
-                    if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
-                    {
-                        homeDataResponse = new Gson().fromJson(str, HomeDataResponse.class);
-                        if(isFirstRequest)
-                        {
-                            allDecks = homeDataResponse.getContent();
-                            setBookmarkData();
-                        }
-                        else
-                        {
-                            allDecks.addAll(homeDataResponse.getContent());
-                            homePageAdapter.notifyDataSetChanged();
-                        }
-                        isFirstRequest = false;
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                hideProgressDialog();
-                try
-                {
-                    if(error!= null)
-                    {
-                        AppUtil.showToast(getActivity(), error.getMessage()+error.getLocalizedMessage());
-                    }
-                    else
-                    {
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    private void getBookMark(String pageNo){
+        startBookmarksIntentService("GET",pageNo);
     }
 
-    private Bundle getBundle(int position)
-    {
+    /**
+     * Creates an intent, adds location data to it as an extra, and starts the intent service for
+     * fetching an address.
+     */
+    protected void startBookmarksIntentService(String operationType, String pageNo) {
+        Intent intent = new Intent(getActivity(), ManageBookmarksService.class);
+        BookmarksResultReceiver mResultReceiver = new BookmarksResultReceiver(new Handler(Looper.getMainLooper()));
+        mResultReceiver.setReceiver(this);
+        intent.putExtra("resultReceiver", mResultReceiver);
+        intent.putExtra("pageno", pageNo);
+        intent.putExtra("operationType", operationType);
+        getActivity().startService(intent);
+    }
+
+
+    /**
+     * Interface method implemented to get article data feed
+     * @param resultCode
+     * @param resultData
+     */
+    @Override
+    public void onReceiveResult(int resultCode, Bundle resultData) {
+
+        String responseData = resultData.getString("result");
+
+        homeDataResponse = new Gson().fromJson(responseData, HomeDataResponse.class);
+        if(allDecks==null || allDecks.size()==0){
+            allDecks = homeDataResponse.getContent();
+            setBookmarkData();
+         }else {
+            allDecks.addAll(homeDataResponse.getContent());
+            homePageAdapter.notifyDataSetChanged();
+         }
+         // - isFirstRequest = false;
+
+    }
+
+    private Bundle getBundle(int position){
         String data = new Gson().toJson(allDecks.get(position).getCards().get(0), Card.class);
         Bundle bundle = new Bundle();
         bundle.putString("data", ""+data);
