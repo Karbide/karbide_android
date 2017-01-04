@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 import com.karbide.bluoh.dal.AppDatabaseHelper;
 import com.karbide.bluoh.dao.core.Bookmark;
 import com.karbide.bluoh.dao.core.Card;
-import com.karbide.bluoh.dao.core.Content;
+import com.karbide.bluoh.dao.core.Deck;
 import com.karbide.bluoh.service.HttpClient;
 import com.karbide.bluoh.ui.DepthVerticalPageTransformer;
 import com.karbide.bluoh.ui.VerticalViewPager;
@@ -36,7 +36,7 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
     private List<Card> allCards;
     private int deckId = -1;
     private String title = null;
-    private Content deckContent;
+    private Deck deckDeck;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -49,7 +49,7 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
         {
             deckId = getIntent().getIntExtra("deckId", -1);
             title = getIntent().getStringExtra("title");
-            deckContent = new Gson().fromJson(getIntent().getStringExtra("content"), Content.class);
+            deckDeck = new Gson().fromJson(getIntent().getStringExtra("content"), Deck.class);
             AppUtil.LogMsg("TITLE", "TITLE IS "+ title);
             setTitle(""+title);
         }
@@ -136,10 +136,10 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
                     AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR"+statusCode+responseData);
                     if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
                     {
-                        Content response = new Gson().fromJson(responseData, Content.class);
+                        Deck response = new Gson().fromJson(responseData, Deck.class);
                         allCards = response.getCards();
                         AppUtil.LogError("ALL DECKS", "ALL DECKS:- "+allCards.size());
-                        DeckVerticalPagerAdapter adapter = new DeckVerticalPagerAdapter(DeckDetailActivity.this, DeckDetailActivity.this, response, deckContent);
+                        DeckVerticalPagerAdapter adapter = new DeckVerticalPagerAdapter(DeckDetailActivity.this, DeckDetailActivity.this, response, deckDeck);
                         mainPager.setAdapter(adapter);
                     }
 
@@ -183,17 +183,17 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
                     {
                         ArrayList<Bookmark> bookmark = new ArrayList<>();
                         Bookmark addBookmark = new Bookmark();
-                        addBookmark.setDeckId(deckContent.getDeckId());
+                        addBookmark.setDeckId(deckDeck.getDeckId());
                         addBookmark.setCardId(allCards.get(position).getId());
                         bookmark.add(addBookmark);
                         updateBookmark(bookmark);
-                        AppDatabaseHelper.getInstance(this).addBookMark(deckContent, null);
+                        AppDatabaseHelper.getInstance(this).addBookMark(deckDeck, null);
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
                 }
                 else
-                    AppDatabaseHelper.getInstance(this).deleteBookmark(deckContent.getDeckId());
+                    AppDatabaseHelper.getInstance(this).deleteBookmark(deckDeck.getDeckId());
                 break;
         }
     }
@@ -247,10 +247,10 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
 
     private Bundle getBundle(int position)
     {
-        String data = new Gson().toJson(deckContent.getCards().get(position), Card.class);
+        String data = new Gson().toJson(deckDeck.getCards().get(position), Card.class);
         Bundle bundle = new Bundle();
         bundle.putString("data", ""+data);
-        bundle.putInt("deckId", deckContent.getDeckId());
+        bundle.putInt("deckId", deckDeck.getDeckId());
         return bundle;
     }
 

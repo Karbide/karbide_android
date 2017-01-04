@@ -23,7 +23,7 @@ import com.karbide.bluoh.dao.HomeDataResponse;
 import com.karbide.bluoh.dao.core.TrafficData;
 import com.karbide.bluoh.dao.core.Bookmark;
 import com.karbide.bluoh.dao.core.Card;
-import com.karbide.bluoh.dao.core.Content;
+import com.karbide.bluoh.dao.core.Deck;
 import com.karbide.bluoh.service.ArticleFeedResultReceiver;
 import com.karbide.bluoh.service.BookmarksResultReceiver;
 import com.karbide.bluoh.service.DataReceiverIntf;
@@ -56,7 +56,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private static final int SWIPE_VELOCITY_THRESHOLD = 100;
     private HomePagerAdapter homePageAdapter;
     private HomeDataResponse homeDataResponse;
-    private ArrayList<Content> allDecks;
+    private ArrayList<Deck> allDecks;
     private String homedata = null;
 
     @Override
@@ -109,9 +109,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             homeDataResponse = new Gson().fromJson(homedata, HomeDataResponse.class);
             startTime = Calendar.getInstance().getTimeInMillis();
             if(allDecks==null){
-                allDecks = new ArrayList<Content>();
+                allDecks = new ArrayList<Deck>();
             }
-            allDecks = homeDataResponse.getContent();
+            allDecks = homeDataResponse.getDeck();
             homePageAdapter = new HomePagerAdapter(getActivity(), HomeFragment.this, allDecks, HomeFragment.this);
             mainPager.setAdapter(homePageAdapter);
             showNativeAd();
@@ -288,9 +288,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         startTime = Calendar.getInstance().getTimeInMillis();
         homeDataResponse = new Gson().fromJson(responseData, HomeDataResponse.class);
         if(allDecks==null){
-            allDecks = new ArrayList<Content>();
+            allDecks = new ArrayList<Deck>();
         }
-        allDecks.addAll(homeDataResponse.getContent());
+        allDecks.addAll(homeDataResponse.getDeck());
 
         if (homePageAdapter == null){
             homePageAdapter = new HomePagerAdapter(getActivity(), HomeFragment.this, allDecks, HomeFragment.this);

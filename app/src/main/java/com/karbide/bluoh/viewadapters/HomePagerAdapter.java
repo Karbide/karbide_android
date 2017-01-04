@@ -31,7 +31,7 @@ import com.karbide.bluoh.DeckDetailActivity;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.dal.AppDatabaseHelper;
 import com.karbide.bluoh.dao.core.Card;
-import com.karbide.bluoh.dao.core.Content;
+import com.karbide.bluoh.dao.core.Deck;
 import com.karbide.bluoh.ui.CustomTextView;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
@@ -51,7 +51,7 @@ public class HomePagerAdapter extends PagerAdapter {
 	/** The Constant TAG. */
 	private static final String TAG = HomePagerAdapter.class.getSimpleName();
 
-	private ArrayList<Content> _allDecks;
+	private ArrayList<Deck> _allDecks;
 	/** The _context. */
 	private Context _context = null;
 
@@ -69,7 +69,7 @@ public class HomePagerAdapter extends PagerAdapter {
 	 * @paramarticleSummaryList the article summary list
 	 * @param onClickListener the on click listener
 	 */
-	public HomePagerAdapter(Context context, OnClickListener onClickListener, ArrayList<Content> allDecks, CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
+	public HomePagerAdapter(Context context, OnClickListener onClickListener, ArrayList<Deck> allDecks, CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
 		_context = context;
 		_onClickListener = onClickListener;
 		_onCheckedChangeListener = onCheckedChangeListener;

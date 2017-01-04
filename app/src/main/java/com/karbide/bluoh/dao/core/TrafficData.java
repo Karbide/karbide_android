@@ -2,7 +2,7 @@ package com.karbide.bluoh.dao.core;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class TrafficData {
+public class TrafficData extends BluohDAO {
 
     @SerializedName("activity")
     @Expose

@@ -270,7 +270,7 @@ public class MainActivity extends BaseActivity implements OnMenuItemClickListene
                     if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
                     {
                         HomeDataResponse homeData = new Gson().fromJson(str, HomeDataResponse.class);
-                        if(homeData.getContent() != null && homeData.getContent().size()>0)
+                        if(homeData.getDeck() != null && homeData.getDeck().size()>0)
                         {
                             bookmarkData = str;
                             displayView(1);

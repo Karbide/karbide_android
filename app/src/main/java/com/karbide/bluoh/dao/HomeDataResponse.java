@@ -2,14 +2,14 @@ package com.karbide.bluoh.dao;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.karbide.bluoh.dao.core.Content;
+import com.karbide.bluoh.dao.core.Deck;
 
 import java.util.ArrayList;
 
 public class HomeDataResponse {
     @SerializedName("content")
     @Expose
-    private ArrayList<Content> content = new ArrayList<Content>();
+    private ArrayList<Deck> deck = new ArrayList<Deck>();
     @SerializedName("last")
     @Expose
     private Boolean last;
@@ -40,17 +40,17 @@ public class HomeDataResponse {
      * @return
      * The content
      */
-    public ArrayList<Content> getContent() {
-        return content;
+    public ArrayList<Deck> getDeck() {
+        return deck;
     }
 
     /**
      *
-     * @param content
+     * @param deck
      * The content
      */
-    public void setContent(ArrayList<Content> content) {
-        this.content = content;
+    public void setDeck(ArrayList<Deck> deck) {
+        this.deck = deck;
     }
 
     /**

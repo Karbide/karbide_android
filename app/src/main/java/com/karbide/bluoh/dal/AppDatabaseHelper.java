@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.gson.Gson;
-import com.karbide.bluoh.dao.core.Content;
+import com.karbide.bluoh.dao.core.Deck;
 import com.karbide.bluoh.util.AppUtil;
 
 import java.util.ArrayList;
@@ -128,13 +128,13 @@ public class AppDatabaseHelper extends SQLiteOpenHelper
 	/**
 			* Adds the article.
 	*
-			* @param content
+			* @param deck
 	*            the article summary
 	* @param db
 	*            the db
 	* @return true, if successful
 	*/
-	public synchronized boolean addBookMark(Content content, SQLiteDatabase db) {
+	public synchronized boolean addBookMark(Deck deck, SQLiteDatabase db) {
 		boolean isAdded = false;
 		boolean closeDBRequired = false;
 
@@ -146,12 +146,12 @@ public class AppDatabaseHelper extends SQLiteOpenHelper
 		if (null != db)
 		{
 			ContentValues cv = new ContentValues();
-			cv.put(COLUMN_DECK_ID, content.getDeckId());
-			cv.put(COLUMN_ARTICLE_JSON, new Gson().toJson(content));
+			cv.put(COLUMN_DECK_ID, deck.getDeckId());
+			cv.put(COLUMN_ARTICLE_JSON, new Gson().toJson(deck));
 
 			StringBuilder sb = new StringBuilder(COLUMN_DECK_ID + "=?");
 			String whereClause = sb.toString();
-			String[] whereArgs = new String[] { Integer.toString(content.getDeckId()) };
+			String[] whereArgs = new String[] { Integer.toString(deck.getDeckId()) };
 
 			int rowsAffected = db.update(TABLE_NAME_BOOKMARK, cv, whereClause, whereArgs);
 			if (rowsAffected > 0) {
@@ -173,9 +173,9 @@ public class AppDatabaseHelper extends SQLiteOpenHelper
 	}
 
 
-	public ArrayList<Content> getBookmarks()
+	public ArrayList<Deck> getBookmarks()
 	{
-		ArrayList<Content> bookmarkList = new ArrayList<Content>();
+		ArrayList<Deck> bookmarkList = new ArrayList<Deck>();
 		SQLiteDatabase db = openSQLiteDatabase();
 
 		if (null != db)
@@ -189,7 +189,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper
 					do
 					{
 						String articleJson = cr.getString(0);
-						bookmarkList.add(gson.fromJson(articleJson, Content.class));
+						bookmarkList.add(gson.fromJson(articleJson, Deck.class));
 						AppUtil.LogMsg(TAG, "Bookmark Article JSON-- article: " + articleJson);
 					}
 					while (cr.moveToNext());

@@ -18,7 +18,7 @@ import com.karbide.bluoh.service.BookmarksResultReceiver;
 import com.karbide.bluoh.service.DataReceiverIntf;
 import com.karbide.bluoh.service.ManageBookmarksService;
 import com.karbide.bluoh.dao.core.Card;
-import com.karbide.bluoh.dao.core.Content;
+import com.karbide.bluoh.dao.core.Deck;
 import com.karbide.bluoh.dao.HomeDataResponse;
 import com.karbide.bluoh.ui.DepthVerticalPageTransformer;
 import com.karbide.bluoh.ui.VerticalViewPager;
@@ -34,7 +34,7 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
         CompoundButton.OnCheckedChangeListener, DataReceiverIntf
 {
     private VerticalViewPager mainPager;
-    private ArrayList<Content> allDecks;
+    private ArrayList<Deck> allDecks;
     private TextView tvBlankTemplate;
     private HomePagerAdapter homePageAdapter;
     private HomeDataResponse homeDataResponse;
@@ -59,7 +59,7 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
         tvBlankTemplate = (TextView)view.findViewById(R.id.tvBlankTemplate);
        if(getArguments() != null) {
             homeDataResponse = new Gson().fromJson(getArguments().getString("bookmark"), HomeDataResponse.class);
-            allDecks = homeDataResponse.getContent();
+            allDecks = homeDataResponse.getDeck();
             setBookmarkData();
         }
         else
@@ -162,10 +162,10 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
 
         homeDataResponse = new Gson().fromJson(responseData, HomeDataResponse.class);
         if(allDecks==null || allDecks.size()==0){
-            allDecks = homeDataResponse.getContent();
+            allDecks = homeDataResponse.getDeck();
             setBookmarkData();
          }else {
-            allDecks.addAll(homeDataResponse.getContent());
+            allDecks.addAll(homeDataResponse.getDeck());
             homePageAdapter.notifyDataSetChanged();
          }
          // - isFirstRequest = false;

@@ -18,7 +18,7 @@ import com.google.gson.Gson;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.dal.AppDatabaseHelper;
 import com.karbide.bluoh.dao.core.Card;
-import com.karbide.bluoh.dao.core.Content;
+import com.karbide.bluoh.dao.core.Deck;
 import com.karbide.bluoh.ui.CustomTextView;
 import com.karbide.bluoh.util.AppUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -37,13 +37,13 @@ public class DeckVerticalPagerAdapter extends PagerAdapter
 	/** The Constant TAG. */
 	private static final String TAG = DeckVerticalPagerAdapter.class.getSimpleName();
 	private List<Card> _allDecks;
-	private Content response;
+	private Deck response;
 	/** The _context. */
 	private Context _context = null;
 	/** The _on click listener. */
 	private OnClickListener _onClickListener = null;
 
-	private Content _content;
+	private Deck _deck;
 	/**
 	 * Instantiates a new vertical pager adapter.
 	 *
@@ -51,10 +51,10 @@ public class DeckVerticalPagerAdapter extends PagerAdapter
 	 * @paramarticleSummaryList the article summary list
 	 * @param onClickListener the on click listener
 	 */
-	public DeckVerticalPagerAdapter(Context context, OnClickListener onClickListener, Content allDecks, Content parentContent) {
+	public DeckVerticalPagerAdapter(Context context, OnClickListener onClickListener, Deck allDecks, Deck parentDeck) {
 		_context = context;
 		_onClickListener = onClickListener;
-		_content = parentContent;
+		_deck = parentDeck;
 		response = allDecks;
 		_allDecks = allDecks.getCards();
 		_allDecks.remove(0);
@@ -189,7 +189,7 @@ public class DeckVerticalPagerAdapter extends PagerAdapter
 					public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked)
 					{
 						if (isChecked)
-							AppDatabaseHelper.getInstance(_context).addBookMark(_content, null);
+							AppDatabaseHelper.getInstance(_context).addBookMark(_deck, null);
 					}
 				});
 
@@ -268,7 +268,7 @@ public class DeckVerticalPagerAdapter extends PagerAdapter
 		String data = new Gson().toJson(card, Card.class);
 		Bundle bundle = new Bundle();
 		bundle.putString("data", ""+data);
-		bundle.putInt("deckId", _content.getDeckId());
+		bundle.putInt("deckId", _deck.getDeckId());
 		return bundle;
 	}
 
