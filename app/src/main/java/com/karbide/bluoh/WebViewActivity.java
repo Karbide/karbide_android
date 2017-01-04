@@ -17,7 +17,7 @@ import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.karbide.bluoh.dal.AppDatabaseHelper;
-import com.karbide.bluoh.dao.Card;
+import com.karbide.bluoh.dao.core.Card;
 import com.karbide.bluoh.ui.CustomTextView;
 import com.karbide.bluoh.util.AppUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;

@@ -20,7 +20,7 @@ import com.google.gson.Gson;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.dal.AppDatabaseHelper;
 import com.karbide.bluoh.dao.Bookmark;
-import com.karbide.bluoh.dao.Card;
+import com.karbide.bluoh.dao.core.Card;
 import com.karbide.bluoh.dao.Content;
 import com.karbide.bluoh.dao.HomeDataResponse;
 import com.karbide.bluoh.dao.TrafficData;

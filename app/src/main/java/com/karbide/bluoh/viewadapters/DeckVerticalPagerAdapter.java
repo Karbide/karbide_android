@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import com.google.gson.Gson;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.dal.AppDatabaseHelper;
-import com.karbide.bluoh.dao.Card;
+import com.karbide.bluoh.dao.core.Card;
 import com.karbide.bluoh.dao.Content;
 import com.karbide.bluoh.dao.DeckDetailResponse;
 import com.karbide.bluoh.ui.CustomTextView;

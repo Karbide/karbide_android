@@ -2,6 +2,8 @@ package com.karbide.bluoh.dao;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.karbide.bluoh.dao.core.Approver;
+import com.karbide.bluoh.dao.core.Card;
 
 import java.util.ArrayList;
 import java.util.List;
