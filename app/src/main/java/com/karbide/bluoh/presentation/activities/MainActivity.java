@@ -1,11 +1,13 @@
 package com.karbide.bluoh.presentation.activities;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -21,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -28,29 +31,27 @@ import com.google.gson.Gson;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.dao.HomeDataResponse;
 import com.karbide.bluoh.presentation.fragments.BookmarksFragment;
-import com.karbide.bluoh.presentation.fragments.HomeFragment;
 import com.karbide.bluoh.presentation.fragments.FeedbackFragment;
+import com.karbide.bluoh.presentation.fragments.HomeFragment;
 import com.karbide.bluoh.presentation.fragments.ShareFragment;
+import com.karbide.bluoh.service.BookmarksReceiverIntf;
+import com.karbide.bluoh.service.BookmarksResultReceiver;
+import com.karbide.bluoh.service.ManageBookmarksService;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppSharedPreference;
 import com.karbide.bluoh.util.AppUtil;
-import com.karbide.bluoh.service.HttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
 import com.yalantis.contextmenu.lib.MenuObject;
 import com.yalantis.contextmenu.lib.MenuParams;
 import com.yalantis.contextmenu.lib.interfaces.OnMenuItemClickListener;
 import com.yalantis.contextmenu.lib.interfaces.OnMenuItemLongClickListener;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.msebera.android.httpclient.Header;
 
-
-public class MainActivity extends BaseActivity implements OnMenuItemClickListener, OnMenuItemLongClickListener {
+public class MainActivity extends BaseActivity implements OnMenuItemClickListener, OnMenuItemLongClickListener,
+        BookmarksReceiverIntf{
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private FragmentManager fragmentManager;
@@ -62,17 +63,19 @@ public class MainActivity extends BaseActivity implements OnMenuItemClickListene
     private String homeData;
     private String bookmarkData;
     private ContextMenuDialogFragment mMenuDialogFragment;
+    private final String Tag = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        getBookMark("0");
         setContentView(R.layout.activity_main);
         mVisible = true;
         appBarLayout = (AppBarLayout)findViewById(R.id.appBarLayout);
         fragmentManager = getSupportFragmentManager();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         initNavigationDrawer();
         if(getIntent().getExtras() != null)
             homeData = getIntent().getExtras().getString("homedata", null);
@@ -97,7 +100,7 @@ public class MainActivity extends BaseActivity implements OnMenuItemClickListene
                         break;
                     case R.id.icWishList:
                         drawerLayout.closeDrawer(Gravity.LEFT);
-                        getBookMark("0");
+                        displayView(1);
                         break;
                     case R.id.icInvite:
                         displayView(2);
@@ -131,7 +134,7 @@ public class MainActivity extends BaseActivity implements OnMenuItemClickListene
     public void displayView(int position)
     {
         Fragment fragment = null;
-        String title =  "BLUOH";
+        String title = this.getResources().getString(R.string.app_name);
         switch (position)
         {
             case 0:
@@ -145,12 +148,18 @@ public class MainActivity extends BaseActivity implements OnMenuItemClickListene
                 isHome =false;
                 title = "BOOKMARKS";
                 Bundle bundlebm = new Bundle();
-                bundlebm.putString("bookmark", bookmarkData);
-                AppUtil.showToast(MainActivity.this, "BOOKMARK"+bookmarkData);
-                fragment = new BookmarksFragment();
-                fragment.setArguments(bundlebm);
-                getBookMark("0");
-                break;
+                if(bookmarkData!=null) {
+                    HomeDataResponse homeData = new Gson().fromJson(bookmarkData, HomeDataResponse.class);
+                    if (homeData.getDeck() != null && homeData.getDeck().size() > 0){
+                        bundlebm.putString("bookmark", bookmarkData);
+                    }
+                    fragment = new BookmarksFragment();
+                    fragment.setArguments(bundlebm);
+                }else{
+                    Toast.makeText(this,"No Bookmarks",Toast.LENGTH_SHORT);
+                    Log.e(Tag, "No bookmarks");
+                }
+                    break;
             case 2:
                 isHome =false;
                 title = "INVITE";
@@ -174,6 +183,50 @@ public class MainActivity extends BaseActivity implements OnMenuItemClickListene
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.containerView, fragment, title);
             fragmentTransaction.commit();
+        }
+    }
+
+
+    private void getBookMark(String pageNo){
+        startBookmarksIntentService(AppConstants.BOOKMARK_GET_OPERATION,pageNo);
+    }
+
+
+    /**
+     * Creates an intent, adds location data to it as an extra, and starts the intent service for
+     * fetching an address.
+     */
+    protected void startBookmarksIntentService(String operationType, String pageNo) {
+        Intent intent = new Intent(this, ManageBookmarksService.class);
+        BookmarksResultReceiver mResultReceiver = new BookmarksResultReceiver(new Handler(Looper.getMainLooper()));
+        mResultReceiver.setReceiver(this);
+        intent.putExtra(AppConstants._resultReceiverBookmarks, mResultReceiver);
+        intent.putExtra(AppConstants._bookmarkPgNo, pageNo);
+        intent.putExtra(AppConstants._operationType, operationType);
+        startService(intent);
+    }
+
+
+    /**
+     * Interface method implemented to get article data feed
+     * @param statusCode
+     * @param resultData
+     */
+    @Override
+    public void onReceiveBookmarkResult(int statusCode, Bundle resultData) {
+        String responseData = resultData.getString(AppConstants._bookmarksResponseData);
+        String operationType = resultData.getString(AppConstants._operationType);
+
+        if(statusCode==AppConstants.STATUS_CODE_SUCCESS){
+            if(operationType.equalsIgnoreCase(AppConstants.BOOKMARK_GET_OPERATION)){
+                bookmarkData = resultData.getString(AppConstants._bookmarksResponseData);
+            }else{
+                AppUtil.LogMsg(Tag, operationType+ " BOOKMARKS SUCESSFULL");
+            }
+        }else if(statusCode == AppConstants.STATUS_CODE_FAILURE) {
+            AppUtil.LogMsg(Tag, operationType+ " BOOKMARKS FAILED");
+        }else{
+            AppUtil.LogMsg(Tag, operationType+ " BOOKMARKS FAILED WITH UNKONWN STATUS");
         }
     }
 
@@ -215,9 +268,8 @@ public class MainActivity extends BaseActivity implements OnMenuItemClickListene
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.miProfile:
-//                displayView(1);
-                getBookMark("0");
+            case R.id.ic_showBookmarks:
+                displayView(1);
                 break;
             case R.id.icOptionMenu:
                 if (fragmentManager.findFragmentByTag(ContextMenuDialogFragment.TAG) == null) {
@@ -251,59 +303,6 @@ public class MainActivity extends BaseActivity implements OnMenuItemClickListene
             }
         }
         super.onBackPressed();
-    }
-
-
-    private void getBookMark(String pageNo)
-    {
-        showProgressDialog(R.string.please_wait);
-        RequestParams rp = new RequestParams();
-        HttpClient.get(this, String.format(AppConstants.GET_BOOKMARK_ENDPOINT, pageNo), rp, new AsyncHttpResponseHandler()
-        {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
-            {
-                hideProgressDialog();
-                try
-                {
-                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                    AppUtil.LogMsg("RESPONSE", "RESPONSE  BOOMARK MAIN"+statusCode+str);
-                    if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
-                    {
-                        HomeDataResponse homeData = new Gson().fromJson(str, HomeDataResponse.class);
-                        if(homeData.getDeck() != null && homeData.getDeck().size()>0)
-                        {
-                            bookmarkData = str;
-                            displayView(1);
-                        }
-                        else
-                            AppUtil.showToast(MainActivity.this, "No bookmark found");
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                hideProgressDialog();
-                try
-                {
-                    if(error!= null)
-                    {
-                        AppUtil.showToast(MainActivity.this, error.getMessage()+error.getLocalizedMessage());
-                    }
-                    else
-                    {
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     private void initMenuFragment() {

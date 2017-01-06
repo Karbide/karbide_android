@@ -108,7 +108,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         showProgressDialog(R.string.please_wait);
         AppUtil.LogMsg("RESPONSE", "TRAFFIC_ENDPOINT JSON"+new Gson().toJson(feedback));
         StringEntity entity = new StringEntity(new Gson().toJson(feedback));
-        HttpClient.postWithJson(getActivity(), AppConstants.FEEDBACK_ENDPOINT, entity,new AsyncHttpResponseHandler()
+        HttpClient.postWithJsonSync(getActivity(), AppConstants.FEEDBACK_ENDPOINT, entity,new AsyncHttpResponseHandler()
         {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
@@ -117,7 +117,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 try
                 {
                     String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                    AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR"+statusCode+str);
+                    AppUtil.LogMsg("RESPONSE", "RESPONSE  SUCCESS"+statusCode+str);
                     if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
                     {
                         clearValue();

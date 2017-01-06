@@ -20,6 +20,9 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
 import static com.karbide.bluoh.util.AppConstants.BOOKMARK_GET_OPERATION;
+import static com.karbide.bluoh.util.AppConstants._bookmarkObj;
+import static com.karbide.bluoh.util.AppConstants._bookmarkPgNo;
+import static com.karbide.bluoh.util.AppConstants._bookmarksResponseData;
 
 /**
  * Created by cheta on 03-01-2017.
@@ -51,23 +54,25 @@ public class ManageBookmarksService extends IntentService {
     protected void onHandleIntent(Intent intent)
     {
 
-        final ResultReceiver mReceiver = intent.getParcelableExtra("resultReceiver");
-        final String operationType = intent.getStringExtra("operationType");
+        final ResultReceiver mReceiver = intent.getParcelableExtra(AppConstants._resultReceiverBookmarks);
+        final String operationType = intent.getStringExtra(AppConstants._operationType);
+        Log.e(TAG,"-------------- BOOKMARK INTENT FIRED for operation "+operationType);
+
         // Check if receiver was properly registered.
         if (mReceiver == null)
         {
-            Log.wtf(TAG, "No receiver received. There is nowhere to send the results.");
+            Log.e(TAG, "No receiver received. There is nowhere to send the results.");
             return;
         }
         if(operationType.equalsIgnoreCase(BOOKMARK_GET_OPERATION)){
-            final int pageNo = Integer.parseInt(intent.getStringExtra("pageNo"));
+            final int pageNo = Integer.parseInt(intent.getStringExtra(_bookmarkPgNo));
             getBookmark(mReceiver, pageNo);
         }else{
-            final Bookmark bookmark = (Bookmark)intent.getSerializableExtra("bookmark");
+            final Bookmark bookmark = (Bookmark)intent.getSerializableExtra(_bookmarkObj);
             if(operationType.equalsIgnoreCase(AppConstants.BOOKMARK_UPDATE_OPERATION)){
-                updateBookmark(bookmark);
+                updateBookmark(mReceiver, bookmark);
             }else if(operationType.equalsIgnoreCase(AppConstants.BOOKMARK_DELETE_OPERATION)){
-                deleteBookmark(bookmark);
+                deleteBookmark(mReceiver, bookmark);
             }
         }
     }
@@ -76,9 +81,9 @@ public class ManageBookmarksService extends IntentService {
     {
         RequestParams rp = new RequestParams();
 
-        Log.e("REQUEST Data","------------ Req Data");
+        Log.e(TAG,"Bookmark Req Data");
 
-        HttpClient.get(this, String.format(AppConstants.GET_BOOKMARK_ENDPOINT, pageNo), rp, new AsyncHttpResponseHandler()
+        HttpClient.getWithSyncHttpClient(this, String.format(AppConstants.GET_BOOKMARK_ENDPOINT, pageNo), rp, new AsyncHttpResponseHandler()
         {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
@@ -86,13 +91,11 @@ public class ManageBookmarksService extends IntentService {
                 try
                 {
                     String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                    AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR"+statusCode+str);
-                    if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
-                    {
-                        Bundle bundle = new Bundle();
-                        bundle.putString("result", str);
-                        resultReceiver.send(100, bundle);
-                    }
+                    AppUtil.LogMsg(TAG, "RESPONSE "+AppConstants.BOOKMARK_GET_OPERATION+ " BOOKMARKS SUCCESS STATUS CODE "+statusCode+" RESPONSE RCV "+str);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(AppConstants._operationType,AppConstants.BOOKMARK_GET_OPERATION);
+                    bundle.putString(_bookmarksResponseData, str);
+                    resultReceiver.send(AppConstants.STATUS_CODE_SUCCESS, bundle);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -103,16 +106,12 @@ public class ManageBookmarksService extends IntentService {
 
                 try
                 {
-                    if(error!= null)
-                    {
-                        AppUtil.showToast(ManageBookmarksService.this, error.getMessage()+error.getLocalizedMessage());
-                    }
-                    else
-                    {
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    }
+                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
+                    AppUtil.LogMsg(TAG, "RESPONSE "+AppConstants.BOOKMARK_GET_OPERATION+ " BOOKMARKS STATUS FAILURE CODE "+statusCode+" RESPONSE RCV "+str);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(AppConstants._operationType,AppConstants.BOOKMARK_GET_OPERATION);
+                    bundle.putString(AppConstants._bookmarksResponseData,str);
+                    resultReceiver.send(AppConstants.STATUS_CODE_FAILURE, bundle);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -121,11 +120,11 @@ public class ManageBookmarksService extends IntentService {
     }
 
 
-    private void updateBookmark(Bookmark bookmark)  {
+    private void updateBookmark(final ResultReceiver resultReceiver, Bookmark bookmark)  {
 
         ArrayList <Bookmark> bookmarks = new  ArrayList();
         bookmarks.add(bookmark);
-        AppUtil.LogMsg("RESPONSE", "BOOKMARK JSON" + new Gson().toJson(bookmarks));
+        AppUtil.LogMsg(TAG, "UPDATE BOOKMARK JSON" + new Gson().toJson(bookmarks));
 
         StringEntity entity = null;
         try {
@@ -133,16 +132,18 @@ public class ManageBookmarksService extends IntentService {
         }catch (UnsupportedEncodingException ex){
             ex.printStackTrace();
         }
-        HttpClient.postWithJson(ManageBookmarksService.this, AppConstants.ADD_BOOKMARK_ENDPOINT, entity, new AsyncHttpResponseHandler() {
+
+        HttpClient.postWithJsonSync(this, AppConstants.ADD_BOOKMARK_ENDPOINT, entity, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
                 try {
                     String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                    AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    if (statusCode == AppConstants.STATUS_CODE_SUCCESS) {
-
-                    }
+                    AppUtil.LogMsg(TAG, "RESPONSE "+AppConstants.BOOKMARK_UPDATE_OPERATION+ " BOOKMARKS SUCCESS STATUS CODE "+statusCode+" RESPONSE RCV "+str);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(AppConstants._operationType,AppConstants.BOOKMARK_UPDATE_OPERATION);
+                    bundle.putString(AppConstants._bookmarksResponseData, str);
+                    resultReceiver.send(AppConstants.STATUS_CODE_SUCCESS, bundle);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -151,13 +152,12 @@ public class ManageBookmarksService extends IntentService {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 try {
-                    if (error != null) {
-                        AppUtil.showToast(ManageBookmarksService.this, error.getMessage() + error.getLocalizedMessage());
-                    } else {
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    }
+                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
+                    AppUtil.LogMsg(TAG, "RESPONSE "+AppConstants.BOOKMARK_UPDATE_OPERATION+ " BOOKMARKS FAILURE STATUS CODE "+statusCode+" RESPONSE RCV "+str);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(AppConstants._operationType,AppConstants.BOOKMARK_UPDATE_OPERATION);
+                    bundle.putString(AppConstants._bookmarksResponseData, str);
+                    resultReceiver.send(AppConstants.STATUS_CODE_FAILURE, bundle);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -165,21 +165,22 @@ public class ManageBookmarksService extends IntentService {
         });
     }
 
-    private void deleteBookmark(Bookmark bookmark) {
+    private void deleteBookmark(final ResultReceiver resultReceiver, Bookmark bookmark) {
 
         int deckId = bookmark.getDeckId();
         String cardId = bookmark.getCardId();
 
         RequestParams rp = new RequestParams();
-        HttpClient.delete(ManageBookmarksService.this, String.format(AppConstants.DELETE_BOOKMARK_ENDPOINT, deckId, cardId), rp, new AsyncHttpResponseHandler() {
+        HttpClient.deleteSync(this, String.format(AppConstants.DELETE_BOOKMARK_ENDPOINT, deckId, cardId), rp, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try {
                     String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                    AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    if (statusCode == AppConstants.STATUS_CODE_SUCCESS) {
-                        AppUtil.showToast(ManageBookmarksService.this, "Bookmark deleted");
-                    }
+                    AppUtil.LogMsg(TAG, "RESPONSE "+AppConstants.BOOKMARK_DELETE_OPERATION+ " BOOKMARKS SUCCESS STATUS CODE "+statusCode+" RESPONSE RCV "+str);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(AppConstants._operationType,AppConstants.BOOKMARK_DELETE_OPERATION);
+                    bundle.putString(AppConstants._bookmarksResponseData, str);
+                    resultReceiver.send(AppConstants.STATUS_CODE_SUCCESS, bundle);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -188,13 +189,12 @@ public class ManageBookmarksService extends IntentService {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 try {
-                    if (error != null) {
-                        AppUtil.showToast(ManageBookmarksService.this, error.getMessage() + error.getLocalizedMessage());
-                    } else {
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    }
+                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
+                    AppUtil.LogMsg(TAG, "RESPONSE "+AppConstants.BOOKMARK_DELETE_OPERATION+ " BOOKMARKS FAILURE STATUS CODE "+statusCode+" RESPONSE RCV "+str);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(AppConstants._operationType,AppConstants.BOOKMARK_DELETE_OPERATION);
+                    bundle.putString(AppConstants._bookmarksResponseData, str);
+                    resultReceiver.send(AppConstants.STATUS_CODE_SUCCESS, bundle);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }

@@ -201,7 +201,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper
 	}
 
 	public boolean isBookMarked(int deckId) {
-		AppUtil.LogMsg(TAG, "getArticleForArticleId++ deck Id for bookmark check: " + deckId);
+		AppUtil.LogMsg(TAG, "getArticleForArticleId -- deck Id for bookmark check: " + deckId);
 		SQLiteDatabase db = openSQLiteDatabase();
 
 		if (null != db)

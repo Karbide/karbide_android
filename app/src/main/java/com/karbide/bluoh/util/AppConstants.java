@@ -39,14 +39,25 @@ public class AppConstants
 
 	public static final int GRID_SHOW_POSITION = 7;
 	public static final int ADV_SHOW_POSITION = 10;
-	public static final int ITEMS_IN_STACK = 5;
-	public static final int GET_DATA_POSITION=3;
+	public static final int ITEMS_IN_STACK = 3;
+	public static final int GET_DATA_POSITION=6;
 
 	public static final String DEFAULT_ENCODING="utf-8";
 	public static final int STATUS_CODE_SUCCESS=200;
 	public static final int STATUS_CODE_FAILURE=400;
 
+	public static final String _operationType = "operationType";
+	public static final String _resultReceiverBookmarks = "resultReceiverBookmarks";
+	public static final String _resultReceiverArticles = "resultReceiverArticles";
+	public static final String _resultReceiverFeeds = "resultReceiverFeeds";
+	public static final String _bookmarksResponseData = "bookmarksResponseData";
+	public static final String _articleResponseData = "result";
+
+	public static final String _bookmarkObj = "bookmark";
+	public static final String _bookmarkPgNo = "pageNo";
+
 	public static final String BOOKMARK_DELETE_OPERATION = "DELETE";
 	public static final String BOOKMARK_UPDATE_OPERATION = "UPDATE";
 	public static final String BOOKMARK_GET_OPERATION = "GET";
+
 }

@@ -27,13 +27,12 @@ import com.facebook.ads.AdChoicesView;
 import com.facebook.ads.MediaView;
 import com.facebook.ads.NativeAd;
 import com.google.gson.Gson;
-import com.karbide.bluoh.presentation.activities.DeckDetailActivity;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.dal.AppDatabaseHelper;
 import com.karbide.bluoh.dao.core.Card;
 import com.karbide.bluoh.dao.core.Deck;
+import com.karbide.bluoh.presentation.activities.DeckDetailActivity;
 import com.karbide.bluoh.presentation.components.CustomTextView;
-import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -87,11 +86,12 @@ public class HomePagerAdapter extends PagerAdapter {
 	@Override
 	public int getCount() {
 //		AppUtil.LogMsg(TAG, "Item++ count: " + _allDecks.size());
-		if (null != _allDecks)
-		{
+		if (null != _allDecks) {
+			/** CK
 			if(nativeAd != null && loadedAd!= null)
 				return _allDecks.size()+((_allDecks.size()/AppConstants.ITEMS_IN_STACK)+1);
 			else
+			**/
 				return _allDecks.size();
 		}
 		else {
@@ -113,6 +113,7 @@ public class HomePagerAdapter extends PagerAdapter {
 		View view = null;
 
 
+		/**
 		// - advertisment
 		if(position>0
 				&& position%AppConstants.ADV_SHOW_POSITION == 0) {
@@ -126,22 +127,27 @@ public class HomePagerAdapter extends PagerAdapter {
 			view = intitializeGridView();
 		}
 
+		 **/
 
 		if(null == view) {
 
-			int index = position - (int) Math.floor(position / AppConstants.ADV_SHOW_POSITION) - (int) Math.floor(position / AppConstants.GRID_SHOW_POSITION);
+			int index = position;
+					//- (int) Math.floor(position / AppConstants.ADV_SHOW_POSITION) - (int) Math.floor(position / AppConstants.GRID_SHOW_POSITION);
 
 			// - if its a Deck
 			if (_allDecks.get(index).getType() != null &&
 					_allDecks.get(index).getType().equalsIgnoreCase("deck")) {
+				Log.e("In position DECK",index+" Deck id"+_allDecks.get(index).getDeckId());
 				view = initializeLandscapeImageLayoutDeck(index);
 			} else {
 				// - if its a full card
 				if (_allDecks.get(index).getCards().get(0).getTemplate().equalsIgnoreCase("Full")) {
 					view = initializeFullViewLayout(index);
+					Log.e("In position Full",index+" Deck id"+_allDecks.get(index).getDeckId());
 				} else {
 					// - if its fifty fifty / seventy thirty
 					view = initializeFiftyFiftyLayout(index, _allDecks.get(position).getCards().get(0).getTemplate());
+					Log.e("In position Other",index+" Deck id"+_allDecks.get(index).getDeckId());
 				}
 			}
 		}

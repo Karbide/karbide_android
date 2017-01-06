@@ -13,6 +13,8 @@ public class ArticleFeedResultReceiver extends ResultReceiver
 {
     private DataReceiverIntf mReceiver;
 
+    private static final String TAG = "ArticleFeedResultReceiver";
+
     public ArticleFeedResultReceiver(Handler handler) {
         super(handler);
     }

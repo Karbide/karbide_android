@@ -5,40 +5,41 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.karbide.bluoh.R;
-import com.karbide.bluoh.service.BookmarksResultReceiver;
-import com.karbide.bluoh.service.DataReceiverIntf;
-import com.karbide.bluoh.service.ManageBookmarksService;
+import com.karbide.bluoh.dao.HomeDataResponse;
 import com.karbide.bluoh.dao.core.Card;
 import com.karbide.bluoh.dao.core.Deck;
-import com.karbide.bluoh.dao.HomeDataResponse;
 import com.karbide.bluoh.presentation.components.DepthVerticalPageTransformer;
 import com.karbide.bluoh.presentation.components.VerticalViewPager;
+import com.karbide.bluoh.presentation.viewadapters.HomePagerAdapter;
+import com.karbide.bluoh.service.BookmarksReceiverIntf;
+import com.karbide.bluoh.service.BookmarksResultReceiver;
+import com.karbide.bluoh.service.ManageBookmarksService;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
 import com.karbide.bluoh.util.OnSwipeTouchListener;
-import com.karbide.bluoh.presentation.viewadapters.HomePagerAdapter;
-
 import java.util.ArrayList;
 
-
 public class BookmarksFragment extends BaseFragment implements View.OnClickListener,
-        CompoundButton.OnCheckedChangeListener, DataReceiverIntf
+        CompoundButton.OnCheckedChangeListener, BookmarksReceiverIntf
 {
     private VerticalViewPager mainPager;
     private ArrayList<Deck> allDecks;
     private TextView tvBlankTemplate;
     private HomePagerAdapter homePageAdapter;
-    private HomeDataResponse homeDataResponse;
-    boolean isFirstRequest = false;
+    private boolean isLast = false;
+    private final String Tag = "BookmarksFragment";
+
     @Override
     public void onResume()
     {
@@ -57,10 +58,18 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
         super.onViewCreated(view, savedInstanceState);
         mainPager = (VerticalViewPager)view.findViewById(R.id.mainPager);
         tvBlankTemplate = (TextView)view.findViewById(R.id.tvBlankTemplate);
-       if(getArguments() != null) {
-            homeDataResponse = new Gson().fromJson(getArguments().getString("bookmark"), HomeDataResponse.class);
-            allDecks = homeDataResponse.getDeck();
-            setBookmarkData();
+        if(getArguments() != null) {
+            HomeDataResponse homeDataResponse = new Gson().fromJson(getArguments().getString("bookmark"), HomeDataResponse.class);
+            if(homeDataResponse !=null && homeDataResponse.getDeck()!=null) {
+                isLast = homeDataResponse.getLast();
+                allDecks = homeDataResponse.getDeck();
+                Log.e(Tag, allDecks.size()+"");
+                setBookmarkData();
+            }else{
+                isLast = false;
+                Toast.makeText(this.getContext(),"No Bookmarks",Toast.LENGTH_SHORT);
+                Log.e(Tag, "No bookmarks");
+            }
         }
         else
             getBookMark("0");
@@ -92,7 +101,8 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
                 }
                 @Override
                 public void onPageSelected(int position) {
-                    if(position%AppConstants.ITEMS_IN_STACK == 0 && homeDataResponse.getLast() == false)
+                    if(position%AppConstants.ITEMS_IN_STACK == 0 &&
+                            !isLast)
                         getBookMark(String.valueOf(position/AppConstants.ITEMS_IN_STACK));
                 }
                 @Override
@@ -121,6 +131,7 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
                     return gestureDetector.onTouchEvent(event);
                 }
             });
+
             homePageAdapter = new HomePagerAdapter(getActivity(), BookmarksFragment.this, allDecks, BookmarksFragment.this);
             mainPager.setAdapter(homePageAdapter);
         }
@@ -129,6 +140,7 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
             mainPager.setVisibility(View.GONE);
             tvBlankTemplate.setVisibility(View.VISIBLE);
         }
+
     }
 
     private void getBookMark(String pageNo){
@@ -143,33 +155,45 @@ public class BookmarksFragment extends BaseFragment implements View.OnClickListe
         Intent intent = new Intent(getActivity(), ManageBookmarksService.class);
         BookmarksResultReceiver mResultReceiver = new BookmarksResultReceiver(new Handler(Looper.getMainLooper()));
         mResultReceiver.setReceiver(this);
-        intent.putExtra("resultReceiver", mResultReceiver);
-        intent.putExtra("pageno", pageNo);
-        intent.putExtra("operationType", operationType);
+        intent.putExtra(AppConstants._resultReceiverBookmarks, mResultReceiver);
+        intent.putExtra(AppConstants._bookmarkPgNo, pageNo);
+        intent.putExtra(AppConstants._operationType, operationType);
         getActivity().startService(intent);
     }
 
 
     /**
      * Interface method implemented to get article data feed
-     * @param resultCode
+     * @param statusCode
      * @param resultData
      */
     @Override
-    public void onReceiveResult(int resultCode, Bundle resultData) {
+    public void onReceiveBookmarkResult(int statusCode, Bundle resultData) {
 
-        String responseData = resultData.getString("result");
+        String responseData = resultData.getString(AppConstants._bookmarksResponseData);
+        String operationType = resultData.getString(AppConstants._operationType);
 
-        homeDataResponse = new Gson().fromJson(responseData, HomeDataResponse.class);
-        if(allDecks==null || allDecks.size()==0){
-            allDecks = homeDataResponse.getDeck();
-            setBookmarkData();
-         }else {
-            allDecks.addAll(homeDataResponse.getDeck());
-            homePageAdapter.notifyDataSetChanged();
-         }
-         // - isFirstRequest = false;
-
+        if(statusCode==AppConstants.STATUS_CODE_SUCCESS){
+            if(operationType.equalsIgnoreCase(AppConstants.BOOKMARK_GET_OPERATION)){
+                HomeDataResponse homeDataResponse = new Gson().fromJson(responseData, HomeDataResponse.class);
+                if(homeDataResponse !=null && homeDataResponse.getDeck()!=null) {
+                    isLast = homeDataResponse.getLast();
+                    if (allDecks == null || allDecks.size() == 0) {
+                        allDecks = homeDataResponse.getDeck();
+                        setBookmarkData();
+                    } else {
+                        allDecks.addAll(homeDataResponse.getDeck());
+                        homePageAdapter.notifyDataSetChanged();
+                    }
+                }
+            }else{
+                AppUtil.LogMsg(Tag, AppConstants._operationType+ " BOOKMARKS SUCESSFULL");
+            }
+        }else if(statusCode == AppConstants.STATUS_CODE_FAILURE) {
+            AppUtil.LogMsg(Tag, AppConstants._operationType+ " BOOKMARKS FAILED");
+        }else{
+            AppUtil.LogMsg(Tag, AppConstants._operationType+ " BOOKMARKS FAILED WITH UNKONWN STATUS");
+        }
     }
 
     private Bundle getBundle(int position){

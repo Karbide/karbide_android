@@ -25,48 +25,42 @@ public class HttpClient
     }
 
     public static void getWithSyncHttpClient(Context ctx, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+
+        AppUtil.LogError("URL", "URL IS "+getAbsoluteUrl(url));
         LoginResponse userInfo = AppSharedPreference.getInstance(ctx).getUserInfo();
         syncclient.setBasicAuth(userInfo.getUsername(),userInfo.getPassword());
         syncclient.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
-    public static void post(Context ctx,String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+    public static void deleteSync(Context ctx,String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         LoginResponse userInfo = AppSharedPreference.getInstance(ctx).getUserInfo();
-        client.setBasicAuth(userInfo.getUsername(),userInfo.getPassword());
-        client.post(getAbsoluteUrl(url), params, responseHandler);
+        syncclient.setBasicAuth(userInfo.getUsername(),userInfo.getPassword());
+        syncclient.delete(getAbsoluteUrl(url), params, responseHandler);
     }
 
-    public static void delete(Context ctx,String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        LoginResponse userInfo = AppSharedPreference.getInstance(ctx).getUserInfo();
-        client.setBasicAuth(userInfo.getUsername(),userInfo.getPassword());
-        client.delete(getAbsoluteUrl(url), params, responseHandler);
-    }
-
-
-    public static void getByUrl(Context ctx,String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        LoginResponse userInfo = AppSharedPreference.getInstance(ctx).getUserInfo();
-        client.setBasicAuth(userInfo.getUsername(),userInfo.getPassword());
-        client.get(url, params, responseHandler);
-    }
-
-    public static void postByUrl(Context ctx,String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        LoginResponse userInfo = AppSharedPreference.getInstance(ctx).getUserInfo();
-        client.setBasicAuth(userInfo.getUsername(),userInfo.getPassword());
-        client.post(url, params, responseHandler);
-    }
 
     public static void postWithJson(Context ctx, String url, StringEntity stringEntity, AsyncHttpResponseHandler responseHandler) {
         LoginResponse userInfo = AppSharedPreference.getInstance(ctx).getUserInfo();
         if(userInfo!=null) {
             client.setBasicAuth(userInfo.getUsername(), userInfo.getPassword());
-            AppUtil.LogError("URL", " User ID" + userInfo.getUsername() + " PASSWORD:= " + userInfo.getPassword());
+            AppUtil.LogError("URL ", "User ID " + userInfo.getUsername() + " PASSWORD:= " + userInfo.getPassword());
         }
         AppUtil.LogError("URL", "URL IS "+getAbsoluteUrl(url));
         client.post(ctx, getAbsoluteUrl(url), stringEntity, "application/json", responseHandler);
     }
 
-    public static void testNotification(Context context, AsyncHttpResponseHandler responseHandler)
-    {
+    public static void postWithJsonSync(Context ctx, String url, StringEntity stringEntity, AsyncHttpResponseHandler responseHandler) {
+        LoginResponse userInfo = AppSharedPreference.getInstance(ctx).getUserInfo();
+        if(userInfo!=null) {
+            syncclient.setBasicAuth(userInfo.getUsername(), userInfo.getPassword());
+            AppUtil.LogError("URL ", "User ID " + userInfo.getUsername() + " PASSWORD:= " + userInfo.getPassword());
+        }
+        AppUtil.LogError("URL", "URL IS "+getAbsoluteUrl(url));
+        syncclient.post(ctx, getAbsoluteUrl(url), stringEntity, "application/json", responseHandler);
+    }
+
+
+    public static void testNotification(Context context, AsyncHttpResponseHandler responseHandler){
         RequestParams param = new RequestParams();
         param.put("gcm_id", ""+AppSharedPreference.getInstance(context).getGcmId());
         client.post("http://aapkadriver.com/fcm/fcm.php", param, responseHandler);

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.aapkadriver.userapp.MainActivity">
     <item
-        android:id="@+id/miProfile"
+        android:id="@+id/ic_showBookmarks"
         android:icon="@drawable/ic_action_bookmark"
         app:showAsAction="always"
         android:title="">

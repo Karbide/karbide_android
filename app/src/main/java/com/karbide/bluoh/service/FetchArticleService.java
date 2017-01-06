@@ -48,7 +48,7 @@ public class FetchArticleService extends IntentService
     {
         String errorMessage = "";
         final ResultReceiver mReceiver = intent.getParcelableExtra("resultReceiver");
-        String pageNo = intent.getStringExtra("pageno");
+        String pageNo = intent.getStringExtra("pageNo");
         // Check if receiver was properly registered.
         if (mReceiver == null)
         {
@@ -63,22 +63,22 @@ public class FetchArticleService extends IntentService
     {
         RequestParams rp = new RequestParams();
 
-        Log.e("REQUEST Data","------------ Req Data");
-        HttpClient.getWithSyncHttpClient(FetchArticleService.this, String.format(AppConstants.HOME_DATA_ENDPOINT, pageNo), rp, new AsyncHttpResponseHandler()
+        Log.e(TAG,"Requesting Article Data");
+        HttpClient.getWithSyncHttpClient(this, String.format(AppConstants.HOME_DATA_ENDPOINT, pageNo), rp, new AsyncHttpResponseHandler()
         {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
             {
-                Log.e("GOT Data","------------ Got Data");
+                Log.e(TAG,"Got Article Data");
                 try
                 {
                     String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                    AppUtil.LogMsg("RESPONSE", "RESPONSE  SUCCESS"+statusCode+str);
+                    AppUtil.LogMsg(TAG, "RESPONSE ARTICLE DATA  SUCCESS "+statusCode+"  "+str);
                     if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
                     {
                         Bundle bundle = new Bundle();
-                        bundle.putString("result", str);
+                        bundle.putString(AppConstants._articleResponseData, str);
                         resultReceiver.send(100, bundle);
                     }
                 } catch (UnsupportedEncodingException e) {
@@ -90,15 +90,16 @@ public class FetchArticleService extends IntentService
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 try
                 {
+                    Log.e(TAG,"Failed to get Article Data");
                     if(error!= null)
                     {
                         AppUtil.showToast(FetchArticleService.this, error.getMessage()+error.getLocalizedMessage());
                     }
                     else
                     {
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
+                        AppUtil.LogMsg(TAG, "RESPONSE  ARTICLE DATA ERROR" + statusCode + error.getMessage());
                         String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
+                        AppUtil.LogMsg(TAG, "RESPONSE  ARTICLE DATA ERROR" + statusCode + str);
                     }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();

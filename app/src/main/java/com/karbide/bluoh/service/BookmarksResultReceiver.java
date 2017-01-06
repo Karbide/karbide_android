@@ -11,13 +11,15 @@ import android.util.Log;
 
 public class BookmarksResultReceiver extends ResultReceiver {
 
-    private DataReceiverIntf mReceiver;
+    private BookmarksReceiverIntf mReceiver;
+
+    private String TAG ="BookmarksResultReceiver";
 
     public BookmarksResultReceiver(Handler handler) {
         super(handler);
     }
 
-    public void setReceiver(DataReceiverIntf receiver) {
+    public void setReceiver(BookmarksReceiverIntf receiver) {
         mReceiver = receiver;
     }
 
@@ -27,12 +29,11 @@ public class BookmarksResultReceiver extends ResultReceiver {
     @Override
     protected void onReceiveResult(int resultCode, Bundle resultData)
     {
-        Log.d("BOOKMARKS", "onReceiveResult start");
+        Log.d(TAG, "onBookmarksReceiveResult start");
         if (mReceiver != null) {
-            mReceiver.onReceiveResult(resultCode, resultData);
+            mReceiver.onReceiveBookmarkResult(resultCode, resultData);
         }
-
-        Log.d("BOOKMARKS", "onReceiveResult end");
+        Log.d(TAG, "onBookmarksReceiveResult end");
     }
 
 

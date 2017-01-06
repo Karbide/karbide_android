@@ -1,6 +1,9 @@
 package com.karbide.bluoh.presentation.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -13,31 +16,35 @@ import com.karbide.bluoh.dal.AppDatabaseHelper;
 import com.karbide.bluoh.dao.core.Bookmark;
 import com.karbide.bluoh.dao.core.Card;
 import com.karbide.bluoh.dao.core.Deck;
-import com.karbide.bluoh.service.HttpClient;
 import com.karbide.bluoh.presentation.components.DepthVerticalPageTransformer;
 import com.karbide.bluoh.presentation.components.VerticalViewPager;
+import com.karbide.bluoh.presentation.viewadapters.DeckVerticalPagerAdapter;
+import com.karbide.bluoh.service.BookmarksReceiverIntf;
+import com.karbide.bluoh.service.BookmarksResultReceiver;
+import com.karbide.bluoh.service.HttpClient;
+import com.karbide.bluoh.service.ManageBookmarksService;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
 import com.karbide.bluoh.util.OnSwipeTouchListener;
-import com.karbide.bluoh.presentation.viewadapters.DeckVerticalPagerAdapter;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.entity.StringEntity;
 
 
-public class DeckDetailActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener{
+public class DeckDetailActivity extends BaseActivity implements View.OnClickListener,
+        CompoundButton.OnCheckedChangeListener, BookmarksReceiverIntf{
     private Toolbar toolbar;
     private VerticalViewPager mainPager;
     private List<Card> allCards;
     private int deckId = -1;
     private String title = null;
     private Deck deckDeck;
+    private final String TAG = "DeckDetailsActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -125,7 +132,7 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
     {
         showProgressDialog(R.string.please_wait);
         RequestParams rp = new RequestParams();
-        HttpClient.get(DeckDetailActivity.this, String.format(AppConstants.DECK_DATA_ENDPOINT, deckId), rp, new AsyncHttpResponseHandler()
+        HttpClient.getWithSyncHttpClient(DeckDetailActivity.this, String.format(AppConstants.DECK_DATA_ENDPOINT, deckId), rp, new AsyncHttpResponseHandler()
         {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
@@ -178,72 +185,53 @@ public class DeckDetailActivity extends BaseActivity implements View.OnClickList
         switch (compoundButton.getId())
         {
             case R.id.buttonBookmark:
-                if (isChecked)
-                {
-                    try
-                    {
-                        ArrayList<Bookmark> bookmark = new ArrayList<>();
-                        Bookmark addBookmark = new Bookmark();
-                        addBookmark.setDeckId(deckDeck.getDeckId());
-                        addBookmark.setCardId(allCards.get(position).getId());
-                        bookmark.add(addBookmark);
-                        updateBookmark(bookmark);
+
+                Bookmark bookmark = new Bookmark();
+                bookmark.setDeckId(deckDeck.getDeckId());
+                bookmark.setCardId(allCards.get(position).getId());
+
+                if (isChecked) {
+                        startManageBookmarkIntentService(AppConstants.BOOKMARK_UPDATE_OPERATION, bookmark);
                         AppDatabaseHelper.getInstance(this).addBookMark(deckDeck, null);
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
+                }else {
+                        startManageBookmarkIntentService(AppConstants.BOOKMARK_DELETE_OPERATION, bookmark);
+                        AppDatabaseHelper.getInstance(this).deleteBookmark(deckDeck.getDeckId());
                 }
-                else
-                    AppDatabaseHelper.getInstance(this).deleteBookmark(deckDeck.getDeckId());
                 break;
         }
     }
 
-    private void updateBookmark(ArrayList<Bookmark> bookmarks) throws UnsupportedEncodingException
-    {
-        showProgressDialog(R.string.please_wait);
-        AppUtil.LogMsg("RESPONSE", "BOOKMARK JSON"+new Gson().toJson(bookmarks));
-        StringEntity entity = new StringEntity(new Gson().toJson(bookmarks));
-        HttpClient.postWithJson(DeckDetailActivity.this, AppConstants.ADD_BOOKMARK_ENDPOINT, entity,new AsyncHttpResponseHandler()
-        {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
-            {
-                hideProgressDialog();
-                try
-                {
-                    String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                    AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR"+statusCode+str);
-                    if(statusCode == AppConstants.STATUS_CODE_SUCCESS)
-                    {
+    /**
+     * Creates an intent, adds location data to it as an extra, and starts the intent service for
+     * fetching an address.
+     */
+    protected void startManageBookmarkIntentService(String operationType, Bookmark bookmark) {
+        Intent intent = new Intent(this, ManageBookmarksService.class);
+        BookmarksResultReceiver mResultReceiver = new BookmarksResultReceiver(new Handler(Looper.getMainLooper()));
+        mResultReceiver.setReceiver(this);
+        intent.putExtra(AppConstants._resultReceiverBookmarks, mResultReceiver);
+        intent.putExtra(AppConstants._operationType, operationType);
+        intent.putExtra(AppConstants._bookmarkObj, bookmark);
+        startService(intent);
+    }
 
-                    }
-                } catch (UnsupportedEncodingException e)
-                {
-                    e.printStackTrace();
-                }
-            }
+    /**
+     * Interface method implemented to get article data feed
+     * @param statusCode
+     * @param resultData
+     */
+    @Override
+    public void onReceiveBookmarkResult(int statusCode, Bundle resultData) {
+        String responseData = resultData.getString(AppConstants._bookmarksResponseData);
+        String operationType = resultData.getString(AppConstants._operationType);
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                hideProgressDialog();
-                try
-                {
-                    if(error!= null)
-                    {
-                        AppUtil.showToast(DeckDetailActivity.this, error.getMessage()+error.getLocalizedMessage());
-                    }
-                    else
-                    {
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + error.getMessage());
-                        String str = new String(responseBody, AppConstants.DEFAULT_ENCODING);
-                        AppUtil.LogMsg("RESPONSE", "RESPONSE  ERROR" + statusCode + str);
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        if(statusCode==AppConstants.STATUS_CODE_SUCCESS){
+            AppUtil.LogMsg(TAG,operationType + " BOOKMARKS SUCESSFULL");
+        }else if(statusCode == AppConstants.STATUS_CODE_FAILURE) {
+            AppUtil.LogMsg(TAG, operationType + " BOOKMARKS FAILED");
+        }else{
+            AppUtil.LogMsg(TAG, operationType+ " BOOKMARKS FAILED WITH UNKONWN STATUS");
+        }
     }
 
     private Bundle getBundle(int position)

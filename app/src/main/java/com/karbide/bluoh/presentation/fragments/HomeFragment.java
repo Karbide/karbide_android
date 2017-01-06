@@ -20,22 +20,23 @@ import com.google.gson.Gson;
 import com.karbide.bluoh.R;
 import com.karbide.bluoh.dal.AppDatabaseHelper;
 import com.karbide.bluoh.dao.HomeDataResponse;
-import com.karbide.bluoh.dao.core.TrafficData;
 import com.karbide.bluoh.dao.core.Bookmark;
 import com.karbide.bluoh.dao.core.Card;
 import com.karbide.bluoh.dao.core.Deck;
+import com.karbide.bluoh.dao.core.TrafficData;
+import com.karbide.bluoh.presentation.components.DepthVerticalPageTransformer;
+import com.karbide.bluoh.presentation.components.VerticalViewPager;
+import com.karbide.bluoh.presentation.viewadapters.HomePagerAdapter;
 import com.karbide.bluoh.service.ArticleFeedResultReceiver;
+import com.karbide.bluoh.service.BookmarksReceiverIntf;
 import com.karbide.bluoh.service.BookmarksResultReceiver;
 import com.karbide.bluoh.service.DataReceiverIntf;
 import com.karbide.bluoh.service.FetchArticleService;
 import com.karbide.bluoh.service.HttpClient;
 import com.karbide.bluoh.service.ManageBookmarksService;
-import com.karbide.bluoh.presentation.components.DepthVerticalPageTransformer;
-import com.karbide.bluoh.presentation.components.VerticalViewPager;
 import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
 import com.karbide.bluoh.util.OnSwipeTouchListener;
-import com.karbide.bluoh.presentation.viewadapters.HomePagerAdapter;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.io.UnsupportedEncodingException;
@@ -45,19 +46,18 @@ import java.util.Calendar;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
-public class HomeFragment extends BaseFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener,
+public class HomeFragment extends BaseFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener,BookmarksReceiverIntf,
         DataReceiverIntf {
 
     public VerticalViewPager mainPager;
-    boolean isFirstRequest = true;
     private long startTime;
     private static final String Tag = "Home Fragment";
+    private HomePagerAdapter homePageAdapter;
+    private ArrayList<Deck> allDecks;
+    private boolean isLast = false;
+    boolean isFirstRequest = true;
     private static final int SWIPE_THRESHOLD = 100;
     private static final int SWIPE_VELOCITY_THRESHOLD = 100;
-    private HomePagerAdapter homePageAdapter;
-    private HomeDataResponse homeDataResponse;
-    private ArrayList<Deck> allDecks;
-    private String homedata = null;
 
     @Override
     public void onResume() {
@@ -79,7 +79,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        homedata = getArguments().getString("homedata");
+        String homedata = getArguments().getString("homedata");
         mainPager = (VerticalViewPager) view.findViewById(R.id.mainPager);
         mainPager.setPageTransformer(false, new DepthVerticalPageTransformer());
         mainPager.setOffscreenPageLimit(AppConstants.ITEMS_IN_STACK);
@@ -91,8 +91,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
             @Override
             public void onPageSelected(int position) {
-                if (position % AppConstants.GET_DATA_POSITION== 0 && homeDataResponse.getLast() == false)
-                    startArticleIntentService(String.valueOf(position / AppConstants.GET_DATA_POSITION));
+
+                Log.e(Tag,"Position is "+position);
+                if (position % AppConstants.GET_DATA_POSITION== 0
+                        && !isLast) {
+                    String pageNo = String.valueOf(position / AppConstants.GET_DATA_POSITION);
+                    Log.e(Tag,"GET DATA Position is "+position+" pageNo"+pageNo);
+                    startArticleIntentService(pageNo);
+                }
             }
 
             @Override
@@ -106,12 +112,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         });
 
         if (homedata != null) {
-            homeDataResponse = new Gson().fromJson(homedata, HomeDataResponse.class);
+            HomeDataResponse homeDataResponse = new Gson().fromJson(homedata, HomeDataResponse.class);
             startTime = Calendar.getInstance().getTimeInMillis();
+            allDecks = homeDataResponse.getDeck();
             if(allDecks==null){
                 allDecks = new ArrayList<Deck>();
             }
-            allDecks = homeDataResponse.getDeck();
+            isLast = homeDataResponse.getLast();
             homePageAdapter = new HomePagerAdapter(getActivity(), HomeFragment.this, allDecks, HomeFragment.this);
             mainPager.setAdapter(homePageAdapter);
             showNativeAd();
@@ -167,13 +174,15 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
                 if (isChecked) {
                         operationType = AppConstants.BOOKMARK_UPDATE_OPERATION;
+                        startManageBookmarkIntentService(operationType, bookmark);
                         AppDatabaseHelper.getInstance(getActivity()).addBookMark(allDecks.get(position), null);
                 } else {
                         operationType = AppConstants.BOOKMARK_DELETE_OPERATION;
+                        startManageBookmarkIntentService(operationType, bookmark);
                         AppDatabaseHelper.getInstance(getActivity()).deleteBookmark(allDecks.get(position).getDeckId());
                 }
 
-                startManageBookmarkIntentService(operationType, bookmark);
+
 
                 break;
 
@@ -218,7 +227,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private void updateTraficOnServer(TrafficData traficData) throws UnsupportedEncodingException {
         AppUtil.LogMsg("RESPONSE", "TRAFFIC_ENDPOINT JSON" + new Gson().toJson(traficData));
         StringEntity entity = new StringEntity(new Gson().toJson(traficData));
-        HttpClient.postWithJson(getActivity(), AppConstants.TRAFFIC_ENDPOINT, entity, new AsyncHttpResponseHandler() {
+        HttpClient.postWithJsonSync(getActivity(), AppConstants.TRAFFIC_ENDPOINT, entity, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try {
@@ -258,7 +267,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         ArticleFeedResultReceiver mResultReceiver = new ArticleFeedResultReceiver(new Handler(Looper.getMainLooper()));
         mResultReceiver.setReceiver(this);
         intent.putExtra("resultReceiver", mResultReceiver);
-        intent.putExtra("pageno", pageNo);
+        intent.putExtra("pageNo", pageNo);
         getActivity().startService(intent);
     }
 
@@ -271,9 +280,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         Intent intent = new Intent(getActivity(), ManageBookmarksService.class);
         BookmarksResultReceiver mResultReceiver = new BookmarksResultReceiver(new Handler(Looper.getMainLooper()));
         mResultReceiver.setReceiver(this);
-        intent.putExtra("resultReceiver", mResultReceiver);
-        intent.putExtra("operationType", operationType);
-        intent.putExtra("bookmark", bookmark);
+        intent.putExtra(AppConstants._resultReceiverBookmarks, mResultReceiver);
+        intent.putExtra(AppConstants._operationType, operationType);
+        intent.putExtra(AppConstants._bookmarkObj, bookmark);
         getActivity().startService(intent);
     }
 
@@ -284,9 +293,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
      */
     @Override
     public void onReceiveResult(int resultCode, Bundle resultData) {
-        String responseData = resultData.getString("result");
+        String responseData = resultData.getString(AppConstants._articleResponseData);
         startTime = Calendar.getInstance().getTimeInMillis();
-        homeDataResponse = new Gson().fromJson(responseData, HomeDataResponse.class);
+        HomeDataResponse homeDataResponse = new Gson().fromJson(responseData, HomeDataResponse.class);
+        isLast = homeDataResponse.getLast();
         if(allDecks==null){
             allDecks = new ArrayList<Deck>();
         }
@@ -298,6 +308,27 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             showNativeAd();
         }else {
             homePageAdapter.notifyDataSetChanged();
+        }
+
+    }
+
+        /**
+         * Interface method implemented to get article data feed
+         * @param statusCode
+         * @param resultData
+         */
+    @Override
+    public void onReceiveBookmarkResult(int statusCode, Bundle resultData) {
+
+        String responseData = resultData.getString(AppConstants._bookmarksResponseData);
+        String operationType = resultData.getString(AppConstants._operationType);
+
+        if(statusCode==AppConstants.STATUS_CODE_SUCCESS){
+                AppUtil.LogMsg(Tag, operationType+ " BOOKMARKS SUCESSFULL");
+        }else if(statusCode == AppConstants.STATUS_CODE_FAILURE) {
+            AppUtil.LogMsg(Tag, operationType+ " BOOKMARKS FAILED");
+        }else{
+            AppUtil.LogMsg(Tag, operationType+ " BOOKMARKS FAILED WITH UNKONWN STATUS");
         }
     }
 

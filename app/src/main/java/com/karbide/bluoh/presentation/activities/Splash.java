@@ -113,7 +113,7 @@ public class Splash extends BaseActivity implements View.OnClickListener, Facebo
         ArticleFeedResultReceiver mResultReceiver = new ArticleFeedResultReceiver(new Handler(Looper.getMainLooper()));
         mResultReceiver.setReceiver(this);
         intent.putExtra("resultReceiver", mResultReceiver);
-        intent.putExtra("pageno", pageNo);
+        intent.putExtra("pageNo", pageNo);
         this.startService(intent);
     }
 
