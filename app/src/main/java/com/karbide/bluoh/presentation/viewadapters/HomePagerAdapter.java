@@ -33,6 +33,7 @@ import com.karbide.bluoh.dao.core.Card;
 import com.karbide.bluoh.dao.core.Deck;
 import com.karbide.bluoh.presentation.activities.DeckDetailActivity;
 import com.karbide.bluoh.presentation.components.CustomTextView;
+import com.karbide.bluoh.util.AppConstants;
 import com.karbide.bluoh.util.AppUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -61,6 +62,9 @@ public class HomePagerAdapter extends PagerAdapter {
 	private String adPlacementId = "800960263379262_814380178703937";
 	public static NativeAd nativeAd = null;
 	public static Ad loadedAd = null;
+
+	private int articlePosition = 0;
+
 	/**
 	 * Instantiates a new vertical pager adapter.
 	 * 
@@ -87,11 +91,11 @@ public class HomePagerAdapter extends PagerAdapter {
 	public int getCount() {
 //		AppUtil.LogMsg(TAG, "Item++ count: " + _allDecks.size());
 		if (null != _allDecks) {
-			/** CK
+//			/** CK
 			if(nativeAd != null && loadedAd!= null)
-				return _allDecks.size()+((_allDecks.size()/AppConstants.ITEMS_IN_STACK)+1);
+				return _allDecks.size()+((_allDecks.size()/AppConstants.ADV_SHOW_POSITION));
 			else
-			**/
+//			**/
 				return _allDecks.size();
 		}
 		else {
@@ -111,23 +115,20 @@ public class HomePagerAdapter extends PagerAdapter {
 	{
 		AppUtil.LogMsg(TAG, "instantiateItem --> position: " + position+" ALl Deck size: "+_allDecks.size());
 		View view = null;
-
-
-		/**
 		// - advertisment
-		if(position>0
-				&& position%AppConstants.ADV_SHOW_POSITION == 0) {
-			if (nativeAd != null && loadedAd != null) {
+		/*if(position>0 && position%AppConstants.ADV_SHOW_POSITION == 0)
+		{
+			if (nativeAd != null && loadedAd != null)
+			{
 				view = initializeAdView(loadedAd);
 			}
 		}
-
 		// - grid view
-		if(position>0 && position%AppConstants.GRID_SHOW_POSITION == 0){
+		if(position>0 && position% AppConstants.GRID_SHOW_POSITION == 0){
 			view = intitializeGridView();
-		}
+		}*/
 
-		 **/
+
 
 		if(null == view) {
 
@@ -357,7 +358,7 @@ public class HomePagerAdapter extends PagerAdapter {
 			}
 			if(summary.getArticleSourceLogo()!= null)
 			{
-				Log.e("IMG", "SOURCE : "+summary.getArticleSourceLogo());
+//				Log.e("IMG", "SOURCE : "+summary.getArticleSourceLogo());
 				tvSource.setVisibility(View.GONE);
 				llSourceImage.setVisibility(View.VISIBLE);
 				ImageLoader.getInstance().displayImage(summary.getArticleSourceLogo(), ivSourceImage);
@@ -462,7 +463,7 @@ public class HomePagerAdapter extends PagerAdapter {
 			}
 			if(summary.getArticleSourceLogo()!= null)
 			{
-				Log.e("IMG", "SOURCE : "+summary.getArticleSourceLogo());
+//				Log.e("IMG", "SOURCE : "+summary.getArticleSourceLogo());
 				tvSource.setVisibility(View.GONE);
 				llSourceImage.setVisibility(View.VISIBLE);
 				ImageLoader.getInstance().displayImage(summary.getArticleSourceLogo(), ivSourceImage);

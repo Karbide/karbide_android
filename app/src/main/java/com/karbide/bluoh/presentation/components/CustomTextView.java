@@ -11,7 +11,6 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.TextView;
 
 import com.karbide.bluoh.R;
-import com.karbide.bluoh.util.AppUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,11 +68,11 @@ public class CustomTextView extends TextView {
 						mTypefaces.put(typefaceAssetPath, typeface);
 					}
 					setTypeface(typeface);
-					AppUtil.LogMsg("BLUOH APP FONT NAME", typefaceAssetPath );
+//					AppUtil.LogMsg("BLUOH APP FONT NAME", typefaceAssetPath );
 				}
 				catch (Exception ex)
 				{
-					AppUtil.LogMsg("BLUOH APP FONT NAME", typefaceAssetPath+" Not Found");
+//					AppUtil.LogMsg("BLUOH APP FONT NAME", typefaceAssetPath+" Not Found");
 				}
 			}
 			array.recycle();
@@ -118,11 +117,11 @@ public class CustomTextView extends TextView {
 						mTypefaces.put(typefaceAssetPath, typeface);
 					}
 					setTypeface(typeface);
-					AppUtil.LogMsg("AKD FONT NAME", typefaceAssetPath );
+//					AppUtil.LogMsg("FONT NAME", typefaceAssetPath );
 				}
 				catch (Exception ex)
 				{
-					AppUtil.LogMsg("AKD FONT NAME", typefaceAssetPath+" Not Found");
+//					AppUtil.LogMsg("FONT NAME", typefaceAssetPath+" Not Found");
 				}
 			}
 			array.recycle();

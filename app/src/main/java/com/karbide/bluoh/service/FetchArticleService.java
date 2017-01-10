@@ -49,6 +49,7 @@ public class FetchArticleService extends IntentService
         String errorMessage = "";
         final ResultReceiver mReceiver = intent.getParcelableExtra("resultReceiver");
         String pageNo = intent.getStringExtra("pageNo");
+        Log.wtf(TAG, "PAGE NO:- "+pageNo);
         // Check if receiver was properly registered.
         if (mReceiver == null)
         {

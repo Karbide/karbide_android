@@ -46,7 +46,9 @@ import java.util.Calendar;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
-public class HomeFragment extends BaseFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener,BookmarksReceiverIntf,
+public class HomeFragment extends BaseFragment implements View.OnClickListener,
+        CompoundButton.OnCheckedChangeListener,
+        BookmarksReceiverIntf,
         DataReceiverIntf {
 
     public VerticalViewPager mainPager;
@@ -58,6 +60,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     boolean isFirstRequest = true;
     private static final int SWIPE_THRESHOLD = 100;
     private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+    private int pageNo = -1;
 
     @Override
     public void onResume() {
@@ -92,12 +95,15 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void onPageSelected(int position) {
 
-                Log.e(Tag,"Position is "+position);
-                if (position % AppConstants.GET_DATA_POSITION== 0
-                        && !isLast) {
-                    String pageNo = String.valueOf(position / AppConstants.GET_DATA_POSITION);
-                    Log.e(Tag,"GET DATA Position is "+position+" pageNo"+pageNo);
-                    startArticleIntentService(pageNo);
+                AppUtil.LogError(Tag,"Position is "+position);
+                if (position % AppConstants.GET_DATA_POSITION== 0 && !isLast)
+                {
+                    if(position / AppConstants.GET_DATA_POSITION>pageNo)
+                    {
+                        pageNo = position / AppConstants.GET_DATA_POSITION;
+                        AppUtil.LogError(Tag,"GET DATA Position is "+position+" pageNo"+pageNo);
+                        startArticleIntentService(String.valueOf(pageNo));
+                    }
                 }
             }
 
@@ -111,7 +117,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             }
         });
 
-        if (homedata != null) {
+        if (homedata != null)
+        {
             HomeDataResponse homeDataResponse = new Gson().fromJson(homedata, HomeDataResponse.class);
             startTime = Calendar.getInstance().getTimeInMillis();
             allDecks = homeDataResponse.getDeck();
